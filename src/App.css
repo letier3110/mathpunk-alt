@@ -62,7 +62,7 @@
   justify-content: center;
   align-items: center;
 
-  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
 
 .read-the-docs {
@@ -74,4 +74,49 @@
   margin-bottom: 120px;
   display: flex;
   gap: -36px;
+
+  position: relative;
+}
+
+.addition {
+  position: absolute;
+  top: 20px;
+  right: -24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.additionText {
+  text-align: center;
+  transition: all .2s;
+  color: #fff;
+  /* background-color: rgba(0,0,0,.1); */
+  font-weight: bold;
+  padding: 3px 6px;
+  border-radius: 0 6px 0 0;
+}
+
+.Denominator {
+  background-color: #FF9E9E;
+  padding: 16px 24px;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+
+.Multiplicator {
+  background-color: #FF6D28;
+  padding: 16px 24px;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+
+.Summator {
+  background-color: #FCE700;
+  padding: 16px 24px;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+
+.Differencator {
+  background-color: #EA047E;
+  padding: 16px 24px;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }

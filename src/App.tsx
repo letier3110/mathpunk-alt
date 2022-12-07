@@ -7,7 +7,7 @@ enum CardTypeEnum {
   SUMMATOR,
   MULTIPLICATOR,
   DIFFERENCATOR,
-  NUMBERATOR
+  // NUMBERATOR
 }
 
 type Indexable = string | number | symbol
@@ -17,7 +17,7 @@ const StartCardPool: Record<CardTypeEnum, number> = {
   [CardTypeEnum.SUMMATOR]: 1,
   [CardTypeEnum.MULTIPLICATOR]: 1,
   [CardTypeEnum.DIFFERENCATOR]: 1,
-  [CardTypeEnum.NUMBERATOR]: 3,
+  // [CardTypeEnum.NUMBERATOR]: 3,
 }
 
 interface IComputable {
@@ -30,12 +30,22 @@ interface CardTypeProps {
 
 class CardType {
   private name: string
+  private count: number
   constructor({ name }: CardTypeProps) {
     this.name = name
+    this.count = 0
+  }
+
+  setCount(count: number) {
+    this.count = count
   }
 
   getName() {
-    return this.name
+    return this.count.toString()
+  }
+
+  getCount() {
+    return this.count.toString()
   }
 
   getDescription() {
@@ -125,7 +135,7 @@ const CardTypeEnumToClass: Record<CardTypeEnum, typeof CardType> = {
   [CardTypeEnum.SUMMATOR]: Summator,
   [CardTypeEnum.MULTIPLICATOR]: Multiplicator,
   [CardTypeEnum.DIFFERENCATOR]: Differencator,
-  [CardTypeEnum.NUMBERATOR]: Numberator
+  // [CardTypeEnum.NUMBERATOR]: Numberator
 }
 
 // https://stackoverflow.com/questions/8435183/generate-a-weighted-random-number
@@ -144,24 +154,26 @@ function weightedRand<T extends Indexable>(spec: Record<T, number>): () => T {
   }
 }
 
-const MIN_TARGET_VALUE = 100
-const MAX_TARGET_VALUE = 500
+const MIN_TARGET_VALUE = 5
+const MAX_TARGET_VALUE = 15
 
 const generateTarget = (): number => {
   return Math.floor(Math.random() * (MAX_TARGET_VALUE - MIN_TARGET_VALUE) + MIN_TARGET_VALUE)
 }
 
-// const generateDenominator = (): number => {
-//   return Math.floor(Math.random() * (MAX_TARGET_VALUE - MIN_TARGET_VALUE) + MIN_TARGET_VALUE)
-// }
+const MIN_NUMENATOR_VALUE = 1
+const MAX_NUMENATOR_VALUE = 20
+const generateNumenator = (): number => {
+  return Math.floor(Math.random() * (MAX_NUMENATOR_VALUE - MIN_NUMENATOR_VALUE) + MIN_NUMENATOR_VALUE)
+}
 
 const getDeckPool = (): CardType[] => {
   const array = Array(5).fill((x: number) => x);
   const res = array.map((): CardType => {
     const result = new CardTypeEnumToClass[(weightedRand<CardTypeEnum>(StartCardPool))()]({name:''});
-    if(result instanceof Numberator) {
-      result.setCount(generateTarget());
-    }
+    // if(result instanceof Numberator) {
+      result.setCount(generateNumenator());
+    // }
     console.log(result);
     return result;
   });
@@ -184,7 +196,14 @@ function App() {
           return (<div style={{
             rotate: `${(rotate + index) * 10}deg`,
             translate: `0px ${(translateY*translateY) * 12}px`,
-          }} className='card'>{x.getName()}</div>)
+          }} className='card'>
+            <div className='mainText'>{x.getCount()}</div>
+            <div className={['addition', x.getDescription()].join(' ')}>
+              <div className='additionText'>
+                {x.getName()}
+              </div>
+            </div>
+          </div>)
         })}
       </div>
     </div>
