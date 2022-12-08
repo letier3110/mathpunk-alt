@@ -6,7 +6,7 @@ enum CardTypeEnum {
   DENOMINATOR,
   SUMMATOR,
   MULTIPLICATOR,
-  DIFFERENCATOR,
+  DIFFERENCATOR
   // NUMBERATOR
 }
 
@@ -16,7 +16,7 @@ const StartCardPool: Record<CardTypeEnum, number> = {
   [CardTypeEnum.DENOMINATOR]: 1,
   [CardTypeEnum.SUMMATOR]: 1,
   [CardTypeEnum.MULTIPLICATOR]: 1,
-  [CardTypeEnum.DIFFERENCATOR]: 1,
+  [CardTypeEnum.DIFFERENCATOR]: 1
   // [CardTypeEnum.NUMBERATOR]: 3,
 }
 
@@ -29,15 +29,22 @@ interface CardTypeProps {
 }
 
 class CardType {
+  private id: number
   private name: string
   private count: number
   constructor({ name }: CardTypeProps) {
     this.name = name
     this.count = 0
+    this.id = Math.random() * 12345678;
   }
 
+  
   setCount(count: number) {
     this.count = count
+  }
+  
+  getId() {
+    return this.id;
   }
 
   getName() {
@@ -109,32 +116,32 @@ class Differencator extends CardType implements IComputable {
   }
 }
 
-interface NumberatorProps {
-  count: number
-}
+// interface NumberatorProps {
+//   count: number
+// }
 
-class Numberator extends CardType {
-  private count: number
+// class Numberator extends CardType {
+//   private count: number
 
-  constructor() {
-    super({ name: 'Numberator' })
-    this.count = 0
-  }
+//   constructor() {
+//     super({ name: 'Numberator' })
+//     this.count = 0
+//   }
 
-  setCount(count: number) {
-    this.count = count
-  }
+//   setCount(count: number) {
+//     this.count = count
+//   }
 
-  getName() {
-    return this.count.toString()
-  }
-}
+//   getName() {
+//     return this.count.toString()
+//   }
+// }
 
 const CardTypeEnumToClass: Record<CardTypeEnum, typeof CardType> = {
   [CardTypeEnum.DENOMINATOR]: Denominator,
   [CardTypeEnum.SUMMATOR]: Summator,
   [CardTypeEnum.MULTIPLICATOR]: Multiplicator,
-  [CardTypeEnum.DIFFERENCATOR]: Differencator,
+  [CardTypeEnum.DIFFERENCATOR]: Differencator
   // [CardTypeEnum.NUMBERATOR]: Numberator
 }
 
@@ -167,43 +174,79 @@ const generateNumenator = (): number => {
   return Math.floor(Math.random() * (MAX_NUMENATOR_VALUE - MIN_NUMENATOR_VALUE) + MIN_NUMENATOR_VALUE)
 }
 
+interface AddCardProps {
+  card: CardType
+  index?: number
+}
+
 const getDeckPool = (): CardType[] => {
-  const array = Array(5).fill((x: number) => x);
+  const array = Array(5).fill((x: number) => x)
   const res = array.map((): CardType => {
-    const result = new CardTypeEnumToClass[(weightedRand<CardTypeEnum>(StartCardPool))()]({name:''});
+    const result = new CardTypeEnumToClass[weightedRand<CardTypeEnum>(StartCardPool)()]({ name: '' })
     // if(result instanceof Numberator) {
-      result.setCount(generateNumenator());
+    result.setCount(generateNumenator())
     // }
-    console.log(result);
-    return result;
-  });
-  return res;
+    console.log(result)
+    return result
+  })
+  return res
 }
 
 function App() {
-  const [count] = useState(generateTarget())
+  const [count, setCount] = useState(generateTarget())
+  const [round, setRound] = useState<number>(1)
+  const [chain, setChain] = useState<CardType[]>([])
   const [deck, setDeck] = useState<CardType[]>(getDeckPool())
 
   console.log(deck)
 
+  const handleAddCard = ({ card, index = 0 }: AddCardProps) => {
+    const newArr = [...chain.slice(0, index), card, ...chain.slice(index)];
+    setChain(newArr)
+    setDeck(deck.filter(x => x.getId() !== card.getId()))
+  }
+
+  const handleRemoveCard = ({ card, index = 0 }: AddCardProps) => {
+    const newArr = [...deck.slice(0, index), card, ...deck.slice(index)];
+    setDeck(newArr)
+    setChain(chain.filter(x => x.getId() !== card.getId()))
+  }
+
   return (
     <div className='root'>
       <div className='count'>{count}</div>
-      <div className='cards'>
-        {deck.map((x, index) => {
-          const translateY = Math.abs(-Math.floor(deck.length / 2) + index);
-          const rotate = -Math.floor(deck.length / 2)
-          return (<div style={{
-            rotate: `${(rotate + index) * 10}deg`,
-            translate: `0px ${(translateY*translateY) * 12}px`,
-          }} className='card'>
-            <div className='mainText'>{x.getCount()}</div>
-            <div className={['addition', x.getDescription()].join(' ')}>
-              <div className='additionText'>
-                {x.getName()}
+      {chain.length > 0 && <div className='chain'>{chain.map((x, index) => {
+          return (
+            <div
+            onClick={() => handleRemoveCard({ card: x, index })}
+              className='card'
+            >
+              <div className='mainText'>{x.getCount()}</div>
+              <div className={['addition', x.getDescription()].join(' ')}>
+                <div className='additionText'>{x.getName()}</div>
               </div>
             </div>
-          </div>)
+          )
+        })}</div>}
+      <div className='cards'>
+        {deck.map((x, index) => {
+          const translateY = Math.abs(-Math.floor(deck.length / 2) + index)
+          const rotate = -Math.floor(deck.length / 2)
+          return (
+            <div
+              onClick={() => handleAddCard({ card: x, index })}
+              style={{
+                rotate: `${(rotate + index) * 10}deg`,
+                translate: `0px ${translateY * translateY * 12}px`
+              }}
+              className='card'
+            >
+              <div className='mainText'>{x.getCount()}</div>
+              <div className={['addition', x.getDescription()].join(' ')}>
+                <div className='additionText'>{x.getName()}</div>
+              </div>
+            </div>
+          )
         })}
       </div>
     </div>
