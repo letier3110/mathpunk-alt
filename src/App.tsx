@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import './App.css'
 
@@ -28,23 +28,34 @@ interface CardTypeProps {
   name: string
 }
 
-class CardType {
+interface ICardType {
+  setCount(count: number): void
+  getId(): number
+  getName(): string
+  getDescription(): string
+  getCount(): string
+}
+
+interface ViewChainElem extends ICardType {
+  isOperator: boolean
+}
+
+class CardType implements ICardType {
   private id: number
   private name: string
   private count: number
   constructor({ name }: CardTypeProps) {
     this.name = name
     this.count = 0
-    this.id = Math.random() * 12345678;
+    this.id = Math.random() * Number.MAX_SAFE_INTEGER
   }
 
-  
   setCount(count: number) {
     this.count = count
   }
-  
+
   getId() {
-    return this.id;
+    return this.id
   }
 
   getName() {
@@ -186,7 +197,7 @@ const getDeckPool = (): CardType[] => {
     // if(result instanceof Numberator) {
     result.setCount(generateNumenator())
     // }
-    console.log(result)
+    // console.log(result)
     return result
   })
   return res
@@ -198,48 +209,84 @@ function App() {
   const [chain, setChain] = useState<CardType[]>([])
   const [deck, setDeck] = useState<CardType[]>(getDeckPool())
 
-  console.log(deck)
+  // console.log(deck)
 
   const handleAddCard = ({ card, index = 0 }: AddCardProps) => {
-    const newArr = [...chain.slice(0, index), card, ...chain.slice(index)];
+    const newArr = [...chain.slice(0, index), card, ...chain.slice(index)]
     setChain(newArr)
-    setDeck(deck.filter(x => x.getId() !== card.getId()))
+    setDeck(deck.filter((x) => x.getId() !== card.getId()))
   }
 
   const handleRemoveCard = ({ card, index = 0 }: AddCardProps) => {
-    const newArr = [...deck.slice(0, index), card, ...deck.slice(index)];
+    const newArr = [...deck.slice(0, index), card, ...deck.slice(index)]
     setDeck(newArr)
-    setChain(chain.filter(x => x.getId() !== card.getId()))
+    setChain(chain.filter((x) => x.getId() !== card.getId()))
+  }
+
+  // const viewChain = chain.reduce<ViewChainElem[]>((a, c, i) => {
+  //   // const card: ViewChainElem =
+  //   // const operator: ViewChainElem = { ...c, isOperator: true }
+  //   return a.concat(card, operator)
+  // }, [])
+
+  const equalizerResult = useMemo(() => {
+    if (chain.length === 0) return 0
+    if (chain.length === 1) return chain[0].getCount()
+    const strResult = chain.reduce(
+      (a, p, i) => a.concat(p.getCount().toString(), i === chain.length - 1 ? '' : p.getName()),
+      ''
+    )
+    console.log('strResult', strResult)
+    const result: number = eval(strResult)
+    return result
+  }, [chain])
+
+  const handleEqual = () => {
+    // TODO
   }
 
   return (
     <div className='root'>
       <div className='count'>{count}</div>
-      {chain.length > 0 && <div className='chain'>{chain.map((x, index) => {
-          return (
-            <div
-            onClick={() => handleRemoveCard({ card: x, index })}
-              className='card'
-            >
-              <div className='mainText'>{x.getCount()}</div>
-              <div className={['addition', x.getDescription()].join(' ')}>
-                <div className='additionText'>{x.getName()}</div>
+      {chain.length > 0 && (
+        <div className='chain'>
+          {chain.map((x, index) => {
+            return (
+              <div key={x.getId()} className='chainElem'>
+                <div onClick={() => handleRemoveCard({ card: x, index })} className='card'>
+                  <div className='mainText'>{x.getCount()}</div>
+                </div>
+                <div className={['cardAddition', x.getDescription()].join(' ')}>
+                  <div className='additionText'>{x.getName()}</div>
+                </div>
+              </div>
+            )
+          })}
+          {chain.length > 0 && (
+            <div className='chainResultElem'>
+              <div className={['cardAddition', 'equalizer'].join(' ')}>
+                <div className='additionText'>=</div>
+              </div>
+              <div onClick={handleEqual} className='card'>
+                <div className='mainText'>{equalizerResult}</div>
               </div>
             </div>
-          )
-        })}</div>}
+          )}
+        </div>
+      )}
       <div className='cards'>
         {deck.map((x, index) => {
           const translateY = Math.abs(-Math.floor(deck.length / 2) + index)
           const rotate = -Math.floor(deck.length / 2)
           return (
             <div
-              onClick={() => handleAddCard({ card: x, index })}
+              key={x.getId()}
+              className='card'
               style={{
                 rotate: `${(rotate + index) * 10}deg`,
                 translate: `0px ${translateY * translateY * 12}px`
               }}
-              className='card'
+              onClick={() => handleAddCard({ card: x, index })}
             >
               <div className='mainText'>{x.getCount()}</div>
               <div className={['addition', x.getDescription()].join(' ')}>

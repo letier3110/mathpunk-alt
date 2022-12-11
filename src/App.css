@@ -24,6 +24,7 @@
 .card {
   cursor: pointer;
   user-select: none;
+  position: relative;
 
   padding: 2em;
   border: 1px solid #888;
@@ -51,15 +52,15 @@
   display: flex;
   gap: -36px;
 
+  justify-content: center;
   position: relative;
 }
 
 .chain {
   margin-bottom: 120px;
   display: flex;
-  gap: -36px;
-
   position: relative;
+  justify-content: center;
 }
 
 .addition {
@@ -69,6 +70,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.chain .chainElem:nth-last-child(2) .cardAddition {
+  display: none;
+  /* border: 1px solid red; */
+}
+
+.cardAddition, .addition {
+  padding: 16px 24px;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+
+.cardAddition {
+  padding: 8px 12px;
 }
 
 .additionText {
@@ -81,26 +96,28 @@
   border-radius: 0 6px 0 0;
 }
 
+.chainElem, .chainResultElem {
+  display: flex;
+  align-items: center;
+}
+
 .Denominator {
   background-color: #FF9E9E;
-  padding: 16px 24px;
-  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
 
 .Multiplicator {
   background-color: #FF6D28;
-  padding: 16px 24px;
-  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
 
 .Summator {
   background-color: #FCE700;
-  padding: 16px 24px;
-  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
 
 .Differencator {
   background-color: #EA047E;
-  padding: 16px 24px;
-  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+
+.equalizer {
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
 }
