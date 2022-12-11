@@ -11,12 +11,20 @@ html {
 }
 
 .root {
+  position: relative;
+
   width: 100%;
   height: calc(100vh - 48px);
   display: flex;
   flex-direction: column;
 
   justify-content: space-between;
+}
+
+.reroll {
+  position: absolute;
+  left: 24px;
+  bottom: 24px;
 }
 
 .hps {
@@ -68,6 +76,16 @@ html {
 .card:hover {
   transform: scale(1.2);
   z-index: 1000;
+}
+
+.cardDisabled {
+  background-color: #888;
+  cursor: no-drop;
+  user-select: none;
+}
+
+.cardDisabled:hover {
+  transform: none;
 }
 
 .read-the-docs {
