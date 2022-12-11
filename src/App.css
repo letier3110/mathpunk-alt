@@ -39,11 +39,51 @@
   justify-content: center;
   align-items: center;
 
+  transition: transform ease 0.3s;
+
   box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+
+.card:hover {
+  transform: scale(1.2);
+  z-index: 1000;
 }
 
 .read-the-docs {
   color: #888;
+}
+
+.chainResultElem .card {
+  transition: transform ease 0.3s;
+}
+
+.chainResultElem .card:hover {
+  transform: scale(1.2);
+  background: rgb(255,255,255);
+  background: radial-gradient(circle, rgba(255,255,190,1) 0%, rgba(240,255,27,1) 35%, rgba(0,212,255,1) 100%);
+  background-size: 400% 400%;
+  background-position: center;
+  /* background: linear-gradient(270deg, #246655, #665f24);
+  background-size: 400% 400%; */
+  -webkit-animation: equalizerAnim 1s ease infinite;
+  -moz-animation: equalizerAnim 1s ease infinite;
+  animation: equalizerAnim 1s ease infinite;
+}
+
+@-webkit-keyframes equalizerAnim {
+  0%{background-size:400% 400%}
+  50%{background-size:200% 200%}
+  100%{background-size:400% 400%}
+}
+@-moz-keyframes equalizerAnim {
+  0%{background-size:400% 400%}
+  50%{background-size:200% 200%}
+  100%{background-size:400% 400%}
+}
+@keyframes equalizerAnim {
+  0%{background-size:400% 400%}
+  50%{background-size:200% 200%}
+  100%{background-size:400% 400%}
 }
 
 

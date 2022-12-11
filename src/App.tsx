@@ -194,10 +194,7 @@ const getDeckPool = (): CardType[] => {
   const array = Array(5).fill((x: number) => x)
   const res = array.map((): CardType => {
     const result = new CardTypeEnumToClass[weightedRand<CardTypeEnum>(StartCardPool)()]({ name: '' })
-    // if(result instanceof Numberator) {
     result.setCount(generateNumenator())
-    // }
-    // console.log(result)
     return result
   })
   return res
@@ -208,8 +205,6 @@ function App() {
   const [round, setRound] = useState<number>(1)
   const [chain, setChain] = useState<CardType[]>([])
   const [deck, setDeck] = useState<CardType[]>(getDeckPool())
-
-  // console.log(deck)
 
   const handleAddCard = ({ card, index }: AddCardProps) => {
     if (!index) {
@@ -235,12 +230,6 @@ function App() {
     }
   }
 
-  // const viewChain = chain.reduce<ViewChainElem[]>((a, c, i) => {
-  //   // const card: ViewChainElem =
-  //   // const operator: ViewChainElem = { ...c, isOperator: true }
-  //   return a.concat(card, operator)
-  // }, [])
-
   const equalizerResult = useMemo(() => {
     if (chain.length === 0) return 0
     if (chain.length === 1) return chain[0].getCount()
@@ -248,7 +237,6 @@ function App() {
       (a, p, i) => a.concat(p.getCount().toString(), i === chain.length - 1 ? '' : p.getName()),
       ''
     )
-    console.log('strResult', strResult)
     const result: number = eval(strResult)
     return result
   }, [chain])
