@@ -196,8 +196,8 @@ const VALUES: Record<DIFFICULTIES, DifficultySettings> = {
   [DIFFICULTIES.HARD]: {
     minTargetValue: 2000,
     maxTargetValue: 8000,
-    minNumenatorValue: 5,
-    maxNumenatorValue: 9999,
+    minNumenatorValue: 100,
+    maxNumenatorValue: 999,
     preciseness: 25,
   }
 }
@@ -423,7 +423,7 @@ function App() {
       {isGameEnded === true && (
         <div className='win'>
           <div>🥳🥳🥳</div>
-          <div>You win!</div>
+          <div>You won!</div>
           <div>
             Hard mode?
             <input type='checkbox' value={hardMode + ''} onChange={(e) => setHardMode(!hardMode)} />
