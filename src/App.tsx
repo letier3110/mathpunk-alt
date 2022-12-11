@@ -202,9 +202,24 @@ const getDeckPool = (): CardType[] => {
 
 function App() {
   const [count, setCount] = useState(generateTarget())
+  const [hp, setHp] = useState(10)
+  const [enemyHp, setEnemyHp] = useState(10)
   const [round, setRound] = useState<number>(1)
   const [chain, setChain] = useState<CardType[]>([])
   const [deck, setDeck] = useState<CardType[]>(getDeckPool())
+
+  const equalizerResult: number = useMemo(() => {
+    if (chain.length === 0) return 0
+    if (chain.length === 1) return Number(chain[0].getCount())
+    const strResult = chain.reduce(
+      (a, p, i) => a.concat(p.getCount().toString(), i === chain.length - 1 ? '' : p.getName()),
+      ''
+    )
+    const result: number = eval(strResult)
+    return result
+  }, [chain])
+
+  const isGameEnded = enemyHp <= 0
 
   const handleAddCard = ({ card, index }: AddCardProps) => {
     if (!index) {
@@ -230,72 +245,111 @@ function App() {
     }
   }
 
-  const equalizerResult = useMemo(() => {
-    if (chain.length === 0) return 0
-    if (chain.length === 1) return chain[0].getCount()
-    const strResult = chain.reduce(
-      (a, p, i) => a.concat(p.getCount().toString(), i === chain.length - 1 ? '' : p.getName()),
-      ''
-    )
-    const result: number = eval(strResult)
-    return result
-  }, [chain])
+  const handleStartNewRound = () => {
+    setCount(generateTarget())
+    setRound(round + 1)
+    setChain([])
+    setDeck(getDeckPool())
+  }
+
+  const handleStartNewGame = () => {
+    setCount(generateTarget())
+    setRound(1)
+    setChain([])
+    setDeck(getDeckPool())
+  }
 
   const handleEqual = () => {
-    // TODO
+    if (equalizerResult === count) {
+      setEnemyHp(enemyHp - 5)
+      handleStartNewRound()
+      return
+    }
+    if(equalizerResult > count * 0.5 && equalizerResult < count * 1.5) {
+      const res = Math.round((1 - Math.abs((equalizerResult - count) / count)) * 5)
+      setEnemyHp(res)
+    } else {
+      setEnemyHp(enemyHp + 5)
+    }
+    handleStartNewRound()
   }
 
   return (
     <div className='root'>
-      <div className='count'>{count}</div>
-      {chain.length > 0 && (
-        <div className='chain'>
-          {chain.map((x) => {
-            return (
-              <div key={x.getId()} className='chainElem'>
-                <div onClick={() => handleRemoveCard({ card: x })} className='card'>
-                  <div className='mainText'>{x.getCount()}</div>
-                </div>
-                <div className={['cardAddition', x.getDescription()].join(' ')}>
-                  <div className='additionText'>{x.getName()}</div>
-                </div>
-              </div>
-            )
-          })}
+      <div className='hps'>
+        <div>
+          Your points:
+          {hp}
+        </div>
+        <div>
+          Round:
+          {round}
+        </div>
+        <div>
+          Opponent points:
+          {enemyHp}
+        </div>
+      </div>
+      {isGameEnded === false && (
+        <>
+          <div className='count'>{count}</div>
           {chain.length > 0 && (
-            <div className='chainResultElem'>
-              <div className={['cardAddition', 'equalizer'].join(' ')}>
-                <div className='additionText'>=</div>
-              </div>
-              <div onClick={handleEqual} className='card'>
-                <div className='mainText'>{equalizerResult}</div>
-              </div>
+            <div className='chain'>
+              {chain.map((x) => {
+                return (
+                  <div key={x.getId()} className='chainElem'>
+                    <div onClick={() => handleRemoveCard({ card: x })} className='card'>
+                      <div className='mainText'>{x.getCount()}</div>
+                    </div>
+                    <div className={['cardAddition', x.getDescription()].join(' ')}>
+                      <div className='additionText'>{x.getName()}</div>
+                    </div>
+                  </div>
+                )
+              })}
+              {chain.length > 0 && (
+                <div className='chainResultElem'>
+                  <div className={['cardAddition', 'equalizer'].join(' ')}>
+                    <div className='additionText'>=</div>
+                  </div>
+                  <div onClick={handleEqual} className='card'>
+                    <div className='mainText'>{equalizerResult}</div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
+          <div className='cards'>
+            {deck.map((x, index) => {
+              const translateY = Math.abs(-Math.floor(deck.length / 2) + index)
+              const rotate = -Math.floor(deck.length / 2)
+              return (
+                <div
+                  key={x.getId()}
+                  className='card'
+                  style={{
+                    rotate: `${(rotate + index) * 10}deg`,
+                    translate: `0px ${translateY * translateY * 12}px`
+                  }}
+                  onClick={() => handleAddCard({ card: x })}
+                >
+                  <div className='mainText'>{x.getCount()}</div>
+                  <div className={['addition', x.getDescription()].join(' ')}>
+                    <div className='additionText'>{x.getName()}</div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </>
+      )}
+      {isGameEnded === true && (
+        <div className='win'>
+          <div>🥳🥳🥳</div>
+          <div>You win!</div>
+          <div className='card' onClick={handleStartNewGame}>Start new game?</div>
         </div>
       )}
-      <div className='cards'>
-        {deck.map((x, index) => {
-          const translateY = Math.abs(-Math.floor(deck.length / 2) + index)
-          const rotate = -Math.floor(deck.length / 2)
-          return (
-            <div
-              key={x.getId()}
-              className='card'
-              style={{
-                rotate: `${(rotate + index) * 10}deg`,
-                translate: `0px ${translateY * translateY * 12}px`
-              }}
-              onClick={() => handleAddCard({ card: x })}
-            >
-              <div className='mainText'>{x.getCount()}</div>
-              <div className={['addition', x.getDescription()].join(' ')}>
-                <div className='additionText'>{x.getName()}</div>
-              </div>
-            </div>
-          )
-        })}
-      </div>
     </div>
   )
 }

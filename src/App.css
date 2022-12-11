@@ -6,6 +6,7 @@
 }
 
 .root {
+  width: 100%;
   height: calc(100vh - 48px);
   padding: 24px;
   display: flex;
@@ -14,8 +15,22 @@
   justify-content: space-between;
 }
 
+.hps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.win {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 300px;
+}
+
 .count {
-  height: 320px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
