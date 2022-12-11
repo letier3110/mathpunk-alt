@@ -11,7 +11,6 @@ html {
 }
 
 .root {
-  position: relative;
 
   width: 100%;
   height: calc(100vh - 48px);
@@ -165,12 +164,24 @@ html {
 }
 
 .cardAddition, .addition {
+  user-select: none;
   padding: 16px 24px;
   box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
 
 .cardAddition {
+  cursor: no-drop;
   padding: 8px 12px;
+}
+
+.activeCardAddition {
+  cursor: pointer;
+  transition: transform ease 0.3s;
+}
+
+.activeCardAddition:hover {
+  transform: scale(1.2);
+  z-index: 1000;
 }
 
 .mainText {
