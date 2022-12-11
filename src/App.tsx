@@ -172,24 +172,55 @@ function weightedRand<T extends Indexable>(spec: Record<T, number>): () => T {
   }
 }
 
-const MIN_TARGET_VALUE = 5
-const MAX_TARGET_VALUE = 15
-
-let latestTarget = 0;
-
-const generateTarget = (): number => {
-  latestTarget = Math.floor(Math.random() * (MAX_TARGET_VALUE - MIN_TARGET_VALUE) + MIN_TARGET_VALUE);
-  return latestTarget;
+enum DIFFICULTIES {
+  EASY = 'easy',
+  HARD = 'hard'
 }
 
-const MIN_NUMENATOR_VALUE = 1
-const MAX_NUMENATOR_VALUE = 20
-const generateNumenator = (): number => {
-  let res = Math.floor(Math.random() * (MAX_NUMENATOR_VALUE - MIN_NUMENATOR_VALUE) + MIN_NUMENATOR_VALUE)
-  while(res === latestTarget) {
-    res = Math.floor(Math.random() * (MAX_NUMENATOR_VALUE - MIN_NUMENATOR_VALUE) + MIN_NUMENATOR_VALUE);
+interface DifficultySettings {
+  minTargetValue: number;
+  maxTargetValue: number;
+  minNumenatorValue: number;
+  maxNumenatorValue: number;
+  preciseness: number;
+}
+
+const VALUES: Record<DIFFICULTIES, DifficultySettings> = {
+  [DIFFICULTIES.EASY]: {
+    minTargetValue: 5,
+    maxTargetValue: 15,
+    minNumenatorValue: 1,
+    maxNumenatorValue: 20,
+    preciseness: 50,
+  },
+  [DIFFICULTIES.HARD]: {
+    minTargetValue: 2000,
+    maxTargetValue: 8000,
+    minNumenatorValue: 5,
+    maxNumenatorValue: 9999,
+    preciseness: 25,
   }
-  return res;
+}
+
+let latestTarget = 0
+
+const generateTarget = (hardMode = false): number => {
+  const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY;
+  const min = VALUES[mode].minTargetValue;
+  const max = VALUES[mode].maxTargetValue;
+  latestTarget = Math.floor(Math.random() * (max - min) + min)
+  return latestTarget
+}
+
+const generateNumenator = (hardMode = false): number => {
+  const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY;
+  const min = VALUES[mode].minNumenatorValue;
+  const max = VALUES[mode].maxNumenatorValue;
+  let res = Math.floor(Math.random() * (max - min) + min)
+  while (res === latestTarget) {
+    res = Math.floor(Math.random() * (max - min) + min)
+  }
+  return res
 }
 
 interface AddCardProps {
@@ -197,17 +228,18 @@ interface AddCardProps {
   index?: number
 }
 
-const getDeckPool = (): CardType[] => {
+const getDeckPool = (hardMode = false): CardType[] => {
   const array = Array(5).fill((x: number) => x)
   const res = array.map((): CardType => {
     const result = new CardTypeEnumToClass[weightedRand<CardTypeEnum>(StartCardPool)()]({ name: '' })
-    result.setCount(generateNumenator())
+    result.setCount(generateNumenator(hardMode))
     return result
   })
   return res
 }
 
 function App() {
+  const [hardMode, setHardMode] = useState<boolean>(false)
   const [count, setCount] = useState(generateTarget())
   const [tutorialMode, setTutorialMode] = useState<boolean>(false)
   const [hp, setHp] = useState(10)
@@ -228,6 +260,8 @@ function App() {
   }, [chain])
 
   const isGameEnded = enemyHp <= 0
+  const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY;
+  const preciseness = VALUES[mode].preciseness;
 
   const handleAddCard = ({ card, index }: AddCardProps) => {
     if (!index) {
@@ -254,17 +288,17 @@ function App() {
   }
 
   const handleStartNewRound = () => {
-    setCount(generateTarget())
+    setCount(generateTarget(hardMode))
     setRound(round + 1)
     setChain([])
-    setDeck(getDeckPool())
+    setDeck(getDeckPool(hardMode))
   }
 
   const handleStartNewGame = () => {
-    setCount(generateTarget())
+    setCount(generateTarget(hardMode))
     setRound(1)
     setChain([])
-    setDeck(getDeckPool())
+    setDeck(getDeckPool(hardMode))
     setEnemyHp(10)
   }
 
@@ -274,9 +308,12 @@ function App() {
       handleStartNewRound()
       return
     }
-    if (equalizerResult > count * 0.5 && equalizerResult < count * 1.5) {
+    const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY;
+    const preciseness = VALUES[mode].preciseness / 100;
+    if (equalizerResult > count * (1 - preciseness) && equalizerResult < count * (1 + preciseness)) {
       const res = Math.round((1 - Math.abs((equalizerResult - count) / count)) * 5)
-      setEnemyHp(res)
+      console.log(res)
+      setEnemyHp(enemyHp - res)
     } else {
       setEnemyHp(enemyHp + 5)
     }
@@ -287,10 +324,27 @@ function App() {
 
   return (
     <div className='root'>
+      {tutorialMode && (<div className='sidebar'>
+        <div>
+          1. Select and click card from the bottom of the screen. Bottom of the screen is represents your HAND.
+        </div>
+        <div>
+          2. Combine your cards to achieve value as close as you can to the target. 
+        </div>
+        <div>
+          3. In order to win, you need to make correct guesses and lower points to zero.
+        </div>
+        <div>
+          4. Your value must consist {100 - preciseness}% of target's value. Otherwise points will grow, pushing away victory of the game.
+        </div>
+        <div>
+          5. To confirm your value - click on the card after equals (=) sign. 
+        </div>
+      </div>)}
       <div>
         Tutorial mode?
-        <input type='checkbox' value={tutorialMode + ''} onChange={(e) => setTutorialMode(!tutorialMode)} />
-        {tutorialMode && (<div className='tutorialText'>LABELS WITH THIS FONT ARE FOR TUTORIAL</div>)}
+        <input type='checkbox' value={tutorialMode + ''} onChange={(e) => setTutorialMode(e.target.checked)} />
+        {/* {tutorialMode && <div className='tutorialText'>LABELS WITH THIS FONT ARE FOR TUTORIAL</div>} */}
       </div>
       <div className='hps'>
         {/* <div>
@@ -332,7 +386,9 @@ function App() {
                     <div className='additionText'>=</div>
                   </div>
                   <div onClick={handleEqual} className='card'>
-                    <div className='mainText'>{equalizerResult.toString().indexOf('.') >= 0 ? equalizerResult.toFixed(2) : equalizerResult}</div>
+                    <div className='mainText'>
+                      {equalizerResult.toString().indexOf('.') >= 0 ? equalizerResult.toFixed(2) : equalizerResult}
+                    </div>
                   </div>
                 </div>
               )}
@@ -368,6 +424,10 @@ function App() {
         <div className='win'>
           <div>🥳🥳🥳</div>
           <div>You win!</div>
+          <div>
+            Hard mode?
+            <input type='checkbox' value={hardMode + ''} onChange={(e) => setHardMode(!hardMode)} />
+          </div>
           {tutorialMode && <div className='tutorialText'>PRESS THE CARD TO START NEW GAME</div>}
           <div className='card' onClick={handleStartNewGame}>
             Start new game?
