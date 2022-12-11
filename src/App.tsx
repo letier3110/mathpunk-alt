@@ -211,16 +211,28 @@ function App() {
 
   // console.log(deck)
 
-  const handleAddCard = ({ card, index = 0 }: AddCardProps) => {
-    const newArr = [...chain.slice(0, index), card, ...chain.slice(index)]
-    setChain(newArr)
-    setDeck(deck.filter((x) => x.getId() !== card.getId()))
+  const handleAddCard = ({ card, index }: AddCardProps) => {
+    if (!index) {
+      const newArr = chain.concat(card)
+      setChain(newArr)
+      setDeck(deck.filter((x) => x.getId() !== card.getId()))
+    } else {
+      const newArr = [...chain.slice(0, index), card, ...chain.slice(index)]
+      setChain(newArr)
+      setDeck(deck.filter((x) => x.getId() !== card.getId()))
+    }
   }
 
-  const handleRemoveCard = ({ card, index = 0 }: AddCardProps) => {
-    const newArr = [...deck.slice(0, index), card, ...deck.slice(index)]
-    setDeck(newArr)
-    setChain(chain.filter((x) => x.getId() !== card.getId()))
+  const handleRemoveCard = ({ card, index }: AddCardProps) => {
+    if (!index) {
+      const newArr = deck.concat(card)
+      setDeck(newArr)
+      setChain(chain.filter((x) => x.getId() !== card.getId()))
+    } else {
+      const newArr = [...deck.slice(0, index), card, ...deck.slice(index)]
+      setDeck(newArr)
+      setChain(chain.filter((x) => x.getId() !== card.getId()))
+    }
   }
 
   // const viewChain = chain.reduce<ViewChainElem[]>((a, c, i) => {
@@ -250,10 +262,10 @@ function App() {
       <div className='count'>{count}</div>
       {chain.length > 0 && (
         <div className='chain'>
-          {chain.map((x, index) => {
+          {chain.map((x) => {
             return (
               <div key={x.getId()} className='chainElem'>
-                <div onClick={() => handleRemoveCard({ card: x, index })} className='card'>
+                <div onClick={() => handleRemoveCard({ card: x })} className='card'>
                   <div className='mainText'>{x.getCount()}</div>
                 </div>
                 <div className={['cardAddition', x.getDescription()].join(' ')}>
@@ -286,7 +298,7 @@ function App() {
                 rotate: `${(rotate + index) * 10}deg`,
                 translate: `0px ${translateY * translateY * 12}px`
               }}
-              onClick={() => handleAddCard({ card: x, index })}
+              onClick={() => handleAddCard({ card: x })}
             >
               <div className='mainText'>{x.getCount()}</div>
               <div className={['addition', x.getDescription()].join(' ')}>
