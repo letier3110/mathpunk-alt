@@ -1,4 +1,4 @@
-body {
+html {
   background-color: white;
   color: black;
 }
@@ -13,7 +13,6 @@ body {
 .root {
   width: 100%;
   height: calc(100vh - 48px);
-  padding: 24px;
   display: flex;
   flex-direction: column;
 
@@ -23,7 +22,8 @@ body {
 .hps {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  justify-content: center;
   width: 100%;
 }
 
@@ -108,7 +108,7 @@ body {
 
 
 .cards {
-  margin-bottom: 120px;
+  margin-bottom: 100px;
   display: flex;
   gap: -36px;
 
@@ -135,6 +135,14 @@ body {
 .chain .chainElem:nth-last-child(2) .cardAddition {
   display: none;
   /* border: 1px solid red; */
+}
+
+.chain .chainElem .noAddition .addition {
+  display: none;
+}
+
+.chain .chainElem:nth-last-child(2) .addition {
+  display: flex;
 }
 
 .cardAddition, .addition {
@@ -180,4 +188,10 @@ body {
 .equalizer {
   background: rgb(2,0,36);
   background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+}
+
+.tutorialText {
+  font-size: 16px;
+  font-weight: bold;
+  color: red;
 }

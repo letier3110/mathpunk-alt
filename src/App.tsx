@@ -175,14 +175,21 @@ function weightedRand<T extends Indexable>(spec: Record<T, number>): () => T {
 const MIN_TARGET_VALUE = 5
 const MAX_TARGET_VALUE = 15
 
+let latestTarget = 0;
+
 const generateTarget = (): number => {
-  return Math.floor(Math.random() * (MAX_TARGET_VALUE - MIN_TARGET_VALUE) + MIN_TARGET_VALUE)
+  latestTarget = Math.floor(Math.random() * (MAX_TARGET_VALUE - MIN_TARGET_VALUE) + MIN_TARGET_VALUE);
+  return latestTarget;
 }
 
 const MIN_NUMENATOR_VALUE = 1
 const MAX_NUMENATOR_VALUE = 20
 const generateNumenator = (): number => {
-  return Math.floor(Math.random() * (MAX_NUMENATOR_VALUE - MIN_NUMENATOR_VALUE) + MIN_NUMENATOR_VALUE)
+  let res = Math.floor(Math.random() * (MAX_NUMENATOR_VALUE - MIN_NUMENATOR_VALUE) + MIN_NUMENATOR_VALUE)
+  while(res === latestTarget) {
+    res = Math.floor(Math.random() * (MAX_NUMENATOR_VALUE - MIN_NUMENATOR_VALUE) + MIN_NUMENATOR_VALUE);
+  }
+  return res;
 }
 
 interface AddCardProps {
@@ -202,6 +209,7 @@ const getDeckPool = (): CardType[] => {
 
 function App() {
   const [count, setCount] = useState(generateTarget())
+  const [tutorialMode, setTutorialMode] = useState<boolean>(false)
   const [hp, setHp] = useState(10)
   const [enemyHp, setEnemyHp] = useState(10)
   const [round, setRound] = useState<number>(1)
@@ -266,7 +274,7 @@ function App() {
       handleStartNewRound()
       return
     }
-    if(equalizerResult > count * 0.5 && equalizerResult < count * 1.5) {
+    if (equalizerResult > count * 0.5 && equalizerResult < count * 1.5) {
       const res = Math.round((1 - Math.abs((equalizerResult - count) / count)) * 5)
       setEnemyHp(res)
     } else {
@@ -275,19 +283,26 @@ function App() {
     handleStartNewRound()
   }
 
+  // console.log('value', tutorialMode)
+
   return (
     <div className='root'>
+      <div>
+        Tutorial mode?
+        <input type='checkbox' value={tutorialMode + ''} onChange={(e) => setTutorialMode(!tutorialMode)} />
+        {tutorialMode && (<div className='tutorialText'>LABELS WITH THIS FONT ARE FOR TUTORIAL</div>)}
+      </div>
       <div className='hps'>
-        <div>
+        {/* <div>
           Your points:
           {hp}
-        </div>
-        <div>
+        </div> */}
+        {/* <div>
           Round:
           {round}
-        </div>
+        </div> */}
         <div>
-          Opponent points:
+          Remaining points to beat:
           {enemyHp}
         </div>
       </div>
@@ -299,8 +314,11 @@ function App() {
               {chain.map((x) => {
                 return (
                   <div key={x.getId()} className='chainElem'>
-                    <div onClick={() => handleRemoveCard({ card: x })} className='card'>
+                    <div onClick={() => handleRemoveCard({ card: x })} className='card noAddition'>
                       <div className='mainText'>{x.getCount()}</div>
+                      <div className={['addition', x.getDescription()].join(' ')}>
+                        <div className='additionText'>{x.getName()}</div>
+                      </div>
                     </div>
                     <div className={['cardAddition', x.getDescription()].join(' ')}>
                       <div className='additionText'>{x.getName()}</div>
@@ -314,12 +332,13 @@ function App() {
                     <div className='additionText'>=</div>
                   </div>
                   <div onClick={handleEqual} className='card'>
-                    <div className='mainText'>{equalizerResult}</div>
+                    <div className='mainText'>{equalizerResult.toString().indexOf('.') >= 0 ? equalizerResult.toFixed(2) : equalizerResult}</div>
                   </div>
                 </div>
               )}
             </div>
           )}
+          {/* {tutorialMode && chain.length > 0 && (<div className='tutorialText'>CLICK ON THE CARD RESULT CARD TO APPLY IT</div>)} */}
           <div className='cards'>
             {deck.map((x, index) => {
               const translateY = Math.abs(-Math.floor(deck.length / 2) + index)
@@ -342,13 +361,17 @@ function App() {
               )
             })}
           </div>
+          {/* {tutorialMode && deck.length > 0 && <div className='tutorialText'>CLICK ON THE CARD TO PLAY IT</div>} */}
         </>
       )}
       {isGameEnded === true && (
         <div className='win'>
           <div>🥳🥳🥳</div>
           <div>You win!</div>
-          <div className='card' onClick={handleStartNewGame}>Start new game?</div>
+          {tutorialMode && <div className='tutorialText'>PRESS THE CARD TO START NEW GAME</div>}
+          <div className='card' onClick={handleStartNewGame}>
+            Start new game?
+          </div>
         </div>
       )}
     </div>
