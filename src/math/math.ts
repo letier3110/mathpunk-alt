@@ -1,94 +1,5 @@
-// /**
-//  * source
-//  * https://stackoverflow.com/questions/13077923/how-can-i-convert-a-string-into-a-math-operator-in-javascript
-//  */
-
-// // var math_it_up = {
-// //     '+': function (x, y) { return x + y },
-// //     '-': function (x, y) { return x - y }
-// // }​​​​​​​;
-// // math_it_up['+'](1, 2) == 3;
-
-// export enum MathOperations {
-//     PLUS = '+',
-//     MINUS = '-'
-// }
-
-// // class MathModule {
-// //     private string
-// //     constructor() {
-
-// //     }
-
-// // }
-
-// // export const mathModule = new MathModule();
-
-// export const math_it_up = {
-//     [MathOperations.PLUS]: function (x: number, y: number) { return x + y },
-//     [MathOperations.MINUS]: function (x: number, y: number) { return x - y }
-// }
-
-export enum CardTypeEnum {
-  DENOMINATOR,
-  SUMMATOR,
-  MULTIPLICATOR,
-  DIFFERENCATOR
-  // NUMBERATOR
-}
-
-type Indexable = string | number | symbol
-
-interface IComputable {
-  calculate(x: number, y: number): number
-}
-
-interface CardTypeProps {
-  name: string
-}
-
-interface ICardType {
-  setCount(count: number): void
-  getId(): number
-  getName(): string
-  getDescription(): string
-  getCount(): string
-}
-
-interface ViewChainElem extends ICardType {
-  isOperator: boolean
-}
-
-export class CardType implements ICardType {
-  private id: number
-  private name: string
-  private count: number
-  constructor({ name }: CardTypeProps) {
-    this.name = name
-    this.count = 0
-    this.id = Math.random() * Number.MAX_SAFE_INTEGER
-  }
-
-  setCount(count: number) {
-    this.count = count
-  }
-
-  getId() {
-    return this.id
-  }
-
-  getName() {
-    return this.count.toString()
-  }
-
-  getCount() {
-    return this.count.toString()
-  }
-
-  getDescription() {
-    return this.name
-  }
-}
+import { ArithmeticCardTypeEnum, CardType, IComputable } from "./arithmetic"
+import { FormulaeCardType, FormulaeCardTypeEnum } from "./formulae"
 
 export class Denominator extends CardType implements IComputable {
   constructor() {
@@ -167,28 +78,63 @@ export class Differencator extends CardType implements IComputable {
 //   }
 // }
 
-export const CardTypeEnumToClass: Record<CardTypeEnum, typeof CardType> = {
-  [CardTypeEnum.DENOMINATOR]: Denominator,
-  [CardTypeEnum.SUMMATOR]: Summator,
-  [CardTypeEnum.MULTIPLICATOR]: Multiplicator,
-  [CardTypeEnum.DIFFERENCATOR]: Differencator
+export class Linenator extends FormulaeCardType {
+  constructor() {
+    super({ name: 'Linenator', addition: new CardType({name: ''}) })
+  }
+
+  getName() {
+    return '(x)'
+  }
+}
+
+export class Squarerator extends FormulaeCardType {
+  constructor() {
+    super({ name: 'Squarerator', addition: new CardType({name: ''}) })
+  }
+
+  getName() {
+    return '(x^2)'
+  }
+}
+
+export class Cosinusator extends FormulaeCardType {
+  constructor() {
+    super({ name: 'Cosinusator', addition: new CardType({name: ''}) })
+  }
+
+  getName() {
+    return '(cos(x))'
+  }
+}
+
+export class Sinusator extends FormulaeCardType {
+  constructor() {
+    super({ name: 'Sinusator', addition: new CardType({name: ''}) })
+  }
+
+  getName() {
+    return '(sin(x))'
+  }
+}
+
+
+export const ArithmeticCardTypeEnumToClass: Record<ArithmeticCardTypeEnum, typeof CardType> = {
+  [ArithmeticCardTypeEnum.DENOMINATOR]: Denominator,
+  [ArithmeticCardTypeEnum.SUMMATOR]: Summator,
+  [ArithmeticCardTypeEnum.MULTIPLICATOR]: Multiplicator,
+  [ArithmeticCardTypeEnum.DIFFERENCATOR]: Differencator,
+  [ArithmeticCardTypeEnum.SWITCHER]: CardType
   // [CardTypeEnum.NUMBERATOR]: Numberator
 }
 
-// https://stackoverflow.com/questions/8435183/generate-a-weighted-random-number
-export function weightedRand<T extends Indexable>(spec: Record<T, number>): () => T {
-  const table: T[] = []
-  for (const i in spec) {
-    // The constant 10 below should be computed based on the
-    // weights in the spec for a correct and optimal table size.
-    // E.g. the spec {0:0.999, 1:0.001} will break this impl.
-    for (let j = 0; j < spec[i] * 10; j++) {
-      table.push(i)
-    }
-  }
-  return function () {
-    return table[Math.floor(Math.random() * table.length)]
-  }
+export const FormulaeCardTypeEnumToClass: Record<FormulaeCardTypeEnum, typeof FormulaeCardType> = {
+  [FormulaeCardTypeEnum.LINENATOR]: Linenator,
+  // [FormulaeCardTypeEnum.DOUBLE_LINENATOR]: Denominator,
+  [FormulaeCardTypeEnum.SQUARERATOR]: Squarerator,
+  [FormulaeCardTypeEnum.SINUSATOR]: Sinusator,
+  [FormulaeCardTypeEnum.COSINUSATOR]: Cosinusator
+  // [CardTypeEnum.NUMBERATOR]: Numberator
 }
 
 export enum DIFFICULTIES {

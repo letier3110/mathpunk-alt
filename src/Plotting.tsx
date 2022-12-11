@@ -1,24 +1,34 @@
 import { FC, useMemo, useState } from 'react'
-import { ArithmeticCardTypeEnum, CardType } from './math/arithmetic'
+import {parse} from 'mathjs'
 
 import {
   ArithmeticCardTypeEnumToClass,
   DIFFICULTIES,
   DifficultySettings,
-  GAME_MODES
+  FormulaeCardTypeEnumToClass,
+  GAME_MODES,
 } from './math/math'
-import { weightedRand } from './math/utils'
 
 import { Reroll } from './Reroll'
+import { FormulaeCardType, FormulaeCardTypeEnum } from './math/formulae'
+import { ArithmeticCardTypeEnum, CardType } from './math/arithmetic'
+import { weightedRand } from './math/utils'
 
-const StartCardPool: Record<ArithmeticCardTypeEnum, number> = {
+const StartCardPool: Record<FormulaeCardTypeEnum, number> = {
+  [FormulaeCardTypeEnum.LINENATOR]: 1,
+  [FormulaeCardTypeEnum.SQUARERATOR]: 1,
+  [FormulaeCardTypeEnum.SINUSATOR]: 1,
+  [FormulaeCardTypeEnum.COSINUSATOR]: 1
+}
+
+const StartCardAdditionsPool: Record<ArithmeticCardTypeEnum, number> = {
   [ArithmeticCardTypeEnum.DENOMINATOR]: 1,
   [ArithmeticCardTypeEnum.SUMMATOR]: 1,
   [ArithmeticCardTypeEnum.MULTIPLICATOR]: 1,
   [ArithmeticCardTypeEnum.DIFFERENCATOR]: 1,
   [ArithmeticCardTypeEnum.SWITCHER]: 0
-  // [CardTypeEnum.NUMBERATOR]: 3,
 }
+
 
 const VALUES: Record<DIFFICULTIES, DifficultySettings> = {
   [DIFFICULTIES.EASY]: {
@@ -59,34 +69,40 @@ const generateNumenator = (hardMode = false): number => {
 }
 
 interface AddCardProps {
-  card: CardType
+  card: FormulaeCardType
   index?: number
 }
 
-const getDeckPool = (hardMode = false): CardType[] => {
+const getDeckPool = (hardMode = false): FormulaeCardType[] => {
   const array = Array(5).fill((x: number) => x)
-  const res = array.map((): CardType => {
-    const result = new ArithmeticCardTypeEnumToClass[weightedRand<ArithmeticCardTypeEnum>(StartCardPool)()]({ name: '' })
-    result.setCount(generateNumenator(hardMode))
+  const res = array.map((): FormulaeCardType => {
+    const result = new FormulaeCardTypeEnumToClass[weightedRand<FormulaeCardTypeEnum>(StartCardPool)()]({ name: '', addition: new CardType({name: ''}) })
+    // result.setCount(generateNumenator(hardMode))
+    result.setAddition(new ArithmeticCardTypeEnumToClass[weightedRand<ArithmeticCardTypeEnum>(StartCardAdditionsPool)()]({ name: '' }))
     return result
   })
   return res
 }
 
-interface ArithmeticProps {
+interface PlottingProps {
   gameMode: GAME_MODES
   setGameMode: (x: GAME_MODES) => void
 }
 
-export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
+const Y_SIZE = 400;
+const Y_SCALE = 10;
+const X_SIZE = 400;
+const X_SCALE = 10;
+
+export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
   const [hardMode, setHardMode] = useState<boolean>(false)
-  const [count, setCount] = useState(generateTarget())
+  const [count, setCount] = useState('cos(x)')
   const [tutorialMode, setTutorialMode] = useState<boolean>(false)
   const [left, setLeft] = useState(3)
   const [enemyHp, setEnemyHp] = useState(10)
   const [round, setRound] = useState<number>(1)
-  const [chain, setChain] = useState<CardType[]>([])
-  const [deck, setDeck] = useState<CardType[]>(getDeckPool())
+  const [chain, setChain] = useState<FormulaeCardType[]>([])
+  const [deck, setDeck] = useState<FormulaeCardType[]>(getDeckPool())
 
   const equalizerResult: number = useMemo(() => {
     if (chain.length === 0) return 0
@@ -102,6 +118,22 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
   const isGameEnded = enemyHp <= 0
   const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY
   const preciseness = VALUES[mode].preciseness
+
+  const node2 = parse(count)
+  const code2 = node2.compile()
+  // let scope = {
+  //   x: 3,
+  // }
+  // code2.evaluate(scope)
+
+  const dots = Array(X_SIZE).fill(1).map((x,i) => i - X_SIZE / 2).map((x) => {
+    let scope = {
+      x: x / X_SCALE,
+    }
+  return `L${x + X_SIZE / 2} ${(Y_SIZE / 2) - (code2.evaluate(scope)*Y_SCALE)}`
+  })
+
+  const plotStr = [`M${dots[0].substring(1)}`, ...dots].join(' ')
 
   const handleAddCard = ({ card, index }: AddCardProps) => {
     if (!index) {
@@ -128,20 +160,20 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
   }
 
   const handleStartNewRound = () => {
-    setCount(generateTarget(hardMode))
-    setRound(round + 1)
-    setChain([])
-    setLeft(3)
-    setDeck(getDeckPool(hardMode))
+    // setCount(generateTarget(hardMode))
+    // setRound(round + 1)
+    // setChain([])
+    // setLeft(3)
+    // setDeck(getDeckPool(hardMode))
   }
 
   const handleStartNewGame = () => {
-    setCount(generateTarget(hardMode))
-    setRound(1)
-    setChain([])
-    setDeck(getDeckPool(hardMode))
-    setEnemyHp(10)
-    setLeft(3)
+    // setCount(generateTarget(hardMode))
+    // setRound(1)
+    // setChain([])
+    // setDeck(getDeckPool(hardMode))
+    // setEnemyHp(10)
+    // setLeft(3)
   }
 
   const handleReroll = () => {
@@ -152,59 +184,39 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
   }
 
   const handleEqual = () => {
-    if (equalizerResult === count) {
-      setEnemyHp(enemyHp - 5)
-      handleStartNewRound()
-      return
-    }
-    const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY
-    const preciseness = VALUES[mode].preciseness / 100
-    if (equalizerResult > count * (1 - preciseness) && equalizerResult < count * (1 + preciseness)) {
-      const res = Math.round((1 - Math.abs((equalizerResult - count) / count)) * 5)
-      console.log(res)
-      setEnemyHp(enemyHp - res)
-    } else {
-      setEnemyHp(enemyHp + 5)
-    }
-    handleStartNewRound()
+    // if (equalizerResult === count) {
+    //   setEnemyHp(enemyHp - 5)
+    //   handleStartNewRound()
+    //   return
+    // }
+    // const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY
+    // const preciseness = VALUES[mode].preciseness / 100
+    // if (equalizerResult > count * (1 - preciseness) && equalizerResult < count * (1 + preciseness)) {
+    //   const res = Math.round((1 - Math.abs((equalizerResult - count) / count)) * 5)
+    //   console.log(res)
+    //   setEnemyHp(enemyHp - res)
+    // } else {
+    //   setEnemyHp(enemyHp + 5)
+    // }
+    // handleStartNewRound()
   }
+
+  const graphConsts = [
+    `M${X_SIZE / 2} 0`,
+    `L${X_SIZE / 2} ${Y_SIZE}`,
+    `M0 ${Y_SIZE / 2}`,
+    `L${X_SIZE} ${Y_SIZE / 2}`
+  ]
 
   return (
     <>
-      <div className='header'>
-        <div className='card' onClick={() => setGameMode(GAME_MODES.PLOTTING)}>
-          Next gamemode?
+      <div className='backHeader'>
+        <div className='card' onClick={() => setGameMode(GAME_MODES.ARITHMETICS)}>
+          Prev gamemode?
         </div>
       </div>
       <div className='root'>
-        {tutorialMode && (
-          <div className='sidebar'>
-            <div>
-              1. Select and click card from the bottom of the screen. Bottom of the screen is represents your HAND.
-            </div>
-            <div>2. Combine your cards to achieve value as close as you can to the target.</div>
-            <div>3. In order to win, you need to make correct guesses and lower points to zero.</div>
-            <div>
-              4. Your value must consist {100 - preciseness}% of target's value. Otherwise points will grow, pushing
-              away victory of the game.
-            </div>
-            <div>5. To confirm your value - click on the card after equals (=) sign.</div>
-          </div>
-        )}
-        <div>
-          Tutorial mode?
-          <input type='checkbox' checked={tutorialMode} onChange={(e) => setTutorialMode(e.target.checked)} />
-          {/* {tutorialMode && <div className='tutorialText'>LABELS WITH THIS FONT ARE FOR TUTORIAL</div>} */}
-        </div>
         <div className='hps'>
-          {/* <div>
-          Your points:
-          {hp}
-        </div> */}
-          {/* <div>
-          Round:
-          {round}
-        </div> */}
           <div>
             Remaining points to beat:
             {enemyHp}
@@ -212,20 +224,32 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
         </div>
         {isGameEnded === false && (
           <>
-            <div className='count'>{count}</div>
+            <div className='plot'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                className='h-6 w-6'
+                fill='none'
+                viewBox={`0 0 ${X_SIZE} ${Y_SIZE}`}
+                stroke='currentColor'
+                strokeWidth={1}
+              >
+                <path strokeLinecap='round' strokeWidth={1} strokeOpacity={0.5} strokeLinejoin='round' d={graphConsts.join(' ')} />
+                <path strokeLinecap='round' strokeLinejoin='round' d={plotStr} />
+              </svg>
+            </div>
             {chain.length > 0 && (
               <div className='chain'>
                 {chain.map((x) => {
                   return (
                     <div key={x.getId()} className='chainElem'>
                       <div onClick={() => handleRemoveCard({ card: x })} className='card noAddition'>
-                        <div className='mainText'>{x.getCount()}</div>
-                        <div className={['addition', x.getDescription()].join(' ')}>
-                          <div className='additionText'>{x.getName()}</div>
+                        <div className='mainText'>{x.getName()}</div>
+                        <div className={['addition', x.getAddition().getDescription()].join(' ')}>
+                          <div className='additionText'>{x.getAddition().getName()}</div>
                         </div>
                       </div>
-                      <div className={['cardAddition', x.getDescription()].join(' ')}>
-                        <div className='additionText'>{x.getName()}</div>
+                      <div className={['cardAddition', x.getAddition().getDescription()].join(' ')}>
+                        <div className='additionText'>{x.getAddition().getName()}</div>
                       </div>
                     </div>
                   )
@@ -259,9 +283,9 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
                     }}
                     onClick={() => handleAddCard({ card: x })}
                   >
-                    <div className='mainText'>{x.getCount()}</div>
-                    <div className={['addition', x.getDescription()].join(' ')}>
-                      <div className='additionText'>{x.getName()}</div>
+                    <div className='mainText'>{x.getName()}</div>
+                    <div className={['addition', x.getAddition().getDescription()].join(' ')}>
+                      <div className='additionText'>{x.getAddition().getName()}</div>
                     </div>
                   </div>
                 )
@@ -285,7 +309,7 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
           </div>
         )}
       </div>
-      <Reroll left={left} handleReroll={handleReroll} />
+      {/* <Reroll left={left} handleReroll={handleReroll} /> */}
     </>
   )
 }

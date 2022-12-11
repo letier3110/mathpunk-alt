@@ -11,13 +11,14 @@ html {
 }
 
 .root {
-
   width: 100%;
   height: calc(100vh - 48px);
+
   display: flex;
   flex-direction: column;
 
   justify-content: space-between;
+  align-items: center;
 }
 
 .reroll {
@@ -43,6 +44,14 @@ html {
 
 .count {
   height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plot {
+  height: 400px;
+  width: 400px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -248,4 +257,20 @@ html {
   justify-content: space-around;
 
   z-index: 400;
+}
+
+.header {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+
+  z-index: 200;
+}
+
+.backHeader {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+
+  z-index: 200;
 }
