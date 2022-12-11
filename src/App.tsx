@@ -257,6 +257,7 @@ function App() {
     setRound(1)
     setChain([])
     setDeck(getDeckPool())
+    setEnemyHp(10)
   }
 
   const handleEqual = () => {
