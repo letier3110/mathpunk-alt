@@ -96,7 +96,7 @@ const X_SCALE = 10;
 
 export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
   const [hardMode, setHardMode] = useState<boolean>(false)
-  const [count, setCount] = useState('cos(x)')
+  const [count, setCount] = useState('-2x + ((2 * sin(x))^3)')
   const [tutorialMode, setTutorialMode] = useState<boolean>(false)
   const [left, setLeft] = useState(3)
   const [enemyHp, setEnemyHp] = useState(10)
