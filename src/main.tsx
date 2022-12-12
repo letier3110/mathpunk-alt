@@ -15,6 +15,10 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 // todo: only ones mode (1+ 1-)
 // todo: map loot
 // todo: reroll loot
-// todo: arrays of numbers and operators over them
+// todo: arrays of numbers and operators over them (1)
+// todo: (1) 🟥 + 🟩 + 🟦 = ?
 // todo: vectors and operations around vector math
 // todo: geometry mode?
+// todo: playableCards as card's names instead of numbers for first game mode
+// todo: irrational targets like √2
+// todo: complex targets like √-2 = 2i
