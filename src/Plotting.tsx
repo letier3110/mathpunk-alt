@@ -35,7 +35,7 @@ const VALUES: Record<DIFFICULTIES, DifficultySettings> = {
     maxTargetValue: 15,
     minNumenatorValue: 1,
     maxNumenatorValue: 20,
-    preciseness: 95
+    preciseness: 80
   },
   [DIFFICULTIES.HARD]: {
     minTargetValue: 2000,
@@ -125,6 +125,7 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
   const isGameEnded = enemyHp <= 0
   const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY
   const preciseness = VALUES[mode].preciseness
+  const localPreciseness = preciseness / 100
 
   // console.log('equalizerResult', equalizerResult)
 
@@ -162,15 +163,14 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
         }
         return targetEvalFunction.evaluate(scope)
       })
-    const localPreciseness = preciseness / 100
     let summ = 0
     for (let i = 0; i < checkPointsCount; i++) {
-      console.log('summ i', summ, i, playerResult[i], targetResult[i])
-      if (
-        playerResult[i] > targetResult[i] * (1 - localPreciseness) &&
-        playerResult[i] < targetResult[i] * (1 + localPreciseness)
-      ) {
-        console.log('res')
+      const lowerTarget = targetResult[i] * (1 - localPreciseness)
+      const upperTarget = targetResult[i] * (1 + localPreciseness)
+      // console.log('summ i', playerResult[i], lowerTarget, upperTarget)
+      // const max = targetResult[i] * (1 - localPreciseness) > targetResult[i] * (1 + localPreciseness) ?
+      if (Math.abs(playerResult[i]) > Math.abs(lowerTarget) && Math.abs(playerResult[i]) < Math.abs(upperTarget)) {
+        // console.log('res', Math.round((1 - Math.abs((playerResult[i] - targetResult[i]) / targetResult[i])) * 5))
         const res = Math.round((1 - Math.abs((playerResult[i] - targetResult[i]) / targetResult[i])) * 5)
         summ -= res
       } else {
@@ -178,7 +178,7 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
       }
     }
     setPrediction(summ / checkPointsCount)
-  }, [equalizerResult, count, mode, preciseness, playerEvalFunction, targetEvalFunction, setPrediction])
+  }, [equalizerResult, count, mode, localPreciseness, playerEvalFunction, targetEvalFunction, setPrediction])
 
   const targetDots = Array(X_SIZE)
     .fill(1)
@@ -188,6 +188,26 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
         x: x / X_SCALE
       }
       return `L${x + X_SIZE / 2} ${Y_SIZE / 2 - targetEvalFunction.evaluate(scope) * Y_SCALE}`
+    })
+
+  const targetLowerDots = Array(X_SIZE)
+    .fill(1)
+    .map((x, i) => i - X_SIZE / 2)
+    .map((x) => {
+      const scope = {
+        x: x / X_SCALE
+      }
+      return `L${x + X_SIZE / 2} ${Y_SIZE / 2 - targetEvalFunction.evaluate(scope) * (1 - localPreciseness) * Y_SCALE}`
+    })
+
+  const targetUpperDots = Array(X_SIZE)
+    .fill(1)
+    .map((x, i) => i - X_SIZE / 2)
+    .map((x) => {
+      const scope = {
+        x: x / X_SCALE
+      }
+      return `L${x + X_SIZE / 2} ${Y_SIZE / 2 - targetEvalFunction.evaluate(scope) * (1 + localPreciseness) * Y_SCALE}`
     })
 
   const playerDots = Array(X_SIZE)
@@ -201,6 +221,14 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
     })
 
   const targetPlotStr = [`M${targetDots[0].substring(1)}`, ...targetDots].join(' ')
+  const targetLowerPlotStr = [`M${targetLowerDots[0].substring(1)}`, ...targetLowerDots].join(' ')
+  // const targetLowerToUpperConnectionStr = `L${(targetUpperDots[0].substring(1)).split('L')[0]}`
+  // const targetLowerToUpperConnectionStr = targetUpperDots[0]
+  const targetLowerToUpperConnectionStr = ''
+  const targetUpperPlotStr = targetUpperDots.reverse().join(' ')
+  // const arr = (targetLowerDots[0].substring(1)).split('L')
+  // const targetUpperLowerEndStr = targetLowerDots[targetLowerDots.length - 1]
+  const targetUpperLowerEndStr = ''
   const playerPlotStr = [`M${playerDots[0].substring(1)}`, ...playerDots].join(' ')
 
   const handleAddCard = ({ card, index }: AddCardProps) => {
@@ -298,9 +326,11 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
                   strokeLinejoin='round'
                   d={graphConsts.join(' ')}
                 />
-                <path strokeLinecap='round' strokeLinejoin='round' d={targetPlotStr} />
+                <path strokeLinecap='round' stroke='#00aa00' opacity={0.5} strokeLinejoin='round' d={targetPlotStr} />
+                <path stroke='transparent' fill='#00ff00' opacity={0.3} d={targetLowerPlotStr + targetLowerToUpperConnectionStr + targetUpperPlotStr + targetUpperLowerEndStr} />
+                {/* <path stroke='#ff0000' strokeLinecap='round' strokeLinejoin='round' d={targetUpperPlotStr} /> */}
                 {chain.length > 0 && (
-                  <path stroke='#ff0000' strokeLinecap='round' strokeLinejoin='round' d={playerPlotStr} />
+                  <path stroke='#0000ff' strokeLinecap='round' strokeLinejoin='round' d={playerPlotStr} />
                 )}
               </svg>
             </div>
