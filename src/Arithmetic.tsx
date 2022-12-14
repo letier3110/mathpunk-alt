@@ -1,12 +1,7 @@
-import { FC, useMemo, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { ArithmeticCardTypeEnum, CardType } from './math/arithmetic'
 
-import {
-  ArithmeticCardTypeEnumToClass,
-  DIFFICULTIES,
-  DifficultySettings,
-  GAME_MODES
-} from './math/math'
+import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, DifficultySettings, GAME_MODES } from './math/math'
 import { weightedRand } from './math/utils'
 
 import { Reroll } from './Reroll'
@@ -66,7 +61,9 @@ interface AddCardProps {
 const getDeckPool = (hardMode = false): CardType[] => {
   const array = Array(5).fill((x: number) => x)
   const res = array.map((): CardType => {
-    const result = new ArithmeticCardTypeEnumToClass[weightedRand<ArithmeticCardTypeEnum>(StartCardPool)()]({ name: '' })
+    const result = new ArithmeticCardTypeEnumToClass[weightedRand<ArithmeticCardTypeEnum>(StartCardPool)()]({
+      name: ''
+    })
     result.setCount(generateNumenator(hardMode))
     return result
   })
@@ -87,6 +84,7 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
   const [round, setRound] = useState<number>(1)
   const [chain, setChain] = useState<CardType[]>([])
   const [deck, setDeck] = useState<CardType[]>(getDeckPool())
+  const [prediction, setPrediction] = useState(0)
 
   const equalizerResult: number = useMemo(() => {
     if (chain.length === 0) return 0
@@ -102,6 +100,19 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
   const isGameEnded = enemyHp <= 0
   const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY
   const preciseness = VALUES[mode].preciseness
+
+  useEffect(() => {
+    if (equalizerResult === count) {
+      setPrediction(-5)
+    }
+    const localPreciseness = preciseness / 100
+    if (equalizerResult > count * (1 - localPreciseness) && equalizerResult < count * (1 + localPreciseness)) {
+      const res = Math.round((1 - Math.abs((equalizerResult - count) / count)) * 5)
+      setPrediction(-res)
+    } else {
+      setPrediction(5)
+    }
+  }, [equalizerResult, count, mode, preciseness, setPrediction])
 
   const handleAddCard = ({ card, index }: AddCardProps) => {
     if (!index) {
@@ -128,6 +139,7 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
   }
 
   const handleStartNewRound = () => {
+    setPrediction(0)
     setCount(generateTarget(hardMode))
     setRound(round + 1)
     setChain([])
@@ -136,6 +148,7 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
   }
 
   const handleStartNewGame = () => {
+    setPrediction(0)
     setCount(generateTarget(hardMode))
     setRound(1)
     setChain([])
@@ -152,20 +165,7 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
   }
 
   const handleEqual = () => {
-    if (equalizerResult === count) {
-      setEnemyHp(enemyHp - 5)
-      handleStartNewRound()
-      return
-    }
-    const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY
-    const preciseness = VALUES[mode].preciseness / 100
-    if (equalizerResult > count * (1 - preciseness) && equalizerResult < count * (1 + preciseness)) {
-      const res = Math.round((1 - Math.abs((equalizerResult - count) / count)) * 5)
-      console.log(res)
-      setEnemyHp(enemyHp - res)
-    } else {
-      setEnemyHp(enemyHp + 5)
-    }
+    setEnemyHp(enemyHp + prediction)
     handleStartNewRound()
   }
 
@@ -208,6 +208,12 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
           <div>
             Remaining points to beat:
             {enemyHp}
+            {prediction !== 0 && chain.length > 0 && (
+              <span style={{ color: prediction > 0 ? '#ff0000' : '#00aa00' }}>
+                {' '}
+                {prediction !== 0 ? `(${prediction > 0 ? '+' : ''}${prediction})` : ''}
+              </span>
+            )}
           </div>
         </div>
         {isGameEnded === false && (
