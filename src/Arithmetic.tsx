@@ -21,7 +21,7 @@ const VALUES: Record<DIFFICULTIES, DifficultySettings> = {
     maxTargetValue: 15,
     minNumenatorValue: 1,
     maxNumenatorValue: 20,
-    preciseness: 50
+    preciseness: 50,
   },
   [DIFFICULTIES.HARD]: {
     minTargetValue: 2000,
