@@ -15,3 +15,5 @@ export function weightedRand<T extends Indexable>(spec: Record<T, number>): () =
       return table[Math.floor(Math.random() * table.length)]
     }
   }
+
+  export const formatNumber = (x: number) => x.toString().indexOf('.') >= 0 ? x.toFixed(2) : x

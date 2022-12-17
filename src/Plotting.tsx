@@ -12,7 +12,7 @@ import {
 import { Reroll } from './Reroll'
 import { FormulaeCardType, FormulaeCardTypeEnum } from './math/formulae'
 import { ArithmeticCardTypeEnum, CardType } from './math/arithmetic'
-import { weightedRand } from './math/utils'
+import { formatNumber, weightedRand } from './math/utils'
 
 const StartCardPool: Record<FormulaeCardTypeEnum, number> = {
   [FormulaeCardTypeEnum.LINENATOR]: 1,
@@ -53,7 +53,13 @@ const generateTarget = (hardMode = false): string => {
   // const min = VALUES[mode].minTargetValue
   // const max = VALUES[mode].maxTargetValue
   // latestTarget = Math.floor(Math.random() * (max - min) + min)
-  return '-2x + sin(x)'
+  const deck = getDeckPool({poolSize: 3})
+  const strResult = deck.reduce(
+    (a, p, i) => a.concat(p.getName().toString(), i === deck.length - 1 ? '' : p.getAddition().getName()),
+    ''
+  )
+  // const strResult = '-2x + sin(x)'
+  return strResult;
 }
 
 const generateNumenator = (hardMode = false): number => {
@@ -72,8 +78,14 @@ interface AddCardProps {
   index?: number
 }
 
-const getDeckPool = (hardMode = false): FormulaeCardType[] => {
-  const array = Array(5).fill((x: number) => x)
+interface GetDeckPoolProps {
+  hardmode?: boolean
+  poolSize?: number
+}
+
+const getDeckPool = (props: GetDeckPoolProps): FormulaeCardType[] => {
+  const { poolSize = 5 } = props
+  const array = Array(poolSize).fill((x: number) => x)
   const res = array.map((): FormulaeCardType => {
     const result = new FormulaeCardTypeEnumToClass[weightedRand<FormulaeCardTypeEnum>(StartCardPool)()]({
       name: '',
@@ -106,7 +118,7 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
   const [enemyHp, setEnemyHp] = useState(10)
   // const [round, setRound] = useState<number>(1)
   const [chain, setChain] = useState<FormulaeCardType[]>([])
-  const [deck, setDeck] = useState<FormulaeCardType[]>(getDeckPool())
+  const [deck, setDeck] = useState<FormulaeCardType[]>(getDeckPool({}))
   const [prediction, setPrediction] = useState(0)
 
   const equalizerResult: string = useMemo(() => {
@@ -261,7 +273,7 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
     // setRound(round + 1)
     setChain([])
     setLeft(3)
-    setDeck(getDeckPool(hardMode))
+    setDeck(getDeckPool({ hardmode: hardMode }))
   }
 
   const handleStartNewGame = () => {
@@ -269,7 +281,7 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
     setCount(generateTarget())
     // setRound(1)
     setChain([])
-    setDeck(getDeckPool(hardMode))
+    setDeck(getDeckPool({ hardmode: hardMode }))
     setEnemyHp(10)
     setLeft(3)
   }
@@ -277,7 +289,7 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
   const handleReroll = () => {
     if (left > 0) {
       setLeft(left - 1)
-      setDeck(getDeckPool(hardMode))
+      setDeck(getDeckPool({ hardmode: hardMode }))
     }
   }
 
@@ -299,7 +311,7 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
         <div className='hps'>
           <div>
             Remaining points to beat:
-            {enemyHp}
+            {formatNumber(enemyHp)}
             {prediction !== 0 && chain.length > 0 && (
               <span style={{ color: prediction > 0 ? '#ff0000' : '#00aa00' }}>
                 {' '}
@@ -327,7 +339,12 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
                   d={graphConsts.join(' ')}
                 />
                 <path strokeLinecap='round' stroke='#00aa00' opacity={0.5} strokeLinejoin='round' d={targetPlotStr} />
-                <path stroke='transparent' fill='#00ff00' opacity={0.3} d={targetLowerPlotStr + targetLowerToUpperConnectionStr + targetUpperPlotStr + targetUpperLowerEndStr} />
+                <path
+                  stroke='transparent'
+                  fill='#00ff00'
+                  opacity={0.3}
+                  d={targetLowerPlotStr + targetLowerToUpperConnectionStr + targetUpperPlotStr + targetUpperLowerEndStr}
+                />
                 {/* <path stroke='#ff0000' strokeLinecap='round' strokeLinejoin='round' d={targetUpperPlotStr} /> */}
                 {chain.length > 0 && (
                   <path stroke='#0000ff' strokeLinecap='round' strokeLinejoin='round' d={playerPlotStr} />
