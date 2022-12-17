@@ -5,6 +5,7 @@ import { Plotting } from './components/Plotting/Plotting'
 import { GAME_MODES } from './math/math'
 
 import './App.css'
+import { PlottingProvider } from './components/Plotting/Plotting.constate'
 
 function App() {
   const [gameMode, setGameMode] = useState<GAME_MODES>(GAME_MODES.ARITHMETICS)
@@ -22,7 +23,9 @@ function App() {
           display: gameMode === GAME_MODES.PLOTTING ? 'block' : 'none'
         }}
       >
-        <Plotting gameMode={gameMode} setGameMode={setGameMode} />
+        <PlottingProvider>
+          <Plotting gameMode={gameMode} setGameMode={setGameMode} />
+        </PlottingProvider>
       </div>
     </>
   )

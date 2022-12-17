@@ -1,5 +1,4 @@
 import { FC, useMemo, useState } from 'react'
-import { parse } from 'mathjs'
 
 import {
   GAME_MODES
@@ -12,6 +11,7 @@ import { FunctionalTypeView } from '../FunctionalTypeView/FunctionalTypeView'
 import { X_SIZE, Y_SIZE } from './Plottings.data'
 import { useGraph } from './useGraph.hook'
 import { generateTargetPlotting, getDeckPoolPlotting } from './Plotting.utils'
+import { usePlottingContext } from './Plotting.constate'
 
 interface PlottingProps {
   gameMode: GAME_MODES
@@ -30,8 +30,7 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
   const [left, setLeft] = useState(3)
   const [enemyHp, setEnemyHp] = useState(10)
   // const [round, setRound] = useState<number>(1)
-  const [chain, setChain] = useState<FormulaeCardType[]>([])
-  const [deck, setDeck] = useState<FormulaeCardType[]>(getDeckPoolPlotting({}))
+  const {chain, deck, setDeck, setChain} = usePlottingContext();
 
   const equalizerResult: string = useMemo(() => {
     // console.log('return 0', 0)
@@ -64,13 +63,6 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
     equalizerResult,
     hardMode
   })
-
-  // console.log('equalizerResult', equalizerResult)
-
-  const mathTargetNode = parse(count)
-  const targetEvalFunction = mathTargetNode.compile()
-  const mathPlayerNode = parse(equalizerResult)
-  const playerEvalFunction = mathPlayerNode.compile()
 
   const handleAddCard = ({ card, index }: AddCardProps) => {
     if (!index) {
@@ -182,19 +174,15 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
                 {chain.map((x) => {
                   return (
                     <div key={x.getId()} className='chainElem'>
-                      <div onClick={() => handleRemoveCard({ card: x })} className='card noAddition'>
-                        <div className='mainText'>{x.getName()}</div>
-                        <div className={['addition', x.getAddition().getDescription()].join(' ')}>
-                          <div className='additionText'>{x.getAddition().getName()}</div>
-                        </div>
-                      </div>
-                      <div className={['cardAddition', x.getAddition().getDescription()].join(' ')}>
-                        <div className='additionText'>{x.getAddition().getName()}</div>
-                      </div>
+                      <FunctionalTypeView
+                        card={x}
+                        showPreview
+                        className='card noAddition'
+                        handleCardClick={() => handleRemoveCard({ card: x })}
+                      />
                     </div>
                   )
                 })}
-                <div></div>
                 {chain.length > 0 && (
                   <div className='chainResultElem'>
                     <div className={['cardAddition', 'equalizer'].join(' ')}>
@@ -226,24 +214,6 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
                 )
               })}
             </div>
-            {/* <div className='cards'>
-              {deck.map((x, index) => {
-                const translateY = Math.abs(-Math.floor(deck.length / 2) + index)
-                const rotate = -Math.floor(deck.length / 2)
-                const style = {
-                  rotate: `${(rotate + index) * 10}deg`,
-                  translate: `0px ${translateY * translateY * 12}px`
-                }
-                return (
-                  <CardTypeView
-                    key={x.getId()}
-                    card={x}
-                    style={style}
-                    handleCardClick={() => handleAddCard({ card: x })}
-                  />
-                )
-              })}
-            </div> */}
             {/* {tutorialMode && deck.length > 0 && <div className='tutorialText'>CLICK ON THE CARD TO PLAY IT</div>} */}
           </>
         )}

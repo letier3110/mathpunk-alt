@@ -5,6 +5,7 @@ interface AdditionViewProps {
   className?: string
   card: CardType
   showPreview?: boolean
+  interactive?: boolean
   style?: CSSProperties
   handleAdditionClick?: () => void
 }
@@ -12,6 +13,7 @@ interface AdditionViewProps {
 export const AdditionView: FC<AdditionViewProps> = ({
   card,
   showPreview = false,
+  interactive = false,
   className = '',
   style = {},
   handleAdditionClick
@@ -27,7 +29,7 @@ export const AdditionView: FC<AdditionViewProps> = ({
 
   return (
     <div
-      className={[showPreview ? 'cardAddition' : 'addition', description, className].join(' ')}
+      className={[showPreview ? 'cardAddition' : 'addition', !interactive ? 'noDrop' : 'activeCardAddition', description, className].join(' ')}
       style={style}
       onClick={handleClick}
     >

@@ -1,4 +1,5 @@
 import { ArithmeticCardTypeEnum, CardType } from "../../math/arithmetic"
+import { FNumberator } from "../../math/FNumberator"
 import { FormulaeCardType, FormulaeCardTypeEnum } from "../../math/formulae"
 import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, FormulaeCardTypeEnumToClass } from "../../math/math"
 import { Switcher } from "../../math/Switcher"
@@ -57,13 +58,16 @@ export const getDeckPoolPlotting = (props: GetDeckPoolProps): FormulaeCardType[]
   const { hardMode = false, poolSize = 5 } = props
   const array = Array(poolSize).fill((x: number) => x)
   const res = array.map((): FormulaeCardType => {
-    const functionalClass = weightedRand<FormulaeCardTypeEnum>(PlottingStartCardPool)()
+    const functionalClassEnum = weightedRand<FormulaeCardTypeEnum>(PlottingStartCardPool)
+    const functionalClass = functionalClassEnum()
     const result = new FormulaeCardTypeEnumToClass[functionalClass]({
       name: '',
       addition: new CardType({ name: '' })
     })
     // result.setCount(generateNumenator(hardMode))
-    if (functionalClass === FormulaeCardTypeEnum.F_NUMBERATOR) {
+    // console.log('plotting class', result, functionalClass, result instanceof FNumberator)
+    if (result instanceof FNumberator) {
+      // console.log('f_numberator')
       result.setCount(generateNumenator(hardMode));
       
       const additionClass = new Switcher()

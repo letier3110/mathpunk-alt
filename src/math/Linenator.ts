@@ -7,6 +7,6 @@ export class Linenator extends FormulaeCardType {
   }
 
   getName() {
-    return '(x)'
+    return 'x'
   }
 }

@@ -384,6 +384,11 @@ complex.js@^2.1.1:
   resolved "https://registry.yarnpkg.com/complex.js/-/complex.js-2.1.1.tgz#0675dac8e464ec431fb2ab7d30f41d889fb25c31"
   integrity sha512-8njCHOTtFFLtegk6zQo0kkVX1rngygb/KQI6z1qZxlFI3scluC+LVTCFbrkWjBv4vvLlbQ9t88IPMC6k95VTTg==
 
+constate@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/constate/-/constate-3.3.2.tgz#a6cd2f3c203da2cb863f47d22a330b833936c449"
+  integrity sha512-ZnEWiwU6QUTil41D5EGpA7pbqAPGvnR9kBjko8DzVIxpC60mdNKrP568tT5WLJPAxAOtJqJw60+h79ot/Uz1+Q==
+
 convert-source-map@^1.7.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/convert-source-map/-/convert-source-map-1.9.0.tgz#7faae62353fb4213366d0ca98358d22e8368b05f"

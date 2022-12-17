@@ -9,8 +9,8 @@ export const VALUES_PLOTTING: Record<DIFFICULTIES, DifficultySettings> = {
   [DIFFICULTIES.EASY]: {
     minTargetValue: 5,
     maxTargetValue: 15,
-    minNumenatorValue: 1,
-    maxNumenatorValue: 5,
+    minNumenatorValue: 2,
+    maxNumenatorValue: 8,
     preciseness: 80
   },
   [DIFFICULTIES.HARD]: {

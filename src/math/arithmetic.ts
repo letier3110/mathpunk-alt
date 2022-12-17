@@ -13,7 +13,12 @@ export interface IComputable {
 
 export interface IChangable<T> {
   getChangableState(): T;
+  getNextPossibleValue(): T;
   setChangableState(value: T): void;
+}
+
+export function instanceOfChangable<T>(object: any): object is IChangable<T> {
+  return 'getChangableState' in object;
 }
 
 interface CardTypeProps {
@@ -57,4 +62,11 @@ export class CardType implements ICardType {
   getDescription() {
     return this.name
   }
+}
+
+export enum SwitcherValue {
+  DENOMINATOR,
+  MULTIPLICATOR,
+  SUMMATOR,
+  DIFFERENCATOR
 }

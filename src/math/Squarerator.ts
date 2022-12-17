@@ -7,6 +7,6 @@ export class Squarerator extends FormulaeCardType {
   }
 
   getName() {
-    return '(x^2)'
+    return 'x^(2)'
   }
 }

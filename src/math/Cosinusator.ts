@@ -7,6 +7,6 @@ export class Cosinusator extends FormulaeCardType {
   }
 
   getName() {
-    return '(cos(x))'
+    return 'cos(x)'
   }
 }

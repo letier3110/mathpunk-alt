@@ -7,6 +7,6 @@ export class Sinusator extends FormulaeCardType {
   }
 
   getName() {
-    return '(sin(x))'
+    return 'sin(x)'
   }
 }
