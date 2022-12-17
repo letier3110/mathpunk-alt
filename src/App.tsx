@@ -21,7 +21,7 @@ function App() {
       >
         <Tutorial gameMode={gameMode} setGameMode={setGameMode} />
       </div>
-      {/* <div
+      <div
         style={{
           display: gameMode === GAME_MODES.ARITHMETICS ? 'block' : 'none'
         }}
@@ -36,7 +36,7 @@ function App() {
         <PlottingProvider>
           <Plotting gameMode={gameMode} setGameMode={setGameMode} />
         </PlottingProvider>
-      </div> */}
+      </div>
     </>
   )
 }

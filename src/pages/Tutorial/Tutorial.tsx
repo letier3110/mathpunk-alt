@@ -71,6 +71,7 @@ export const Tutorial: FC<TutorialProps> = ({ gameMode, setGameMode }) => {
   }
 
   const handleEqual = () => {
+    setGameMode(GAME_MODES.ARITHMETICS)
     // setEnemyHp(enemyHp + prediction)
     // handleStartNewRound()
   }
