@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import { AdditionView } from '../../components/AdditionView/AdditionView'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
 import { CardTypeView } from '../../components/CardTypeView/CardTypeView'
@@ -34,7 +34,19 @@ export const Tutorial: FC<TutorialProps> = ({ gameMode, setGameMode }) => {
   const [chain, setChain] = useState<CardType[]>([])
   const [deck, setDeck] = useState<CardType[]>(initialDeckStepPlus)
 
+  const equalizerResult: number = useMemo(() => {
+    if (chain.length === 0) return 0
+    if (chain.length === 1) return Number(chain[0].getCount())
+    const strResult = chain.reduce(
+      (a, p, i) => a.concat(p.getCount().toString(), i === chain.length - 1 ? '' : '+'),
+      ''
+    )
+    const result: number = eval(strResult)
+    return result
+  }, [chain])
+
   const handleAddCard = ({ card, index }: AddCardProps) => {
+    if(chain.length === 2) return;
     if (!index) {
       const newArr = chain.concat(card)
       setChain(newArr)
@@ -56,6 +68,11 @@ export const Tutorial: FC<TutorialProps> = ({ gameMode, setGameMode }) => {
       setDeck(newArr)
       setChain(chain.filter((x) => x.getId() !== card.getId()))
     }
+  }
+
+  const handleEqual = () => {
+    // setEnemyHp(enemyHp + prediction)
+    // handleStartNewRound()
   }
 
   return (
@@ -93,6 +110,18 @@ export const Tutorial: FC<TutorialProps> = ({ gameMode, setGameMode }) => {
             />
           ) : (
             <CardTypeView card={new Numberator()} noAddition className='cardPlace noAddition' />
+          )}
+          {chain.length === 2 && (
+            <div className='chainResultElem'>
+              <div className={['cardAddition', 'equalizer'].join(' ')}>
+                <div className='additionText'>=</div>
+              </div>
+              <div onClick={handleEqual} className='card'>
+                <div className='mainText'>
+                  {equalizerResult.toString().indexOf('.') >= 0 ? equalizerResult.toFixed(2) : equalizerResult}
+                </div>
+              </div>
+            </div>
           )}
         </div>
         <CardsHand>
