@@ -62,6 +62,10 @@ export class CardType implements ICardType {
   getDescription() {
     return this.name
   }
+
+  getIsInteractive() {
+    return false;
+  }
 }
 
 export enum SwitcherValue {

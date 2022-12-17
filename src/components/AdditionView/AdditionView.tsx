@@ -27,13 +27,21 @@ export const AdditionView: FC<AdditionViewProps> = ({
     }
   }
 
+  const previewClass = showPreview ? 'cardAddition' : 'addition'
+  const noDropClass = showPreview ? (!interactive ? 'noDrop' : 'activeCardAddition') : ''
+  const interactiveClass = card.getIsInteractive() ? 'additionAnim' : ''
+
   return (
-    <div
-      className={[showPreview ? 'cardAddition' : 'addition', !interactive ? 'noDrop' : 'activeCardAddition', description, className].join(' ')}
-      style={style}
-      onClick={handleClick}
-    >
-      <div className='additionText'>{name}</div>
+    <div className={[previewClass, noDropClass, description, interactiveClass, className].join(' ')} style={style} onClick={handleClick}>
+      {/* {card.getIsInteractive() && (
+        <div className='additionalAnimWrapper'>
+          <div className='additionAnim'></div>
+          <div className='additionAnim'></div>
+          <div className='additionAnim'></div>
+          <div className='additionAnim'></div>
+        </div>
+      )} */}
+      <div className={['additionText'].join(' ')}>{name}</div>
     </div>
   )
 }

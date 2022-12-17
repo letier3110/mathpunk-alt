@@ -42,6 +42,24 @@ export class Switcher extends CardType implements IComputable, IChangable<Switch
     }
   }
 
+  getDescription() {
+    switch (this.getChangableState()) {
+      case SwitcherValue.SUMMATOR:
+        return 'Summator'
+      case SwitcherValue.MULTIPLICATOR:
+        return 'Multiplicator'
+      case SwitcherValue.DIFFERENCATOR:
+        return 'Differencator'
+      case SwitcherValue.DENOMINATOR:
+      default:
+        return 'Denominator'
+    }
+  }
+
+  getIsInteractive() {
+    return true;
+  }
+
   calculate(x: number, y: number): number {
     return x - y
   }
