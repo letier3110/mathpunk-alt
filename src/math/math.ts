@@ -35,6 +35,7 @@ export enum DIFFICULTIES {
 }
 
 export enum GAME_MODES {
+  TUTORIAL = 'tutorial',
   ARITHMETICS = 'arithmetic',
   PLOTTING = 'plotting'
 }

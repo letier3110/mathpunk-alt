@@ -3,7 +3,7 @@ import { instanceOfChangable, SwitcherValue } from '../../math/arithmetic'
 import { FormulaeCardType } from '../../math/formulae'
 import { Switcher } from '../../math/Switcher'
 import { AdditionView } from '../AdditionView/AdditionView'
-import { usePlottingContext } from '../Plotting/Plotting.constate'
+import { usePlottingContext } from '../../pages/Plotting/Plotting.constate'
 
 interface FunctionalTypeViewProps {
   className?: string

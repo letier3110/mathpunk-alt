@@ -1,17 +1,16 @@
 import { FC, useMemo, useState } from 'react'
 
-import {
-  GAME_MODES
-} from '../../math/math'
+import { GAME_MODES } from '../../math/math'
 
 import { Reroll } from '../../Reroll'
 import { FormulaeCardType } from '../../math/formulae'
 import { formatNumber } from '../../math/utils'
-import { FunctionalTypeView } from '../FunctionalTypeView/FunctionalTypeView'
+import { FunctionalTypeView } from '../../components/FunctionalTypeView/FunctionalTypeView'
 import { X_SIZE, Y_SIZE } from './Plottings.data'
 import { useGraph } from './useGraph.hook'
 import { generateTargetPlotting, getDeckPoolPlotting } from './Plotting.utils'
 import { usePlottingContext } from './Plotting.constate'
+import { CardsHand } from '../../components/CardsHand/CardsHand'
 
 interface PlottingProps {
   gameMode: GAME_MODES
@@ -30,7 +29,7 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
   const [left, setLeft] = useState(3)
   const [enemyHp, setEnemyHp] = useState(10)
   // const [round, setRound] = useState<number>(1)
-  const {chain, deck, setDeck, setChain} = usePlottingContext();
+  const { chain, deck, setDeck, setChain } = usePlottingContext()
 
   const equalizerResult: string = useMemo(() => {
     // console.log('return 0', 0)
@@ -196,24 +195,11 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
               </div>
             )}
             {/* {tutorialMode && chain.length > 0 && (<div className='tutorialText'>CLICK ON THE CARD RESULT CARD TO APPLY IT</div>)} */}
-            <div className='cards'>
-              {deck.map((x, index) => {
-                const translateY = Math.abs(-Math.floor(deck.length / 2) + index)
-                const rotate = -Math.floor(deck.length / 2)
-                const style = {
-                  rotate: `${(rotate + index) * 10}deg`,
-                  translate: `0px ${translateY * translateY * 12}px`
-                }
-                return (
-                  <FunctionalTypeView
-                    key={x.getId()}
-                    card={x}
-                    style={style}
-                    handleCardClick={() => handleAddCard({ card: x })}
-                  />
-                )
-              })}
-            </div>
+            <CardsHand>
+              {deck.map((x) => (
+                <FunctionalTypeView key={x.getId()} card={x} handleCardClick={() => handleAddCard({ card: x })} />
+              ))}
+            </CardsHand>
             {/* {tutorialMode && deck.length > 0 && <div className='tutorialText'>CLICK ON THE CARD TO PLAY IT</div>} */}
           </>
         )}

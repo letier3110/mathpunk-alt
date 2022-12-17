@@ -1,0 +1,62 @@
+import { ArithmeticCardTypeEnum, CardType } from "../../math/arithmetic"
+import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, DifficultySettings } from "../../math/math"
+import { weightedRand } from "../../math/utils"
+
+const StartCardPool: Record<ArithmeticCardTypeEnum, number> = {
+  [ArithmeticCardTypeEnum.DENOMINATOR]: 1,
+  [ArithmeticCardTypeEnum.SUMMATOR]: 1,
+  [ArithmeticCardTypeEnum.MULTIPLICATOR]: 1,
+  [ArithmeticCardTypeEnum.DIFFERENCATOR]: 1,
+  [ArithmeticCardTypeEnum.SWITCHER]: 0
+  // [CardTypeEnum.NUMBERATOR]: 3,
+}
+
+export const ARITHMETIC_VALUES: Record<DIFFICULTIES, DifficultySettings> = {
+  [DIFFICULTIES.EASY]: {
+    minTargetValue: 5,
+    maxTargetValue: 15,
+    minNumenatorValue: 1,
+    maxNumenatorValue: 20,
+    preciseness: 50
+  },
+  [DIFFICULTIES.HARD]: {
+    minTargetValue: 2000,
+    maxTargetValue: 8000,
+    minNumenatorValue: 100,
+    maxNumenatorValue: 999,
+    preciseness: 25
+  }
+}
+
+let latestTarget = 0
+
+export const generateTargetArithmetic = (hardMode = false): number => {
+  const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY
+  const min = ARITHMETIC_VALUES[mode].minTargetValue
+  const max = ARITHMETIC_VALUES[mode].maxTargetValue
+  latestTarget = Math.floor(Math.random() * (max - min) + min)
+  return latestTarget
+}
+
+export const generateNumenator = (hardMode = false): number => {
+  const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY
+  const min = ARITHMETIC_VALUES[mode].minNumenatorValue
+  const max = ARITHMETIC_VALUES[mode].maxNumenatorValue
+  let res = Math.floor(Math.random() * (max - min) + min)
+  while (res === latestTarget) {
+    res = Math.floor(Math.random() * (max - min) + min)
+  }
+  return res
+}
+
+export const getDeckPoolArithmetic = (hardMode = false): CardType[] => {
+  const array = Array(5).fill((x: number) => x)
+  const res = array.map((): CardType => {
+    const result = new ArithmeticCardTypeEnumToClass[weightedRand<ArithmeticCardTypeEnum>(StartCardPool)()]({
+      name: ''
+    })
+    result.setCount(generateNumenator(hardMode))
+    return result
+  })
+  return res
+}

@@ -6,6 +6,7 @@ interface CardTypeViewProps {
   className?: string
   card: CardType
   showPreview?: boolean
+  noAddition?: boolean
   style?: CSSProperties
   handleCardClick?: () => void
 }
@@ -13,6 +14,7 @@ interface CardTypeViewProps {
 export const CardTypeView: FC<CardTypeViewProps> = ({
   card,
   showPreview = false,
+  noAddition = false,
   className = 'card',
   style = {},
   handleCardClick
@@ -31,9 +33,9 @@ export const CardTypeView: FC<CardTypeViewProps> = ({
     <>
       <div onClick={handleClick} style={style} className={className}>
         <div className='mainText'>{count}</div>
-        <AdditionView card={card} />
+        {noAddition === false && (<AdditionView card={card} />)}
       </div>
-      {showPreview && <AdditionView card={card} showPreview />}
+      {noAddition === false && showPreview && <AdditionView card={card} showPreview />}
     </>
   )
 }

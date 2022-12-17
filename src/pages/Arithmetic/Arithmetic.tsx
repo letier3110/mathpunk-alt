@@ -1,74 +1,17 @@
 import { FC, useEffect, useMemo, useState } from 'react'
-import { CardTypeView } from '../CardTypeView/CardTypeView'
+import { CardsHand } from '../../components/CardsHand/CardsHand'
+import { CardTypeView } from '../../components/CardTypeView/CardTypeView'
 import { ArithmeticCardTypeEnum, CardType } from '../../math/arithmetic'
 
 import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, DifficultySettings, GAME_MODES } from '../../math/math'
 import { weightedRand } from '../../math/utils'
 
 import { Reroll } from '../../Reroll'
-
-const StartCardPool: Record<ArithmeticCardTypeEnum, number> = {
-  [ArithmeticCardTypeEnum.DENOMINATOR]: 1,
-  [ArithmeticCardTypeEnum.SUMMATOR]: 1,
-  [ArithmeticCardTypeEnum.MULTIPLICATOR]: 1,
-  [ArithmeticCardTypeEnum.DIFFERENCATOR]: 1,
-  [ArithmeticCardTypeEnum.SWITCHER]: 0
-  // [CardTypeEnum.NUMBERATOR]: 3,
-}
-
-const VALUES: Record<DIFFICULTIES, DifficultySettings> = {
-  [DIFFICULTIES.EASY]: {
-    minTargetValue: 5,
-    maxTargetValue: 15,
-    minNumenatorValue: 1,
-    maxNumenatorValue: 20,
-    preciseness: 50
-  },
-  [DIFFICULTIES.HARD]: {
-    minTargetValue: 2000,
-    maxTargetValue: 8000,
-    minNumenatorValue: 100,
-    maxNumenatorValue: 999,
-    preciseness: 25
-  }
-}
-
-let latestTarget = 0
-
-const generateTarget = (hardMode = false): number => {
-  const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY
-  const min = VALUES[mode].minTargetValue
-  const max = VALUES[mode].maxTargetValue
-  latestTarget = Math.floor(Math.random() * (max - min) + min)
-  return latestTarget
-}
-
-const generateNumenator = (hardMode = false): number => {
-  const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY
-  const min = VALUES[mode].minNumenatorValue
-  const max = VALUES[mode].maxNumenatorValue
-  let res = Math.floor(Math.random() * (max - min) + min)
-  while (res === latestTarget) {
-    res = Math.floor(Math.random() * (max - min) + min)
-  }
-  return res
-}
+import { ARITHMETIC_VALUES, generateTargetArithmetic, getDeckPoolArithmetic } from './Arithmetic.utils'
 
 interface AddCardProps {
   card: CardType
   index?: number
-}
-
-const getDeckPool = (hardMode = false): CardType[] => {
-  const array = Array(5).fill((x: number) => x)
-  const res = array.map((): CardType => {
-    const result = new ArithmeticCardTypeEnumToClass[weightedRand<ArithmeticCardTypeEnum>(StartCardPool)()]({
-      name: ''
-    })
-    result.setCount(generateNumenator(hardMode))
-    return result
-  })
-  return res
 }
 
 interface ArithmeticProps {
@@ -78,13 +21,13 @@ interface ArithmeticProps {
 
 export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
   const [hardMode, setHardMode] = useState<boolean>(false)
-  const [count, setCount] = useState(generateTarget())
+  const [count, setCount] = useState(generateTargetArithmetic())
   const [tutorialMode, setTutorialMode] = useState<boolean>(false)
   const [left, setLeft] = useState(3)
   const [enemyHp, setEnemyHp] = useState(10)
   const [round, setRound] = useState<number>(1)
   const [chain, setChain] = useState<CardType[]>([])
-  const [deck, setDeck] = useState<CardType[]>(getDeckPool())
+  const [deck, setDeck] = useState<CardType[]>(getDeckPoolArithmetic())
   const [prediction, setPrediction] = useState(0)
 
   const equalizerResult: number = useMemo(() => {
@@ -100,7 +43,7 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
 
   const isGameEnded = enemyHp <= 0
   const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY
-  const preciseness = VALUES[mode].preciseness
+  const preciseness = ARITHMETIC_VALUES[mode].preciseness
 
   useEffect(() => {
     if (equalizerResult === count) {
@@ -141,19 +84,19 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
 
   const handleStartNewRound = () => {
     setPrediction(0)
-    setCount(generateTarget(hardMode))
+    setCount(generateTargetArithmetic(hardMode))
     setRound(round + 1)
     setChain([])
     setLeft(3)
-    setDeck(getDeckPool(hardMode))
+    setDeck(getDeckPoolArithmetic(hardMode))
   }
 
   const handleStartNewGame = () => {
     setPrediction(0)
-    setCount(generateTarget(hardMode))
+    setCount(generateTargetArithmetic(hardMode))
     setRound(1)
     setChain([])
-    setDeck(getDeckPool(hardMode))
+    setDeck(getDeckPoolArithmetic(hardMode))
     setEnemyHp(10)
     setLeft(3)
   }
@@ -161,7 +104,7 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
   const handleReroll = () => {
     if (left > 0) {
       setLeft(left - 1)
-      setDeck(getDeckPool(hardMode))
+      setDeck(getDeckPoolArithmetic(hardMode))
     }
   }
 
@@ -224,12 +167,12 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
               <div className='chain'>
                 {chain.map((x) => (
                   <div key={x.getId()} className='chainElem'>
-                  <CardTypeView
-                    card={x}
-                    showPreview
-                    className='card noAddition'
-                    handleCardClick={() => handleRemoveCard({ card: x })}
-                  />
+                    <CardTypeView
+                      card={x}
+                      showPreview
+                      className='card noAddition'
+                      handleCardClick={() => handleRemoveCard({ card: x })}
+                    />
                   </div>
                 ))}
                 {chain.length > 0 && (
@@ -247,24 +190,11 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
               </div>
             )}
             {/* {tutorialMode && chain.length > 0 && (<div className='tutorialText'>CLICK ON THE CARD RESULT CARD TO APPLY IT</div>)} */}
-            <div className='cards'>
-              {deck.map((x, index) => {
-                const translateY = Math.abs(-Math.floor(deck.length / 2) + index)
-                const rotate = -Math.floor(deck.length / 2)
-                const style = {
-                  rotate: `${(rotate + index) * 10}deg`,
-                  translate: `0px ${translateY * translateY * 12}px`
-                }
-                return (
-                  <CardTypeView
-                    key={x.getId()}
-                    card={x}
-                    style={style}
-                    handleCardClick={() => handleAddCard({ card: x })}
-                  />
-                )
-              })}
-            </div>
+            <CardsHand>
+              {deck.map((x) => (
+                <CardTypeView key={x.getId()} card={x} handleCardClick={() => handleAddCard({ card: x })} />
+              ))}
+            </CardsHand>
             {/* {tutorialMode && deck.length > 0 && <div className='tutorialText'>CLICK ON THE CARD TO PLAY IT</div>} */}
           </>
         )}
