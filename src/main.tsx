@@ -9,6 +9,10 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   </React.StrictMode>
 )
 
+// todo: tutorial - introduce to player + - * / and give him this mechs
+// todo: implement second hand, that will be under the table
+// todo: implement inventory, the will be under second hand
+// 
 // todo: taylor series ∞∑n=1−4[(2n−3)!!] 2(2n−3)(2n−1)! as cards
 // todo: taylor series as targets
 // todo: selectable operator
