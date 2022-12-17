@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-import { Arithmetic } from './Arithmetic'
-import { Plotting } from './Plotting'
+import { Arithmetic } from './components/Arithmetic/Arithmetic'
+import { Plotting } from './components/Plotting/Plotting'
 import { GAME_MODES } from './math/math'
 
 import './App.css'

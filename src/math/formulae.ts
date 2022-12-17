@@ -4,7 +4,8 @@ export enum FormulaeCardTypeEnum {
   LINENATOR,
   SQUARERATOR,
   SINUSATOR,
-  COSINUSATOR
+  COSINUSATOR,
+  F_NUMBERATOR
 }
 
 interface FormulaeCardTypeProps {

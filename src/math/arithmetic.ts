@@ -11,6 +11,11 @@ export interface IComputable {
   calculate(x: number, y: number): number
 }
 
+export interface IChangable<T> {
+  getChangableState(): T;
+  setChangableState(value: T): void;
+}
+
 interface CardTypeProps {
   name: string
 }

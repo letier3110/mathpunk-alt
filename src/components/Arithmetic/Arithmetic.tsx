@@ -1,10 +1,11 @@
 import { FC, useEffect, useMemo, useState } from 'react'
-import { ArithmeticCardTypeEnum, CardType } from './math/arithmetic'
+import { CardTypeView } from '../CardTypeView/CardTypeView'
+import { ArithmeticCardTypeEnum, CardType } from '../../math/arithmetic'
 
-import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, DifficultySettings, GAME_MODES } from './math/math'
-import { weightedRand } from './math/utils'
+import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, DifficultySettings, GAME_MODES } from '../../math/math'
+import { weightedRand } from '../../math/utils'
 
-import { Reroll } from './Reroll'
+import { Reroll } from '../../Reroll'
 
 const StartCardPool: Record<ArithmeticCardTypeEnum, number> = {
   [ArithmeticCardTypeEnum.DENOMINATOR]: 1,
@@ -21,7 +22,7 @@ const VALUES: Record<DIFFICULTIES, DifficultySettings> = {
     maxTargetValue: 15,
     minNumenatorValue: 1,
     maxNumenatorValue: 20,
-    preciseness: 50,
+    preciseness: 50
   },
   [DIFFICULTIES.HARD]: {
     minTargetValue: 2000,
@@ -221,21 +222,16 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
             <div className='count'>{count}</div>
             {chain.length > 0 && (
               <div className='chain'>
-                {chain.map((x) => {
-                  return (
-                    <div key={x.getId()} className='chainElem'>
-                      <div onClick={() => handleRemoveCard({ card: x })} className='card noAddition'>
-                        <div className='mainText'>{x.getCount()}</div>
-                        <div className={['addition', x.getDescription()].join(' ')}>
-                          <div className='additionText'>{x.getName()}</div>
-                        </div>
-                      </div>
-                      <div className={['cardAddition', x.getDescription()].join(' ')}>
-                        <div className='additionText'>{x.getName()}</div>
-                      </div>
-                    </div>
-                  )
-                })}
+                {chain.map((x) => (
+                  <div key={x.getId()} className='chainElem'>
+                  <CardTypeView
+                    card={x}
+                    showPreview
+                    className='card noAddition'
+                    handleCardClick={() => handleRemoveCard({ card: x })}
+                  />
+                  </div>
+                ))}
                 {chain.length > 0 && (
                   <div className='chainResultElem'>
                     <div className={['cardAddition', 'equalizer'].join(' ')}>
@@ -255,21 +251,17 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
               {deck.map((x, index) => {
                 const translateY = Math.abs(-Math.floor(deck.length / 2) + index)
                 const rotate = -Math.floor(deck.length / 2)
+                const style = {
+                  rotate: `${(rotate + index) * 10}deg`,
+                  translate: `0px ${translateY * translateY * 12}px`
+                }
                 return (
-                  <div
+                  <CardTypeView
                     key={x.getId()}
-                    className='card'
-                    style={{
-                      rotate: `${(rotate + index) * 10}deg`,
-                      translate: `0px ${translateY * translateY * 12}px`
-                    }}
-                    onClick={() => handleAddCard({ card: x })}
-                  >
-                    <div className='mainText'>{x.getCount()}</div>
-                    <div className={['addition', x.getDescription()].join(' ')}>
-                      <div className='additionText'>{x.getName()}</div>
-                    </div>
-                  </div>
+                    card={x}
+                    style={style}
+                    handleCardClick={() => handleAddCard({ card: x })}
+                  />
                 )
               })}
             </div>
