@@ -8,7 +8,7 @@
 }
 
 .operatorsSection {
-  flex: 2;
+  flex: 1;
 }
 
 .operatorsGrid {
@@ -18,4 +18,11 @@
   flex-wrap: wrap;
   gap: 16px;
   row-gap: 16px;
+}
+
+.addition {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  right: 0px;
 }
