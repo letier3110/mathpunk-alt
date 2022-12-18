@@ -1,0 +1,21 @@
+.sections {
+  display: flex;
+  margin-top: 32px;
+}
+
+.section {
+  flex: 1;
+}
+
+.operatorsSection {
+  flex: 2;
+}
+
+.operatorsGrid {
+  margin-top: 16px;
+  display: flex;
+
+  flex-wrap: wrap;
+  gap: 16px;
+  row-gap: 16px;
+}

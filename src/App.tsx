@@ -7,9 +7,11 @@ import { PlottingProvider } from './pages/Plotting/Plotting.constate'
 import { GAME_MODES } from './math/math'
 
 import './App.css'
+import { useGameModeContext } from './shared/GameState.constate'
+import { Inventory } from './pages/Inventory/Inventory'
 
 function App() {
-  const [gameMode, setGameMode] = useState<GAME_MODES>(GAME_MODES.TUTORIAL)
+  const { gameMode } = useGameModeContext()
   // const [gameMode, setGameMode] = useState<GAME_MODES>(GAME_MODES.ARITHMETICS)
   // const [tutorial, setTutorial] = useState(true)
   return (
@@ -19,14 +21,14 @@ function App() {
           display: gameMode === GAME_MODES.TUTORIAL ? 'block' : 'none'
         }}
       >
-        <Tutorial gameMode={gameMode} setGameMode={setGameMode} />
+        <Tutorial />
       </div>
       <div
         style={{
           display: gameMode === GAME_MODES.ARITHMETICS ? 'block' : 'none'
         }}
       >
-        <Arithmetic gameMode={gameMode} setGameMode={setGameMode} />
+        <Arithmetic />
       </div>
       <div
         style={{
@@ -34,9 +36,10 @@ function App() {
         }}
       >
         <PlottingProvider>
-          <Plotting gameMode={gameMode} setGameMode={setGameMode} />
+          <Plotting />
         </PlottingProvider>
       </div>
+      <Inventory />
     </>
   )
 }

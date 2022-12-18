@@ -2,7 +2,7 @@ import { FC, useMemo, useState } from 'react'
 
 import { GAME_MODES } from '../../math/math'
 
-import { Reroll } from '../../Reroll'
+import { Reroll } from '../../components/Reroll/Reroll'
 import { FormulaeCardType } from '../../math/formulae'
 import { formatNumber } from '../../math/utils'
 import { FunctionalTypeView } from '../../components/FunctionalTypeView/FunctionalTypeView'
@@ -11,10 +11,11 @@ import { useGraph } from './useGraph.hook'
 import { generateTargetPlotting, getDeckPoolPlotting } from './Plotting.utils'
 import { usePlottingContext } from './Plotting.constate'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
+import { CardsChain } from '../../components/CardsChain/CardsChain'
+import { useGameModeContext } from '../../shared/GameState.constate'
 
 interface PlottingProps {
-  gameMode: GAME_MODES
-  setGameMode: (x: GAME_MODES) => void
+  //
 }
 
 interface AddCardProps {
@@ -22,10 +23,10 @@ interface AddCardProps {
   index?: number
 }
 
-export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
+export const Plotting: FC<PlottingProps> = () => {
+  const { setGameMode } = useGameModeContext()
   const [hardMode, setHardMode] = useState<boolean>(false)
   const [count, setCount] = useState(generateTargetPlotting())
-  const [tutorialMode, setTutorialMode] = useState<boolean>(false)
   const [left, setLeft] = useState(3)
   const [enemyHp, setEnemyHp] = useState(10)
   // const [round, setRound] = useState<number>(1)
@@ -168,39 +169,27 @@ export const Plotting: FC<PlottingProps> = ({ gameMode, setGameMode }) => {
                 )}
               </svg>
             </div>
-            {chain.length > 0 && (
-              <div className='chain'>
-                {chain.map((x) => {
-                  return (
-                    <div key={x.getId()} className='chainElem'>
-                      <FunctionalTypeView
-                        card={x}
-                        showPreview
-                        className='card noAddition'
-                        handleCardClick={() => handleRemoveCard({ card: x })}
-                      />
-                    </div>
-                  )
-                })}
-                {chain.length > 0 && (
-                  <div className='chainResultElem'>
-                    <div className={['cardAddition', 'equalizer'].join(' ')}>
-                      <div className='additionText'>=</div>
-                    </div>
-                    <div onClick={handleEqual} className='card'>
-                      <div className='mainText'>{equalizerResult}</div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-            {/* {tutorialMode && chain.length > 0 && (<div className='tutorialText'>CLICK ON THE CARD RESULT CARD TO APPLY IT</div>)} */}
-            <CardsHand>
+            <CardsChain
+              chain={chain}
+              keys={chain.map((x) => x.getId().toString())}
+              equalizerResult={equalizerResult}
+              handleEqual={handleEqual}
+            >
+              {chain.map((x) => (
+                <FunctionalTypeView
+                  key={x.getId()}
+                  card={x}
+                  showPreview
+                  className='card noAddition'
+                  handleCardClick={() => handleRemoveCard({ card: x })}
+                />
+              ))}
+            </CardsChain>
+            <CardsHand keys={deck.map((x) => x.getId().toString())}>
               {deck.map((x) => (
                 <FunctionalTypeView key={x.getId()} card={x} handleCardClick={() => handleAddCard({ card: x })} />
               ))}
             </CardsHand>
-            {/* {tutorialMode && deck.length > 0 && <div className='tutorialText'>CLICK ON THE CARD TO PLAY IT</div>} */}
           </>
         )}
         {isGameEnded === true && (

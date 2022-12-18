@@ -1,13 +1,15 @@
 import { FC, useEffect, useMemo, useState } from 'react'
+import { CardsChain } from '../../components/CardsChain/CardsChain'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
 import { CardTypeView } from '../../components/CardTypeView/CardTypeView'
-import { ArithmeticCardTypeEnum, CardType } from '../../math/arithmetic'
+import { CardType } from '../../math/arithmetic'
 
-import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, DifficultySettings, GAME_MODES } from '../../math/math'
-import { weightedRand } from '../../math/utils'
-
-import { Reroll } from '../../Reroll'
+import { DIFFICULTIES, GAME_MODES } from '../../math/math'
+import { formatNumber } from '../../math/utils'
 import { ARITHMETIC_VALUES, generateTargetArithmetic, getDeckPoolArithmetic } from './Arithmetic.utils'
+import { useGameModeContext } from '../../shared/GameState.constate'
+
+import { Reroll } from '../../components/Reroll/Reroll'
 
 interface AddCardProps {
   card: CardType
@@ -15,14 +17,13 @@ interface AddCardProps {
 }
 
 interface ArithmeticProps {
-  gameMode: GAME_MODES
-  setGameMode: (x: GAME_MODES) => void
+  //
 }
 
-export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
+export const Arithmetic: FC<ArithmeticProps> = () => {
+  const { setGameMode } = useGameModeContext()
   const [hardMode, setHardMode] = useState<boolean>(false)
   const [count, setCount] = useState(generateTargetArithmetic())
-  const [tutorialMode, setTutorialMode] = useState<boolean>(false)
   const [left, setLeft] = useState(3)
   const [enemyHp, setEnemyHp] = useState(10)
   const [round, setRound] = useState<number>(1)
@@ -121,34 +122,7 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
         </div>
       </div>
       <div className='root'>
-        {tutorialMode && (
-          <div className='sidebar'>
-            <div>
-              1. Select and click card from the bottom of the screen. Bottom of the screen is represents your HAND.
-            </div>
-            <div>2. Combine your cards to achieve value as close as you can to the target.</div>
-            <div>3. In order to win, you need to make correct guesses and lower points to zero.</div>
-            <div>
-              4. Your value must consist {100 - preciseness}% of target's value. Otherwise points will grow, pushing
-              away victory of the game.
-            </div>
-            <div>5. To confirm your value - click on the card after equals (=) sign.</div>
-          </div>
-        )}
-        <div>
-          Tutorial mode?
-          <input type='checkbox' checked={tutorialMode} onChange={(e) => setTutorialMode(e.target.checked)} />
-          {/* {tutorialMode && <div className='tutorialText'>LABELS WITH THIS FONT ARE FOR TUTORIAL</div>} */}
-        </div>
         <div className='hps'>
-          {/* <div>
-          Your points:
-          {hp}
-        </div> */}
-          {/* <div>
-          Round:
-          {round}
-        </div> */}
           <div>
             Remaining points to beat:
             {enemyHp}
@@ -163,39 +137,27 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
         {isGameEnded === false && (
           <>
             <div className='count'>{count}</div>
-            {chain.length > 0 && (
-              <div className='chain'>
-                {chain.map((x) => (
-                  <div key={x.getId()} className='chainElem'>
-                    <CardTypeView
-                      card={x}
-                      showPreview
-                      className='card noAddition'
-                      handleCardClick={() => handleRemoveCard({ card: x })}
-                    />
-                  </div>
-                ))}
-                {chain.length > 0 && (
-                  <div className='chainResultElem'>
-                    <div className={['cardAddition', 'equalizer'].join(' ')}>
-                      <div className='additionText'>=</div>
-                    </div>
-                    <div onClick={handleEqual} className='card'>
-                      <div className='mainText'>
-                        {equalizerResult.toString().indexOf('.') >= 0 ? equalizerResult.toFixed(2) : equalizerResult}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-            {/* {tutorialMode && chain.length > 0 && (<div className='tutorialText'>CLICK ON THE CARD RESULT CARD TO APPLY IT</div>)} */}
-            <CardsHand>
+            <CardsChain
+              chain={chain}
+              keys={chain.map((x) => x.getId().toString())}
+              equalizerResult={formatNumber(equalizerResult)}
+              handleEqual={handleEqual}
+            >
+              {chain.map((x) => (
+                <CardTypeView
+                  key={x.getId()}
+                  card={x}
+                  showPreview
+                  className='card noAddition'
+                  handleCardClick={() => handleRemoveCard({ card: x })}
+                />
+              ))}
+            </CardsChain>
+            <CardsHand keys={deck.map((x) => x.getId().toString())}>
               {deck.map((x) => (
                 <CardTypeView key={x.getId()} card={x} handleCardClick={() => handleAddCard({ card: x })} />
               ))}
             </CardsHand>
-            {/* {tutorialMode && deck.length > 0 && <div className='tutorialText'>CLICK ON THE CARD TO PLAY IT</div>} */}
           </>
         )}
         {isGameEnded === true && (
@@ -206,7 +168,6 @@ export const Arithmetic: FC<ArithmeticProps> = ({ gameMode, setGameMode }) => {
               Hard mode?
               <input type='checkbox' checked={hardMode} onChange={(e) => setHardMode(e.target.checked)} />
             </div>
-            {tutorialMode && <div className='tutorialText'>PRESS THE CARD TO START NEW GAME</div>}
             <div className='card' onClick={handleStartNewGame}>
               Start new game?
             </div>

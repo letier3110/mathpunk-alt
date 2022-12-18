@@ -1,24 +1,28 @@
-export enum ArithmeticCardTypeEnum {
-  DENOMINATOR,
-  SUMMATOR,
-  MULTIPLICATOR,
-  DIFFERENCATOR,
-  SWITCHER
+export const ArithmeticCardTypes = {
+  DENOMINATOR: 'DENOMINATOR',
+  SUMMATOR: 'SUMMATOR',
+  MULTIPLICATOR: 'MULTIPLICATOR',
+  DIFFERENCATOR: 'DIFFERENCATOR',
+  SWITCHER: 'SWITCHER'
   // NUMBERATOR
-}
+} as const;
+
+type ObjectValues<T> = T[keyof T]
+
+export type ArithmeticCardTypeEnum = ObjectValues<typeof ArithmeticCardTypes>
 
 export interface IComputable {
   calculate(x: number, y: number): number
 }
 
 export interface IChangable<T> {
-  getChangableState(): T;
-  getNextPossibleValue(): T;
-  setChangableState(value: T): void;
+  getChangableState(): T
+  getNextPossibleValue(): T
+  setChangableState(value: T): void
 }
 
 export function instanceOfChangable<T>(object: any): object is IChangable<T> {
-  return 'getChangableState' in object;
+  return 'getChangableState' in object
 }
 
 interface CardTypeProps {
@@ -64,13 +68,13 @@ export class CardType implements ICardType {
   }
 
   getIsInteractive() {
-    return false;
+    return false
   }
 }
 
 export enum SwitcherValue {
-  DENOMINATOR,
-  MULTIPLICATOR,
-  SUMMATOR,
-  DIFFERENCATOR
+  DENOMINATOR = 'DENOMINATOR',
+  MULTIPLICATOR = 'MULTIPLICATOR',
+  SUMMATOR = 'SUMMATOR',
+  DIFFERENCATOR = 'DIFFERENCATOR'
 }

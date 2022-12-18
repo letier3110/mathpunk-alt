@@ -1,15 +1,11 @@
 import { FC, ReactNode } from 'react'
-import { AdditionView } from '../../components/AdditionView/AdditionView'
-import { CardTypeView } from '../../components/CardTypeView/CardTypeView'
-import { GAME_MODES } from '../../math/math'
-import { Numberator } from '../../math/Numberator'
-import { Summator } from '../../math/Summator'
 
 interface CardsHandProps {
   children: ReactNode[]
+  keys?: string[]
 }
 
-export const CardsHand: FC<CardsHandProps> = ({ children }) => {
+export const CardsHand: FC<CardsHandProps> = ({ children, keys }) => {
   return (
     <div className='cards'>
       {children.map((Element, index, deck) => {
@@ -19,7 +15,7 @@ export const CardsHand: FC<CardsHandProps> = ({ children }) => {
           rotate: `${(rotate + index) * 10}deg`,
           translate: `0px ${translateY * translateY * 12}px`
         }
-        return <div style={style}>{Element}</div>
+        return <div key={(keys ?? [index = index])[index]} style={style}>{Element}</div>
       })}
     </div>
   )

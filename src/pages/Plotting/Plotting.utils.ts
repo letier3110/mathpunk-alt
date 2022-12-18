@@ -1,4 +1,4 @@
-import { ArithmeticCardTypeEnum, CardType } from "../../math/arithmetic"
+import { ArithmeticCardTypeEnum, ArithmeticCardTypes, CardType } from "../../math/arithmetic"
 import { FNumberator } from "../../math/FNumberator"
 import { FormulaeCardType, FormulaeCardTypeEnum } from "../../math/formulae"
 import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, FormulaeCardTypeEnumToClass } from "../../math/math"
@@ -15,11 +15,11 @@ const PlottingStartCardPool: Record<FormulaeCardTypeEnum, number> = {
 }
 
 const PlottingStartCardAdditionsPool: Record<ArithmeticCardTypeEnum, number> = {
-  [ArithmeticCardTypeEnum.DENOMINATOR]: 1,
-  [ArithmeticCardTypeEnum.SUMMATOR]: 1,
-  [ArithmeticCardTypeEnum.MULTIPLICATOR]: 1,
-  [ArithmeticCardTypeEnum.DIFFERENCATOR]: 1,
-  [ArithmeticCardTypeEnum.SWITCHER]: 0
+  [ArithmeticCardTypes.DENOMINATOR]: 1,
+  [ArithmeticCardTypes.SUMMATOR]: 1,
+  [ArithmeticCardTypes.MULTIPLICATOR]: 1,
+  [ArithmeticCardTypes.DIFFERENCATOR]: 1,
+  [ArithmeticCardTypes.SWITCHER]: 0
 }
 
 let latestTarget = 0

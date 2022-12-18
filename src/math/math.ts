@@ -1,4 +1,4 @@
-import { ArithmeticCardTypeEnum, CardType } from './arithmetic'
+import { ArithmeticCardTypeEnum, ArithmeticCardTypes, CardType } from './arithmetic'
 import { Cosinusator } from './Cosinusator'
 import { Denominator } from './Denominator'
 import { Differencator } from './Differencator'
@@ -12,11 +12,11 @@ import { Summator } from './Summator'
 import { Switcher } from './Switcher'
 
 export const ArithmeticCardTypeEnumToClass: Record<ArithmeticCardTypeEnum, typeof CardType> = {
-  [ArithmeticCardTypeEnum.DENOMINATOR]: Denominator,
-  [ArithmeticCardTypeEnum.SUMMATOR]: Summator,
-  [ArithmeticCardTypeEnum.MULTIPLICATOR]: Multiplicator,
-  [ArithmeticCardTypeEnum.DIFFERENCATOR]: Differencator,
-  [ArithmeticCardTypeEnum.SWITCHER]: Switcher
+  [ArithmeticCardTypes.DENOMINATOR]: Denominator,
+  [ArithmeticCardTypes.SUMMATOR]: Summator,
+  [ArithmeticCardTypes.MULTIPLICATOR]: Multiplicator,
+  [ArithmeticCardTypes.DIFFERENCATOR]: Differencator,
+  [ArithmeticCardTypes.SWITCHER]: Switcher
   // [CardTypeEnum.NUMBERATOR]: Numberator
 }
 
