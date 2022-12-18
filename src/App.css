@@ -13,7 +13,7 @@ html, body {
 
 .root {
   width: 100%;
-  height: calc(100vh - 48px);
+  min-height: calc(100vh - 48px);
 
   display: flex;
   flex-direction: column;
@@ -179,11 +179,18 @@ html, body {
   position: relative;
 }
 
+.cards > div:hover {
+  z-index: 1000;
+}
+
 .chain {
   margin-bottom: 120px;
   display: flex;
   position: relative;
   justify-content: center;
+  flex-wrap: wrap;
+  max-width: 100%;
+  row-gap: 16px;
 }
 
 .addition {
@@ -352,4 +359,8 @@ html, body {
 
 .mt32 {
   margin-top: 32px;
+}
+
+.mb32 {
+  margin-bottom: 32px;
 }
