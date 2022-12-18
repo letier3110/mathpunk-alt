@@ -6,7 +6,7 @@ import { getDeckPoolPlotting } from "./Plotting.utils";
 // 2️⃣ Wrap your hook with the constate factory
 export const [PlottingProvider, usePlottingContext] = constate(() => {
   const [chain, setChain] = useState<FormulaeCardType[]>([])
-  const [deck, setDeck] = useState<FormulaeCardType[]>(getDeckPoolPlotting({poolSize: 15}))
+  const [deck, setDeck] = useState<FormulaeCardType[]>(getDeckPoolPlotting({}))
   return { 
     chain,
     deck,
