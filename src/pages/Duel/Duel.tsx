@@ -41,6 +41,9 @@ enum TurnsType {
 
 const startingTurn: TurnsType = TurnsType.PLAYER
 
+const initialChainCard = new Switcher();
+initialChainCard.setCount(generateTargetArithmetic())
+
 export const Duel: FC<DuelProps> = () => {
   const { setGameMode } = useGameModeContext()
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -50,7 +53,7 @@ export const Duel: FC<DuelProps> = () => {
   const [left, setLeft] = useState(3)
   const [rounds, setRounds] = useState(initialRounds)
   // const [round, setRound] = useState<number>(1)
-  const [chain, setChain] = useState<CardType[]>([new Switcher(generateTargetArithmetic())])
+  const [chain, setChain] = useState<CardType[]>([initialChainCard])
   const [deck, setDeck] = useState<CardType[]>(getDeckPoolArithmetic())
   const [enemyDeck, setEnemyDeck] = useState<CardType[]>(getEnemyDeckPoolArithmetic())
   // const [prediction, setPrediction] = useState(0)
@@ -137,7 +140,9 @@ export const Duel: FC<DuelProps> = () => {
       }
     }
     setRounds(rounds - 1)
-    setChain([new Switcher(equalizerResult)])
+    const sw = new Switcher();
+    sw.setCount(equalizerResult)
+    setChain([sw])
     // setLeft(3)
   }
 
@@ -146,7 +151,9 @@ export const Duel: FC<DuelProps> = () => {
     // setCount(generateTargetArithmetic(hardMode))
     setCurrentTurn(startingTurn)
     setRounds(initialRounds)
-    setChain([new Switcher(generateTargetArithmetic(hardMode))])
+    const sw = new Switcher();
+    sw.setCount(generateTargetArithmetic(hardMode))
+    setChain([sw])
     setDeck(getDeckPoolArithmetic(hardMode))
     setEnemyDeck(getEnemyDeckPoolArithmetic(hardMode))
     setRounds(initialRounds)

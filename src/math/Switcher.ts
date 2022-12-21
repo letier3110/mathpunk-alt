@@ -3,9 +3,8 @@ import { CardType, IChangable, IComputable, SwitcherValue } from './arithmetic'
 export class Switcher extends CardType implements IComputable, IChangable<SwitcherValue> {
   private switcherValue: SwitcherValue = SwitcherValue.DIFFERENCATOR
 
-  constructor(count = 0) {
+  constructor() {
     super({ name: 'Switcher' })
-    this.setCount(count)
   }
   getChangableState(): SwitcherValue {
     return this.switcherValue
