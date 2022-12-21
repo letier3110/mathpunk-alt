@@ -55,6 +55,10 @@ export class CardType implements ICardType {
     return this.id
   }
 
+  setName(name: string) {
+    this.name = name
+  }
+
   getName() {
     return this.name.toString()
   }
