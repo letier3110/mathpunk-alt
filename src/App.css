@@ -284,11 +284,24 @@ html, body {
   background-color: #EA047E;
 }
 
+.chain .Numberator {
+  opacity: 0;
+}
+
 .Switcher {
   background: rgb(2,0,36);
   -webkit-animation: switcherAnim 1s ease infinite;
   -moz-animation: switcherAnim 1s ease infinite;
   animation: switcherAnim 1s ease infinite;
+}
+
+.enemyDeck {
+  rotate: 180deg;
+  margin-bottom: 20px;
+}
+
+.enemyChain {
+  rotate: 180deg;
 }
 
 .equalizer {

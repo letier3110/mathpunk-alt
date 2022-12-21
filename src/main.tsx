@@ -15,6 +15,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   </React.StrictMode>
 )
 
+// todo: triangle fractals using [x1, x2, x3] arrays
+// todo: reward for arithmetic is Switcher
+// todo: reward for hardmode arithmetic is Rerolls
 // todo: add animations - hand collapse, hand draw, mech added flow down
 // todo: reserve slot for hand at bottom of first screen
 // todo: ?? main menu of game ?? - <nav> [continue, new game] </nav> <content> [patch notes] </content>

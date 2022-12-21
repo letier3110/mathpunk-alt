@@ -9,6 +9,7 @@ import { GAME_MODES } from './math/math'
 import './App.css'
 import { useGameModeContext } from './shared/GameState.constate'
 import { Inventory } from './pages/Inventory/Inventory'
+import { Duel } from './pages/Duel/Duel'
 
 function App() {
   const { gameMode } = useGameModeContext()
@@ -22,6 +23,13 @@ function App() {
         }}
       >
         <Tutorial />
+      </div>
+      <div
+        style={{
+          display: gameMode === GAME_MODES.DUEL_FUNCTION ? 'block' : 'none'
+        }}
+      >
+        <Duel />
       </div>
       <div
         style={{

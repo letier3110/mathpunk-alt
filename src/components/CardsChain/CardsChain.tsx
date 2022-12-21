@@ -5,16 +5,17 @@ interface CardsChainProps {
   chain: CardType[]
   children: ReactNode[]
   keys?: string[]
+  className?: string
   equalizerResult: string
   handleEqual: () => void
 }
 
-export const CardsChain: FC<CardsChainProps> = ({ chain, children, keys, equalizerResult, handleEqual }) => {
+export const CardsChain: FC<CardsChainProps> = ({ chain, children, keys, equalizerResult, className, handleEqual }) => {
   if (chain.length === 0) return null
   return (
-    <div className='chain'>
+    <div className={['chain', className].join(' ')}>
       {children.map((x, index) => (
-        <div key={(keys ?? [index = index])[index]} className='chainElem'>
+        <div key={(keys ?? [(index = index)])[index]} className='chainElem'>
           {x}
         </div>
       ))}
