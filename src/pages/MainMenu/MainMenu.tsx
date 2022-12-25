@@ -19,6 +19,8 @@ const DUEL_NAME = 'Start Duel?'
 
 export const MainMenu: FC<MainMenuProps> = () => {
   const { setGameMode } = useGameModeContext()
+  const [gameModeState, setGameModeState] = useState(GAME_MODES.MAIN_MENU)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const deck = [
     // new Navigator('Continue')
     new Navigator(TUTORIAL_NAME),
@@ -27,36 +29,51 @@ export const MainMenu: FC<MainMenuProps> = () => {
     new Navigator(DUEL_NAME)
   ]
 
+  const handleCardClick = (card:Navigator) => {
+    if (card.getName() === TUTORIAL_NAME) {
+      setGameModeState(GAME_MODES.TUTORIAL)
+      return
+    }
+    if (card.getName() === ARITHMETIC_NAME) {
+      setGameModeState(GAME_MODES.ARITHMETICS)
+      return
+    }
+    if (card.getName() === PLOTTING_NAME) {
+      setGameModeState(GAME_MODES.PLOTTING)
+      return
+    }
+    if (card.getName() === DUEL_NAME) {
+      setGameModeState(GAME_MODES.DUEL_FUNCTION)
+      return
+    }
+  }
+
+  useEffect(() => {
+    if(gameModeState !== GAME_MODES.MAIN_MENU) {
+      timerRef.current = setTimeout(() => {
+        setGameMode(gameModeState);
+      }, 1100)
+    }
+    return () => {
+      if(timerRef && timerRef.current) {
+        clearTimeout(timerRef.current)
+      }
+    }
+  }, [gameModeState])
+
   return (
     <div className='root'>
       <div></div>
       <MainMenuLoader />
       <div>
       </div>
-      <CardsHand keys={deck.map((x) => x.getId().toString())}>
+      <CardsHand className={gameModeState !== GAME_MODES.MAIN_MENU ? 'cardsHide' : ''} keys={deck.map((x) => x.getId().toString())}>
         {deck.map((x) => (
           <NavigatorTypeView
             key={x.getId()}
             card={x}
             handleCardClick={() => {
-              // if (currentTurn === TurnsType.COMPETITOR) return
-              // handleAddCard({ card: x })
-              if (x.getName() === TUTORIAL_NAME) {
-                setGameMode(GAME_MODES.TUTORIAL)
-                return
-              }
-              if (x.getName() === ARITHMETIC_NAME) {
-                setGameMode(GAME_MODES.ARITHMETICS)
-                return
-              }
-              if (x.getName() === PLOTTING_NAME) {
-                setGameMode(GAME_MODES.PLOTTING)
-                return
-              }
-              if (x.getName() === DUEL_NAME) {
-                setGameMode(GAME_MODES.DUEL_FUNCTION)
-                return
-              }
+              handleCardClick(x)
             }}
           />
         ))}

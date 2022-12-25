@@ -4,10 +4,12 @@ interface CardsHandProps {
   children: ReactNode[]
   className?: string
   keys?: string[]
+  hide?: boolean
 }
 
-export const CardsHand: FC<CardsHandProps> = ({ children, className = '', keys }) => {
+export const CardsHand: FC<CardsHandProps> = ({ children, className = '', keys, hide = false }) => {
   const height = Math.abs(-Math.floor(children.length / 2))
+  if(hide) return null;
   return (
     <div
       className={['cards', className].join(' ')}

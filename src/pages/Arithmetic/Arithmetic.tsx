@@ -161,17 +161,22 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
           </>
         )}
         {isGameEnded === true && (
-          <div className='win'>
-            <div>🥳🥳🥳</div>
-            <div>You won!</div>
-            <div>
-              Hard mode?
-              <input type='checkbox' checked={hardMode} onChange={(e) => setHardMode(e.target.checked)} />
+          <>
+            <div className='win'>
+              <div>🥳🥳🥳</div>
+              <div>You won!</div>
+              <div>
+                Hard mode?
+                <input type='checkbox' checked={hardMode} onChange={(e) => setHardMode(e.target.checked)} />
+              </div>
             </div>
-            <div className='card' onClick={handleStartNewGame}>
-              Start new game?
-            </div>
-          </div>
+            <CardsHand keys={['1']}>
+              <div className='card' onClick={handleStartNewGame}>
+                Start new game?
+              </div>
+              <></>
+            </CardsHand>
+          </>
         )}
       </div>
       <Reroll left={left} handleReroll={handleReroll} />

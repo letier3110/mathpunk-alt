@@ -200,9 +200,12 @@ export const Plotting: FC<PlottingProps> = () => {
               Hard mode?
               <input type='checkbox' checked={hardMode} onChange={(e) => setHardMode(e.target.checked)} />
             </div>
+            <CardsHand keys={['1']}>
             <div className='card' onClick={handleStartNewGame}>
               Start new game?
             </div>
+            <></>
+            </CardsHand>
           </div>
         )}
       </div>

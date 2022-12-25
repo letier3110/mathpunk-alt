@@ -320,16 +320,16 @@ export const Tutorial: FC<TutorialProps> = () => {
             <div className='win mt32'>
               <div>🥳🥳🥳</div>
               <div>You completed tutorials!</div>
-              <div className='chain mt32'>
-                <CardsHand keys={['1', '2', '3']}>
-                  <div className='card' onClick={handleRestartTutorial}>
-                    Restart tutorial?
-                  </div>
-                  <div className='card' onClick={handleNextGameMode}>
-                    Continue to actual gameplay?
-                  </div>
-                </CardsHand>
-              </div>
+            </div>
+            <div className='chain mt32'>
+              <CardsHand keys={['1', '2', '3']}>
+                <div className='card' onClick={handleRestartTutorial}>
+                  Restart tutorial?
+                </div>
+                <div className='card' onClick={handleNextGameMode}>
+                  Continue to actual gameplay?
+                </div>
+              </CardsHand>
             </div>
           </>
         )}
@@ -412,9 +412,12 @@ export const Tutorial: FC<TutorialProps> = () => {
               </>
             )}
             {isGameEnded === true && (
-              <div className='win'>
-                <div>🥳🥳🥳</div>
-                <div>You won!</div>
+              <>
+                <div className='win'>
+                  <div>🥳🥳🥳</div>
+                  <div>You won!</div>
+                </div>
+                <div></div>
                 <div className='chain mt32'>
                   <CardsHand keys={['1', '2', '3']}>
                     <div className='card' onClick={handleStartAgain}>
@@ -428,7 +431,7 @@ export const Tutorial: FC<TutorialProps> = () => {
                     </div>
                   </CardsHand>
                 </div>
-              </div>
+              </>
             )}
           </>
         )}
