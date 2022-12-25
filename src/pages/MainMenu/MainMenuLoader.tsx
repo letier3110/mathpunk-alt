@@ -34,30 +34,25 @@ export const MainMenuLoader: FC<MainMenuLoaderProps> = () => {
   }, [progress])
 
   return (
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          className='h-6 w-6'
-          fill='none'
-          viewBox={`0 0 300 300`}
-          stroke='#5af'
-          width={300}
-          height={300}
-          strokeWidth={1}
-        >
-          <circle cx='100' cy='100' fill='none' r='28' stroke={secondaryColor} strokeWidth={strokeWidth} />
-          <circle
-            cx='100'
-            cy='100'
-            fill='none'
-            r='28'
-            stroke='currentColor'
-            strokeDasharray={`${progress}, 170`}
-            strokeDashoffset='1'
-            strokeLinecap='round'
-            strokeWidth={strokeWidth}
-            style={circleStyle}
-            transform='rotate(-90 100 100)'
-          />
-        </svg>
+    <svg viewBox="0 0 160 160" width="160" height="160">
+    {/* <circle cx="80" cy="80" r="50" /> */}
+    <g transform=" matrix(0.866, -0.5, 0.25, 0.433, 80, 80)">
+      <path d="M 0,70 A 65,70 0 0,0 65,0 5,5 0 0,1 75,0 75,70 0 0,1 0,70Z" fill="#FCE700">
+        <animateTransform attributeName="transform" type="rotate" from="360 0 0" to="0 0 0" dur="1s" repeatCount="indefinite" />
+      </path>
+    </g>
+    <g transform=" matrix(0.866, 0.5, 0.25, 0.433, 80, 80)">
+      <path d="M 0,70 A 65,70 0 0,0 65,0 5,5 0 0,1 75,0 75,70 0 0,1 0,70Z" fill="#FF6D28">
+        <animateTransform attributeName="transform" type="rotate" from="360 0 0" to="0 0 0" dur="2s" repeatCount="indefinite" />
+      </path>
+    </g>
+    <g transform=" matrix(-0.866, 0, 0.25, -0.433, 80, 80)">
+      <path d="M 0,70 A 65,70 0 0,0 65,0 5,5 0 0,1 75,0 75,70 0 0,1 0,70Z" fill="#FF9E9E">
+        <animateTransform attributeName="transform" type="rotate" from="360 0 0" to="0 0 0" dur="2s" repeatCount="indefinite" />
+      </path>
+    </g>
+    {/* <path d="M 50,0 A 50,50 0 0,0 -50,0Z" transform="matrix(0.866, -0.5, 0.5, 0.866, 80, 80)" /> */}
+  </svg>
+  
   )
 }

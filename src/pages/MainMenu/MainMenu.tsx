@@ -30,8 +30,8 @@ export const MainMenu: FC<MainMenuProps> = () => {
   return (
     <div className='root'>
       <div></div>
+      <MainMenuLoader />
       <div>
-        <MainMenuLoader />
       </div>
       <CardsHand keys={deck.map((x) => x.getId().toString())}>
         {deck.map((x) => (

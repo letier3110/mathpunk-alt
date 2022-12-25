@@ -15,6 +15,12 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   </React.StrictMode>
 )
 
+// Eco
+// todo: add links to deployed version
+// todo: deploy blog with UPDATES (changelog), TODOS (board), REVIEWS, GOVERN, DONATIONS
+// todo: add EVENTS (by comunity, like tournaments), STREAMS (?) to blog 
+// 
+// Tech
 // todo: triangle fractals using [x1, x2, x3] arrays
 // todo: reward for arithmetic is Switcher
 // todo: reward for hardmode arithmetic is Rerolls
@@ -22,6 +28,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 // todo: reserve slot for hand at bottom of first screen
 // todo: ?? main menu of game ?? - <nav> [continue, new game] </nav> <content> [patch notes] </content>
 //
+// Future Gameplay
 // todo: taylor series ∞∑n=1−4[(2n−3)!!] 2(2n−3)(2n−1)! as cards
 // todo: taylor series as targets
 // todo: selectable operator
