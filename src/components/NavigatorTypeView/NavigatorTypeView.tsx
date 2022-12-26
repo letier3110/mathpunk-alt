@@ -38,7 +38,15 @@ export const NavigatorTypeView: FC<NavigatorViewProps> = ({
   }
 
   return (
-    <div ref={drag} style={style} data-testid='box' className={className} onClick={handleClick}>
+    <div
+      ref={drag}
+      style={{
+        ...style,
+        opacity: isDragging ? 0 : 1
+      }}
+      className={className}
+      onClick={handleClick}
+    >
       <div className='mainText'>{name}</div>
     </div>
   )

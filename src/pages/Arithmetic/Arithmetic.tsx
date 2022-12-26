@@ -136,7 +136,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
         </div>
         {isGameEnded === false && (
           <>
-            <div className='count'>{count}</div>
+            <div className='flex1 count'>{count}</div>
             <CardsChain
               chain={chain}
               keys={chain.map((x) => x.getId().toString())}

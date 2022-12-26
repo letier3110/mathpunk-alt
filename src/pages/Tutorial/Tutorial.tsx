@@ -314,7 +314,7 @@ export const Tutorial: FC<TutorialProps> = () => {
       <div className='root'>
         {tutorialEnded === true && (
           <>
-            <div className='hps'>
+            <div className='hps flex1'>
               <div>Tap the card to continue</div>
             </div>
             <div className='win mt32'>
@@ -336,7 +336,7 @@ export const Tutorial: FC<TutorialProps> = () => {
         {tutorialEnded === false && (
           <>
             {isGameEnded === true && (
-              <div className='hps'>
+              <div className='hps flex1'>
                 <div>Tap the card to continue</div>
               </div>
             )}
@@ -353,7 +353,7 @@ export const Tutorial: FC<TutorialProps> = () => {
             )}
             {isGameEnded === false && (
               <>
-                <div className='chainElem'>
+                <div className='flex1 chainElem'>
                   {new Array(maxChain).fill(1).map((x, i) => {
                     const gapElement = (
                       <div className=''>
@@ -417,7 +417,6 @@ export const Tutorial: FC<TutorialProps> = () => {
                   <div>🥳🥳🥳</div>
                   <div>You won!</div>
                 </div>
-                <div></div>
                 <div className='chain mt32'>
                   <CardsHand keys={['1', '2', '3']}>
                     <div className='card' onClick={handleStartAgain}>

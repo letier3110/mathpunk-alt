@@ -1,6 +1,5 @@
-import { FC, useEffect, useRef, useState, CSSProperties } from 'react'
-import type { DropTargetMonitor, XYCoord } from 'react-dnd'
-import { useDragLayer } from 'react-dnd'
+import { FC, useEffect, useRef, useState } from 'react'
+import type { DropTargetMonitor } from 'react-dnd'
 
 import { CardsHand } from '../../components/CardsHand/CardsHand'
 
@@ -13,7 +12,21 @@ import { MainMenuLoader } from './MainMenuLoader'
 import { useDrop } from 'react-dnd'
 import { ItemTypes } from '../../shared/constants'
 import { CardType } from '../../math/arithmetic'
+import { usePreview } from 'react-dnd-preview'
 
+const GhostPreview = () => {
+  const preview = usePreview()
+  if (!preview.display) {
+    return null
+  }
+  const { itemType, style } = preview
+  const item = preview.item as CardType
+  return (
+    <div className='card' style={style}>
+      {item.getDescription()}
+    </div>
+  )
+}
 interface MainMenuProps {
   //
 }
@@ -41,6 +54,7 @@ export const MainMenu: FC<MainMenuProps> = () => {
 
   const dropHandle = (e: CardType) => {
     // game.moveKnight(x, y)
+    handleCardClick(e);
     console.log('dropped something', e)
   }
 
@@ -103,7 +117,7 @@ export const MainMenu: FC<MainMenuProps> = () => {
       >
         <MainMenuLoader />
       </div>
-      {/* <CustomDragLayer snapToGrid={false} /> */}
+      <GhostPreview />
       <CardsHand
         className={gameModeState !== GAME_MODES.MAIN_MENU ? 'cardsHide' : ''}
         keys={deck.map((x) => x.getId().toString())}
@@ -120,77 +134,4 @@ export const MainMenu: FC<MainMenuProps> = () => {
       </CardsHand>
     </div>
   )
-}
-
-const layerStyles: CSSProperties = {
-  position: 'fixed',
-  pointerEvents: 'none',
-  zIndex: 100,
-  left: 0,
-  top: 0,
-  width: '100%',
-  height: '100%'
-}
-
-function getItemStyles(initialOffset: XYCoord | null, currentOffset: XYCoord | null, isSnapToGrid: boolean) {
-  if (!initialOffset || !currentOffset) {
-    return {
-      display: 'none'
-    }
-  }
-
-  let { x, y } = currentOffset
-
-  if (isSnapToGrid) {
-    x -= initialOffset.x
-    y -= initialOffset.y
-    ;[x, y] = snapToGrid(x, y)
-    x += initialOffset.x
-    y += initialOffset.y
-  }
-
-  const transform = `translate(${x}px, ${y}px)`
-  return {
-    transform,
-    WebkitTransform: transform
-  }
-}
-
-export interface CustomDragLayerProps {
-  snapToGrid: boolean
-}
-
-export const CustomDragLayer: FC<CustomDragLayerProps> = (props) => {
-  const { itemType, isDragging, item, initialOffset, currentOffset } = useDragLayer((monitor) => ({
-    item: monitor.getItem(),
-    itemType: monitor.getItemType(),
-    initialOffset: monitor.getInitialSourceClientOffset(),
-    currentOffset: monitor.getSourceClientOffset(),
-    isDragging: monitor.isDragging()
-  }))
-
-  function renderItem() {
-    console.log(item, itemType)
-    switch (itemType) {
-      case ItemTypes.CARD:
-        return <NavigatorTypeView key={item.getId()} card={item} handleCardClick={() => {}} />
-      default:
-        return null
-    }
-  }
-
-  if (!isDragging) {
-    return null
-  }
-  return (
-    <div style={layerStyles}>
-      <div style={getItemStyles(initialOffset, currentOffset, props.snapToGrid)}>{renderItem()}</div>
-    </div>
-  )
-}
-
-export function snapToGrid(x: number, y: number): [number, number] {
-  const snappedX = Math.round(x / 32) * 32
-  const snappedY = Math.round(y / 32) * 32
-  return [snappedX, snappedY]
 }
