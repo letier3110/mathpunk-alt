@@ -4,22 +4,26 @@ import App from './App'
 import './index.css'
 import { InventoryProvider } from './pages/Inventory/Inventory.constate'
 import { GameModeProvider } from './shared/GameState.constate'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <GameModeProvider>
-      <InventoryProvider>
-        <App />
-      </InventoryProvider>
-    </GameModeProvider>
+    <DndProvider backend={HTML5Backend}>
+      <GameModeProvider>
+        <InventoryProvider>
+          <App />
+        </InventoryProvider>
+      </GameModeProvider>
+    </DndProvider>
   </React.StrictMode>
 )
 
 // Eco
 // todo: add links to deployed version
 // todo: deploy blog with UPDATES (changelog), TODOS (board), REVIEWS, GOVERN, DONATIONS
-// todo: add EVENTS (by comunity, like tournaments), STREAMS (?) to blog 
-// 
+// todo: add EVENTS (by comunity, like tournaments), STREAMS (?) to blog
+//
 // Tech
 // todo: triangle fractals using [x1, x2, x3] arrays
 // todo: reward for arithmetic is Switcher

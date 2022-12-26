@@ -1,6 +1,8 @@
 import { CSSProperties, FC } from 'react'
+import { useDrag } from 'react-dnd'
 import { CardType } from '../../math/arithmetic'
 import { formatNumber } from '../../math/utils'
+import { ItemTypes } from '../../shared/constants'
 import { AdditionView } from '../AdditionView/AdditionView'
 
 interface NavigatorViewProps {
@@ -16,6 +18,17 @@ export const NavigatorTypeView: FC<NavigatorViewProps> = ({
   style = {},
   handleCardClick
 }) => {
+  const [{ isDragging }, drag, preview] = useDrag(
+    () => ({
+      type: ItemTypes.CARD,
+      item: card,
+      collect: (monitor) => ({
+        isDragging: !!monitor.isDragging()
+      })
+    }),
+    []
+  )
+
   const name = card.getName()
 
   const handleClick = () => {
@@ -25,7 +38,7 @@ export const NavigatorTypeView: FC<NavigatorViewProps> = ({
   }
 
   return (
-    <div onClick={handleClick} style={style} className={className}>
+    <div ref={drag} style={style} data-testid='box' className={className} onClick={handleClick}>
       <div className='mainText'>{name}</div>
     </div>
   )

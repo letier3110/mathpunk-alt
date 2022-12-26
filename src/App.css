@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   background-color: white;
   color: black;
 }
@@ -18,8 +19,23 @@ html, body {
   display: flex;
   flex-direction: column;
 
-  justify-content: space-between;
   align-items: center;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex1 {
+  flex: 1;
+}
+
+.aic {
+  align-items: center;
+}
+
+.jcc {
+  justify-content: center;
 }
 
 .secondPage {
@@ -70,12 +86,14 @@ html, body {
   user-select: none;
   position: relative;
 
-  padding: 2em;
+  /* padding: 2em; */
   border: 1px solid #888;
   background-color: #fff;
 
-  width: 50px;
-  height: 120px;
+  /* width: 50px;
+  height: 120px; */
+  width: 116px;
+  height: 186px;
 
   display: flex;
   flex-direction: column;
@@ -110,7 +128,8 @@ html, body {
   transition: transform ease 0.3s;
   color: #eee;
 
-  box-shadow: inset 0px 3px 1px -2px rgb(0 0 0 / 20%), inset 0px 2px 2px 0px rgb(0 0 0 / 14%), inset 0px 1px 5px 0px rgb(0 0 0 / 12%);
+  box-shadow: inset 0px 3px 1px -2px rgb(0 0 0 / 20%), inset 0px 2px 2px 0px rgb(0 0 0 / 14%),
+    inset 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
 
 .cardPlace .mainText {
@@ -142,8 +161,8 @@ html, body {
 
 .chainResultElem .card:hover {
   transform: scale(1.2);
-  background: rgb(255,255,255);
-  background: radial-gradient(circle, rgba(255,255,190,1) 0%, rgba(240,255,27,1) 35%, rgba(0,212,255,1) 100%);
+  background: rgb(255, 255, 255);
+  background: radial-gradient(circle, rgba(255, 255, 190, 1) 0%, rgba(240, 255, 27, 1) 35%, rgba(0, 212, 255, 1) 100%);
   background-size: 400% 400%;
   background-position: center;
   /* background: linear-gradient(270deg, #246655, #665f24);
@@ -154,21 +173,38 @@ html, body {
 }
 
 @-webkit-keyframes equalizerAnim {
-  0%{background-size:400% 400%}
-  50%{background-size:200% 200%}
-  100%{background-size:400% 400%}
+  0% {
+    background-size: 400% 400%;
+  }
+  50% {
+    background-size: 200% 200%;
+  }
+  100% {
+    background-size: 400% 400%;
+  }
 }
 @-moz-keyframes equalizerAnim {
-  0%{background-size:400% 400%}
-  50%{background-size:200% 200%}
-  100%{background-size:400% 400%}
+  0% {
+    background-size: 400% 400%;
+  }
+  50% {
+    background-size: 200% 200%;
+  }
+  100% {
+    background-size: 400% 400%;
+  }
 }
 @keyframes equalizerAnim {
-  0%{background-size:400% 400%}
-  50%{background-size:200% 200%}
-  100%{background-size:400% 400%}
+  0% {
+    background-size: 400% 400%;
+  }
+  50% {
+    background-size: 200% 200%;
+  }
+  100% {
+    background-size: 400% 400%;
+  }
 }
-
 
 .cards {
   margin-bottom: 100px;
@@ -185,11 +221,11 @@ html, body {
 }
 
 @keyframes cardsShow {
-  0%{
+  0% {
     transform: translateY(300px);
     opacity: 0;
   }
-  100%{
+  100% {
     transform: translateY(0px);
     opacity: 1;
   }
@@ -201,11 +237,11 @@ html, body {
 }
 
 @keyframes cardsHide {
-  0%{
+  0% {
     transform: translateY(0px);
     opacity: 1;
   }
-  100%{
+  100% {
     transform: translateY(300px);
     opacity: 0;
   }
@@ -243,7 +279,8 @@ html, body {
   display: flex;
 }
 
-.cardAddition, .addition {
+.cardAddition,
+.addition {
   user-select: none;
   padding: 16px 24px;
   box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
@@ -283,7 +320,7 @@ html, body {
 
 .additionText {
   text-align: center;
-  transition: all .2s;
+  transition: all 0.2s;
   color: #fff;
   /* background-color: rgba(0,0,0,.1); */
   font-weight: bold;
@@ -291,25 +328,26 @@ html, body {
   border-radius: 0 6px 0 0;
 }
 
-.chainElem, .chainResultElem {
+.chainElem,
+.chainResultElem {
   display: flex;
   align-items: center;
 }
 
 .Denominator {
-  background-color: #FF9E9E;
+  background-color: #ff9e9e;
 }
 
 .Multiplicator {
-  background-color: #FF6D28;
+  background-color: #ff6d28;
 }
 
 .Summator {
-  background-color: #FCE700;
+  background-color: #fce700;
 }
 
 .Differencator {
-  background-color: #EA047E;
+  background-color: #ea047e;
 }
 
 .chain .Numberator {
@@ -317,7 +355,7 @@ html, body {
 }
 
 .Switcher {
-  background: rgb(2,0,36);
+  background: rgb(2, 0, 36);
   -webkit-animation: switcherAnim 1s ease infinite;
   -moz-animation: switcherAnim 1s ease infinite;
   animation: switcherAnim 1s ease infinite;
@@ -333,8 +371,8 @@ html, body {
 }
 
 .equalizer {
-  background: rgb(2,0,36);
-  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+  background: rgb(2, 0, 36);
+  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);
 }
 
 .tutorialText {
@@ -348,11 +386,11 @@ html, body {
   right: 0px;
   top: 0px;
   bottom: 0px;
-  
+
   width: 30vw;
   text-align: left;
   padding: 24px;
-  
+
   color: #fff;
   background-color: #888;
 
@@ -379,7 +417,6 @@ html, body {
   z-index: 200;
 }
 
-
 .additionAnim {
   animation: additionAnim 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
   /* box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%); */
@@ -387,16 +424,18 @@ html, body {
 
 @keyframes additionAnim {
   0% {
-    box-shadow: 0px 3px 1px -2px rgba(0, 0, 250, 0.2), 0px 2px 2px 0px rgba(0, 0, 250, 0.14), 0px 1px 5px 0px rgba(0, 0, 250, 0.12);
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 250, 0.2), 0px 2px 2px 0px rgba(0, 0, 250, 0.14),
+      0px 1px 5px 0px rgba(0, 0, 250, 0.12);
   }
   50% {
-    box-shadow: 0px 4px 4px -2px rgba(0, 0, 250, 0.2), 0px 4px 4px 3px rgba(0, 0, 250, 0.2), 0px 4px 4px 2px rgba(0, 0, 250, 0.2), 0px -4px 4px 2px rgba(0, 0, 250, 0.2);
+    box-shadow: 0px 4px 4px -2px rgba(0, 0, 250, 0.2), 0px 4px 4px 3px rgba(0, 0, 250, 0.2),
+      0px 4px 4px 2px rgba(0, 0, 250, 0.2), 0px -4px 4px 2px rgba(0, 0, 250, 0.2);
   }
   100% {
-    box-shadow: 0px 3px 1px -2px rgba(0, 0, 250, 0.2), 0px 2px 2px 0px rgba(0, 0, 250, 0.14), 0px 1px 5px 0px rgba(0, 0, 250, 0.12);
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 250, 0.2), 0px 2px 2px 0px rgba(0, 0, 250, 0.14),
+      0px 1px 5px 0px rgba(0, 0, 250, 0.12);
   }
-} 
-
+}
 
 .mt32 {
   margin-top: 32px;
