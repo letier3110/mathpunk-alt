@@ -4,19 +4,14 @@ import App from './App'
 import './index.css'
 import { InventoryProvider } from './pages/Inventory/Inventory.constate'
 import { GameModeProvider } from './shared/GameState.constate'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { TouchBackend } from 'react-dnd-touch-backend'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <DndProvider backend={TouchBackend} options={{enableMouseEvents: true}}>
-      <GameModeProvider>
-        <InventoryProvider>
-          <App />
-        </InventoryProvider>
-      </GameModeProvider>
-    </DndProvider>
+    <GameModeProvider>
+      <InventoryProvider>
+        <App />
+      </InventoryProvider>
+    </GameModeProvider>
   </React.StrictMode>
 )
 

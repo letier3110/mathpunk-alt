@@ -137,8 +137,26 @@ body {
 }
 
 .card:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
   z-index: 1000;
+}
+
+.ghostHand {
+  display: flex;
+  position: absolute;
+  bottom: 100px;
+}
+
+.hideCard {
+  visibility: hidden;
+}
+
+.dragCard {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  cursor: default;
+  /* display: contents; */
 }
 
 .cardDisabled {
