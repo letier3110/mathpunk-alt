@@ -64,7 +64,12 @@ const GhostPreview: FC<GhostPreviewProps> = ({ card, deck }) => {
             position: isSelected ? 'absolute' : 'relative'
           }
           return (
-            <div key={x.getId().toString()} className='card hideCard ghostCard' style={style} ref={isSelected ? cardRef : null}>
+            <div
+              key={x.getId().toString()}
+              className='card hideCard ghostCard'
+              style={style}
+              ref={isSelected ? cardRef : null}
+            >
               {card.getDescription()}
             </div>
           )
@@ -131,9 +136,9 @@ export const MainMenu: FC<MainMenuProps> = () => {
     <div className='root'>
       <div className='flex flex1 aic jcc'>
         <div
-          // className={''}
+          className={[selectedCard ? 'border' : ''].join(' ')}
           style={{
-            backgroundColor: selectedCard ? 'rgba(255,120,70,.1)' : ''
+            backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
           }}
           onMouseUp={() => {
             if (selectedCard) {
@@ -147,8 +152,9 @@ export const MainMenu: FC<MainMenuProps> = () => {
       </div>
       {selectedCard && <GhostPreview deck={deck} card={selectedCard} />}
       <div
+        className={[selectedCard ? 'border' : ''].join(' ')}
         style={{
-          backgroundColor: selectedCard ? 'rgba(255,120,70,.1)' : ''
+          backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
         }}
         onMouseUp={() => {
           if (selectedCard) {
