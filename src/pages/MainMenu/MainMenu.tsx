@@ -29,14 +29,18 @@ const GhostPreview: FC<GhostPreviewProps> = ({ card, deck }) => {
     const mouseMoveHandler = (e: MouseEvent) => {
       if (!card) return
       if (!cardRef.current) return
-      const x = e.clientX
-      const y = e.clientY
+      const x = e.pageX
+      const y = e.pageY
       const newposX = x - 60
-      const newposY = y - 60
+      // const newposX = x 
+      // const newposY = y 
+      const newposY = y + 60
+      console.log(e.x, e.screenX, e.offsetX, e.clientX)
       // console.log(cardRef.current.getBoundingClientRect())
-      cardRef.current.style.transform = `translate(${newposX}px,${newposY}px)`
+      cardRef.current.style.transform = `matrix(1.2, 0, 0, 1.2, ${newposX},${newposY})`
       // cardRef.current.style.rotate = `${(newposX / window.innerWidth - 0.5) * 30}deg`
       cardRef.current.style.rotate = `0deg`
+      cardRef.current.style.visibility = `visible`
       // $(".circle").css("transform","translate3d("+newposX+"px,"+newposY+"px,0px)");
     }
     document.addEventListener('mousemove', mouseMoveHandler)
@@ -59,13 +63,14 @@ const GhostPreview: FC<GhostPreviewProps> = ({ card, deck }) => {
         .map((x) => {
           const isSelected = x.getDescription() === card?.getDescription()
           const style: CSSProperties = {
-            scale: isSelected ? '1.2' : '1',
+            // scale: isSelected ? '1.2' : '1',
             zIndex: isSelected ? 200 : '',
-            visibility: isSelected ? 'visible' : 'hidden',
+            // visibility: isSelected ? 'visible' : 'hidden',
+            visibility: 'hidden',
             position: isSelected ? 'absolute' : 'relative'
           }
           return (
-            <div key={x.getId().toString()} className='card hideCard' style={style} ref={isSelected ? cardRef : null}>
+            <div key={x.getId().toString()} className='card hideCard ghostCard' style={style} ref={isSelected ? cardRef : null}>
               {card.getDescription()}
             </div>
           )
@@ -136,8 +141,6 @@ export const MainMenu: FC<MainMenuProps> = () => {
           style={{
             backgroundColor: selectedCard ? 'rgba(255,120,70,.1)' : ''
           }}
-          // onMouseOver={() => {}}
-          // onMouseOut={() => {}}
           onMouseUp={() => {
             if (selectedCard) {
               handleCardClick(selectedCard)

@@ -151,6 +151,10 @@ body {
   visibility: hidden;
 }
 
+.ghostCard {
+  transition: none;
+}
+
 .dragCard {
   position: absolute;
   left: 0px;
