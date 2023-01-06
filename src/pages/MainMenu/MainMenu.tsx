@@ -32,16 +32,10 @@ const GhostPreview: FC<GhostPreviewProps> = ({ card, deck }) => {
       const x = e.pageX
       const y = e.pageY
       const newposX = x - 60
-      // const newposX = x 
-      // const newposY = y 
       const newposY = y + 60
-      console.log(e.x, e.screenX, e.offsetX, e.clientX)
-      // console.log(cardRef.current.getBoundingClientRect())
       cardRef.current.style.transform = `matrix(1.2, 0, 0, 1.2, ${newposX},${newposY})`
-      // cardRef.current.style.rotate = `${(newposX / window.innerWidth - 0.5) * 30}deg`
       cardRef.current.style.rotate = `0deg`
       cardRef.current.style.visibility = `visible`
-      // $(".circle").css("transform","translate3d("+newposX+"px,"+newposY+"px,0px)");
     }
     document.addEventListener('mousemove', mouseMoveHandler)
     return () => {
