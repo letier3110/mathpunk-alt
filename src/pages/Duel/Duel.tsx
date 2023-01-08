@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useRef, useState } from 'react'
+import { CSSProperties, FC, useEffect, useMemo, useRef, useState } from 'react'
 import { CardsChain } from '../../components/CardsChain/CardsChain'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
 import { CardTypeView } from '../../components/CardTypeView/CardTypeView'
@@ -14,9 +14,13 @@ import {
 } from './Duel.utils'
 import { useGameModeContext } from '../../shared/GameState.constate'
 
+import { Navigator } from '../../math/Navigator'
 import { Reroll } from '../../components/Reroll/Reroll'
 import { Numberator } from '../../math/Numberator'
 import { Switcher } from '../../math/Switcher'
+import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
+import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
+import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 
 interface AddCardProps {
   card: CardType
@@ -34,19 +38,19 @@ enum TurnsType {
   COMPETITOR = 'competitor'
 }
 
-// const TURNS: Record<TurnsType, string> = {
-//   [TurnsType.PLAYER]: 'player',
-//   [TurnsType.COMPETITOR]: 'competitor'
-// }
-
 const startingTurn: TurnsType = TurnsType.PLAYER
 
-const initialChainCard = new Switcher();
+const initialChainCard = new Switcher()
 initialChainCard.setCount(generateTargetArithmetic())
+
+const START_NEW_NAME = 'Start new game?'
+
+const lessonEndDeck = [new Navigator(START_NEW_NAME)]
 
 export const Duel: FC<DuelProps> = () => {
   const { setGameMode } = useGameModeContext()
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { selectedCard, setSelectedCard } = useGhostPreviewContext()
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [hardMode, setHardMode] = useState<boolean>(false)
   const [currentTurn, setCurrentTurn] = useState<TurnsType>(startingTurn)
   // const [count, setCount] = useState(generateTargetArithmetic())
@@ -140,7 +144,7 @@ export const Duel: FC<DuelProps> = () => {
       }
     }
     setRounds(rounds - 1)
-    const sw = new Switcher();
+    const sw = new Switcher()
     sw.setCount(equalizerResult)
     setChain([sw])
     // setLeft(3)
@@ -151,7 +155,7 @@ export const Duel: FC<DuelProps> = () => {
     // setCount(generateTargetArithmetic(hardMode))
     setCurrentTurn(startingTurn)
     setRounds(initialRounds)
-    const sw = new Switcher();
+    const sw = new Switcher()
     sw.setCount(generateTargetArithmetic(hardMode))
     setChain([sw])
     setDeck(getDeckPoolArithmetic(hardMode))
@@ -172,17 +176,24 @@ export const Duel: FC<DuelProps> = () => {
     handleStartNewRound()
   }
 
+  const handleEndGameClick = (card: CardType) => {
+    if (card.getName() === START_NEW_NAME) {
+      handleStartNewGame()
+      return
+    }
+  }
+
   useEffect(() => {
-    if(currentTurn === TurnsType.COMPETITOR) {
+    if (currentTurn === TurnsType.COMPETITOR) {
       timerRef.current = setTimeout(() => {
-        if(enemyDeck.length > 0) {
+        if (enemyDeck.length > 0) {
           const randomFromDeck = Math.floor(Math.random() * enemyDeck.length)
-          handleAddEnemyCard({card:enemyDeck[randomFromDeck]})
+          handleAddEnemyCard({ card: enemyDeck[randomFromDeck] })
         }
       }, 500)
     }
     return () => {
-      if(timerRef && timerRef.current) {
+      if (timerRef && timerRef.current) {
         clearTimeout(timerRef.current)
       }
     }
@@ -206,59 +217,146 @@ export const Duel: FC<DuelProps> = () => {
                 <CardTypeView key={x.getId()} card={x} />
               ))}
             </CardsHand>
-            <CardsChain
-              chain={chain}
-              className={currentTurn === TurnsType.COMPETITOR ? 'enemyChain' : ''}
-              keys={chain.map((x) => x.getId().toString())}
-              equalizerResult={formatNumber(equalizerResult)}
-              handleEqual={() => {
-                if (currentTurn === TurnsType.COMPETITOR && enemyDeck.length === 0) {
-                  handleEqual();
-                  return
+            <div
+              className={[selectedCard ? 'border' : ''].join(' ')}
+              style={{
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : '',
+                minHeight: '100px',
+                minWidth: '100px'
+              }}
+              onMouseUp={() => {
+                if (selectedCard) {
+                  handleAddCard({ card: selectedCard })
+                  setSelectedCard(null)
                 }
-                handleEqual();
               }}
             >
-              {chain.map((x) => (
-                <CardTypeView
-                  key={x.getId()}
-                  card={x}
-                  showPreview
-                  className='card noAddition'
-                  handleCardClick={() => {
-                    if (currentTurn === TurnsType.COMPETITOR) return
-                    if (x instanceof Switcher) return
-                    handleRemoveCard({ card: x })
-                  }}
-                />
-              ))}
-            </CardsChain>
-            <CardsHand keys={deck.map((x) => x.getId().toString())}>
-              {deck.map((x) => (
-                <CardTypeView
-                  key={x.getId()}
-                  card={x}
-                  handleCardClick={() => {
-                    if (currentTurn === TurnsType.COMPETITOR) return
-                    handleAddCard({ card: x })
-                  }}
-                />
-              ))}
-            </CardsHand>
+              <CardsChain
+                chain={chain}
+                className={currentTurn === TurnsType.COMPETITOR ? 'enemyChain' : ''}
+                keys={chain.map((x) => x.getId().toString())}
+                equalizerResult={formatNumber(equalizerResult)}
+                handleEqual={() => {
+                  if (currentTurn === TurnsType.COMPETITOR && enemyDeck.length === 0) {
+                    handleEqual()
+                    return
+                  }
+                  handleEqual()
+                }}
+              >
+                {chain.map((x) => (
+                  <CardTypeView
+                    key={x.getId()}
+                    card={x}
+                    showPreview
+                    className='card noAddition'
+                    handleCardClick={() => {
+                      if (currentTurn === TurnsType.COMPETITOR) return
+                      if (x instanceof Switcher) return
+                      handleRemoveCard({ card: x })
+                    }}
+                  />
+                ))}
+              </CardsChain>
+            </div>
+            {selectedCard && <GhostPreview deck={deck} card={selectedCard} showField={'count'} />}
+            <div
+              className={[selectedCard ? 'border' : ''].join(' ')}
+              style={{
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+              }}
+              onMouseUp={() => {
+                if (selectedCard) {
+                  setSelectedCard(null)
+                }
+              }}
+            >
+              <CardsHand keys={deck.map((x) => x.getId().toString())}>
+                {deck.map((x) => {
+                  const isSelected = x.getId() === selectedCard?.getId()
+                  const style: CSSProperties = {
+                    scale: isSelected ? '1.2' : '1',
+                    zIndex: isSelected ? 200 : '',
+                    visibility: !isSelected ? 'visible' : 'hidden'
+                  }
+                  return (
+                    <CardTypeView
+                      key={x.getId()}
+                      card={x}
+                      style={style}
+                      handleCardClick={() => {
+                        if (currentTurn === TurnsType.COMPETITOR) return
+                        handleAddCard({ card: x })
+                      }}
+                      handleMouseDown={(card: CardType) => {
+                        if (currentTurn === TurnsType.COMPETITOR) return
+                        setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                      }}
+                    />
+                  )
+                })}
+              </CardsHand>
+            </div>
           </>
         )}
         {isGameEnded === true && (
-          <div className='win'>
-            <div>🥳🥳🥳</div>
-            <div>{equalizerResult > 0 ? `You won!` : `Your enemy won!`}</div>
-            <div>
-              Hard mode?
-              <input type='checkbox' checked={hardMode} onChange={(e) => setHardMode(e.target.checked)} />
+          <>
+            <div
+              className={[selectedCard ? 'border' : '', 'win'].join(' ')}
+              style={{
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+              }}
+              onMouseUp={() => {
+                if (selectedCard) {
+                  handleEndGameClick(selectedCard)
+                  setSelectedCard(null)
+                }
+              }}
+            >
+              <div>🥳🥳🥳</div>
+              <div>{equalizerResult > 0 ? `You won!` : `Your enemy won!`}</div>
+              <div>
+                Hard mode?
+                <input type='checkbox' checked={hardMode} onChange={(e) => setHardMode(e.target.checked)} />
+              </div>
             </div>
-            <div className='card' onClick={handleStartNewGame}>
-              Start new game?
+            {selectedCard && <GhostPreview deck={lessonEndDeck} card={selectedCard} />}
+            <div
+              className={[selectedCard ? 'border' : ''].join(' ')}
+              style={{
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+              }}
+              onMouseUp={() => {
+                if (selectedCard) {
+                  setSelectedCard(null)
+                }
+              }}
+            >
+              <CardsHand keys={lessonEndDeck.map((x) => x.getId().toString())}>
+                {lessonEndDeck.map((x) => {
+                  const isSelected = x.getId() === selectedCard?.getId()
+                  const style: CSSProperties = {
+                    scale: isSelected ? '1.2' : '1',
+                    zIndex: isSelected ? 200 : '',
+                    visibility: !isSelected ? 'visible' : 'hidden'
+                  }
+                  return (
+                    <NavigatorTypeView
+                      key={x.getId()}
+                      card={x}
+                      handleCardClick={() => {
+                        handleEndGameClick(x)
+                      }}
+                      style={style}
+                      handleMouseDown={(card: CardType) =>
+                        setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                      }
+                    />
+                  )
+                })}
+              </CardsHand>
             </div>
-          </div>
+          </>
         )}
       </div>
       <Reroll left={left} handleReroll={handleReroll} />

@@ -128,22 +128,6 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
       handleStartNewGame()
       return
     }
-    // if (card.getName() === CONTINUE_NAME) {
-    //   handleNextGameMode()
-    //   return
-    // }
-    // if (card.getName() === START_AGAIN_NAME) {
-    //   handleStartAgain()
-    //   return
-    // }
-    // if (card.getName() === CONTINUE_LESSON_NAME) {
-    //   handleNextStep()
-    //   return
-    // }
-    // if (card.getName() === SKIP_NAME) {
-    //   handleSkip()
-    //   return
-    // }
   }
 
   return (
