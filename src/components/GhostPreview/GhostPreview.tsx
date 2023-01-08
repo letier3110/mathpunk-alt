@@ -1,11 +1,11 @@
-import { CSSProperties, FC, useEffect, useRef } from "react"
-import { CardType } from "../../math/CardType"
-import { CardsHand } from "../CardsHand/CardsHand"
+import { CSSProperties, FC, useEffect, useRef } from 'react'
+import { CardType } from '../../math/CardType'
+import { CardsHand } from '../CardsHand/CardsHand'
 
 interface GhostPreviewProps {
   card: CardType
   deck: Array<CardType>
-  showField?: 'description' | 'count'
+  showField?: 'description' | 'count' | 'name'
 }
 
 export const GhostPreview: FC<GhostPreviewProps> = ({ card, deck, showField = 'description' }) => {
@@ -56,7 +56,11 @@ export const GhostPreview: FC<GhostPreviewProps> = ({ card, deck, showField = 'd
               style={style}
               ref={isSelected ? cardRef : null}
             >
-              {showField === 'description' ? card.getDescription() : card.getCount()}
+              {showField === 'description'
+                ? card.getDescription()
+                : showField === 'name'
+                ? card.getName()
+                : card.getCount()}
             </div>
           )
         })}

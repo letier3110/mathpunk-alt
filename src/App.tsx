@@ -60,9 +60,11 @@ function App() {
           display: gameMode === GAME_MODES.PLOTTING ? 'block' : 'none'
         }}
       >
-        <PlottingProvider>
-          <Plotting />
-        </PlottingProvider>
+        <GhostPreviewProvider>
+          <PlottingProvider>
+            <Plotting />
+          </PlottingProvider>
+        </GhostPreviewProvider>
       </div>
       <Inventory />
     </>

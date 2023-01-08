@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react'
+import { CSSProperties, FC, useMemo, useState } from 'react'
 
 import { GAME_MODES } from '../../math/math'
 
@@ -8,11 +8,17 @@ import { formatNumber } from '../../math/utils'
 import { FunctionalTypeView } from '../../components/FunctionalTypeView/FunctionalTypeView'
 import { X_SIZE, Y_SIZE } from './Plottings.data'
 import { useGraph } from './useGraph.hook'
+
+import { Navigator } from '../../math/Navigator'
 import { generateTargetPlotting, getDeckPoolPlotting } from './Plotting.utils'
 import { usePlottingContext } from './Plotting.constate'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
 import { CardsChain } from '../../components/CardsChain/CardsChain'
 import { useGameModeContext } from '../../shared/GameState.constate'
+import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
+import { CardType } from '../../math/CardType'
+import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
+import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 
 interface PlottingProps {
   //
@@ -23,8 +29,13 @@ interface AddCardProps {
   index?: number
 }
 
+const START_NEW_NAME = 'Start new game?'
+
+const lessonEndDeck = [new Navigator(START_NEW_NAME)]
+
 export const Plotting: FC<PlottingProps> = () => {
   const { setGameMode } = useGameModeContext()
+  const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const [hardMode, setHardMode] = useState<boolean>(false)
   const [count, setCount] = useState(generateTargetPlotting())
   const [left, setLeft] = useState(3)
@@ -119,6 +130,13 @@ export const Plotting: FC<PlottingProps> = () => {
     handleStartNewRound()
   }
 
+  const handleEndGameClick = (card: CardType) => {
+    if (card.getName() === START_NEW_NAME) {
+      handleStartNewGame()
+      return
+    }
+  }
+
   return (
     <>
       <div className='backHeader'>
@@ -141,7 +159,20 @@ export const Plotting: FC<PlottingProps> = () => {
         </div>
         {isGameEnded === false && (
           <>
-            <div className='plot flex1 mb32'>
+            <div
+              className={[selectedCard ? 'border' : '', 'plot flex1 mb32'].join(' ')}
+              style={{
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : '',
+                minHeight: '100px',
+                minWidth: '100px'
+              }}
+              onMouseUp={() => {
+                if (selectedCard) {
+                  handleAddCard({ card: selectedCard as FormulaeCardType })
+                  setSelectedCard(null)
+                }
+              }}
+            >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 className='h-6 w-6'
@@ -185,28 +216,100 @@ export const Plotting: FC<PlottingProps> = () => {
                 />
               ))}
             </CardsChain>
-            <CardsHand keys={deck.map((x) => x.getId().toString())}>
-              {deck.map((x) => (
-                <FunctionalTypeView key={x.getId()} card={x} handleCardClick={() => handleAddCard({ card: x })} />
-              ))}
-            </CardsHand>
+            {selectedCard && <GhostPreview deck={deck} card={selectedCard} showField={'name'} />}
+            <div
+              className={[selectedCard ? 'border' : ''].join(' ')}
+              style={{
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : '',
+                padding:'0px 40px'
+              }}
+              onMouseUp={() => {
+                if (selectedCard) {
+                  setSelectedCard(null)
+                }
+              }}
+            >
+              <CardsHand keys={deck.map((x) => x.getId().toString())}>
+                {deck.map((x) => {
+                  const isSelected = x.getId().toString() === selectedCard?.getId().toString()
+                  const style: CSSProperties = {
+                    scale: isSelected ? '1.2' : '1',
+                    zIndex: isSelected ? 200 : '',
+                    visibility: !isSelected ? 'visible' : 'hidden'
+                  }
+                  return (
+                    <FunctionalTypeView
+                      key={x.getId().toString()}
+                      card={x}
+                      handleCardClick={() => handleAddCard({ card: x })}
+                      handleMouseDown={(card: CardType) =>
+                        setSelectedCard((prev) => (prev?.getId().toString() === card.getId().toString() ? null : card))
+                      }
+                    />
+                  )
+                })}
+              </CardsHand>
+            </div>
           </>
         )}
         {isGameEnded === true && (
-          <div className='win'>
-            <div>🥳🥳🥳</div>
-            <div>You won!</div>
-            <div>
-              Hard mode?
-              <input type='checkbox' checked={hardMode} onChange={(e) => setHardMode(e.target.checked)} />
+          <>
+            <div
+              className={[selectedCard ? 'border' : '', 'win'].join(' ')}
+              style={{
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+              }}
+              onMouseUp={() => {
+                if (selectedCard) {
+                  handleEndGameClick(selectedCard)
+                  setSelectedCard(null)
+                }
+              }}
+            >
+              <div>🥳🥳🥳</div>
+              <div>You won!</div>
+              <div>
+                Hard mode?
+                <input type='checkbox' checked={hardMode} onChange={(e) => setHardMode(e.target.checked)} />
+              </div>
             </div>
-            <CardsHand keys={['1']}>
-            <div className='card' onClick={handleStartNewGame}>
-              Start new game?
+            {selectedCard && <GhostPreview deck={lessonEndDeck} card={selectedCard} />}
+            <div
+              className={[selectedCard ? 'border' : ''].join(' ')}
+              style={{
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+              }}
+              onMouseUp={() => {
+                if (selectedCard) {
+                  setSelectedCard(null)
+                }
+              }}
+            >
+              <CardsHand keys={lessonEndDeck.map((x) => x.getId().toString())}>
+                {lessonEndDeck.map((x) => {
+                  const isSelected = x.getId().toString() === selectedCard?.getId().toString()
+                  const style: CSSProperties = {
+                    scale: isSelected ? '1.2' : '1',
+                    zIndex: isSelected ? 200 : '',
+                    visibility: !isSelected ? 'visible' : 'hidden'
+                  }
+                  return (
+                    <NavigatorTypeView
+                      key={x.getId().toString()}
+                      card={x}
+                      handleCardClick={() => {
+                        handleEndGameClick(x)
+                      }}
+                      style={style}
+                      handleMouseDown={(card: CardType) =>
+                        setSelectedCard((prev) => (prev?.getId().toString() === card.getId().toString() ? null : card))
+                      }
+                    />
+                  )
+                })}
+              </CardsHand>
             </div>
-            <></>
-            </CardsHand>
-          </div>
+          </>
         )}
       </div>
       <Reroll left={left} handleReroll={handleReroll} />

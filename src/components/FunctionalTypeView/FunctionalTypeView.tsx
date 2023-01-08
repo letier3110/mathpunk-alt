@@ -4,6 +4,7 @@ import { FormulaeCardType } from '../../math/formulae'
 import { Switcher } from '../../math/Switcher'
 import { AdditionView } from '../AdditionView/AdditionView'
 import { usePlottingContext } from '../../pages/Plotting/Plotting.constate'
+import { CardType } from '../../math/CardType'
 
 interface FunctionalTypeViewProps {
   className?: string
@@ -11,6 +12,8 @@ interface FunctionalTypeViewProps {
   showPreview?: boolean
   style?: CSSProperties
   handleCardClick?: () => void
+  handleMouseDown?: (card: CardType) => void
+  handleMouseUp?: (card: CardType) => void
 }
 
 export const FunctionalTypeView: FC<FunctionalTypeViewProps> = ({
@@ -18,7 +21,9 @@ export const FunctionalTypeView: FC<FunctionalTypeViewProps> = ({
   showPreview = false,
   className = 'card',
   style = {},
-  handleCardClick
+  handleCardClick = () => {},
+  handleMouseDown = () => {},
+  handleMouseUp = () => {}
 }) => {
   // const count = card.getCount()
   const cardName = card.getName()
@@ -45,9 +50,17 @@ export const FunctionalTypeView: FC<FunctionalTypeViewProps> = ({
     }
   }
 
+  const handleDown = () => {
+    handleMouseDown(card)
+  }
+
+  const handleUp = () => {
+    handleMouseUp(card)
+  }
+
   return (
     <>
-      <div onClick={handleClick} style={style} className={className}>
+      <div style={style} className={className} onClick={handleClick} onMouseDown={handleDown} onMouseUp={handleUp}>
         <div className='mainText'>{cardName}</div>
         <AdditionView card={addition} />
       </div>
