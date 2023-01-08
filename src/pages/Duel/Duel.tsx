@@ -2,7 +2,7 @@ import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { CardsChain } from '../../components/CardsChain/CardsChain'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
 import { CardTypeView } from '../../components/CardTypeView/CardTypeView'
-import { CardType } from '../../math/arithmetic'
+import { CardType } from '../../math/CardType'
 
 import { DIFFICULTIES, GAME_MODES } from '../../math/math'
 import { formatNumber } from '../../math/utils'

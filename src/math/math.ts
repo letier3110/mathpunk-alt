@@ -1,4 +1,5 @@
-import { ArithmeticCardTypeEnum, ArithmeticCardTypes, CardType } from './arithmetic'
+import { ArithmeticCardTypeEnum, ArithmeticCardTypes } from './arithmetic'
+import { CardType } from './CardType'
 import { Cosinusator } from './Cosinusator'
 import { Denominator } from './Denominator'
 import { Differencator } from './Differencator'
@@ -39,7 +40,7 @@ export enum GAME_MODES {
   TUTORIAL = 'tutorial',
   ARITHMETICS = 'arithmetic',
   PLOTTING = 'plotting',
-  DUEL_FUNCTION = 'duel function',
+  DUEL_FUNCTION = 'duel function'
 }
 
 export interface DifficultySettings {

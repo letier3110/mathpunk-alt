@@ -1,4 +1,5 @@
-import { CardType, IComputable } from './arithmetic'
+import { IComputable } from './arithmetic'
+import { CardType } from './CardType'
 
 export class Attacher extends CardType implements IComputable {
   constructor(count?: number) {

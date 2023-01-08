@@ -1,4 +1,4 @@
-import { CardType } from './arithmetic'
+import { CardType } from './CardType'
 
 export class Unknownator extends CardType {
   constructor() {

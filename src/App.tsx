@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import { Arithmetic } from './pages/Arithmetic/Arithmetic'
 import { Plotting } from './pages/Plotting/Plotting'
 import { Tutorial } from './pages/Tutorial/Tutorial'
@@ -11,6 +9,7 @@ import { useGameModeContext } from './shared/GameState.constate'
 import { Inventory } from './pages/Inventory/Inventory'
 import { Duel } from './pages/Duel/Duel'
 import { MainMenu } from './pages/MainMenu/MainMenu'
+import { GhostPreviewProvider } from './shared/GhostPreview.constate'
 
 function App() {
   const { gameMode } = useGameModeContext()
@@ -23,28 +22,38 @@ function App() {
           display: gameMode === GAME_MODES.TUTORIAL ? 'block' : 'none'
         }}
       >
-        <Tutorial />
+        <GhostPreviewProvider>
+          <Tutorial />
+        </GhostPreviewProvider>
       </div>
-      {gameMode === GAME_MODES.MAIN_MENU && (<div
-        style={{
-          display: gameMode === GAME_MODES.MAIN_MENU ? 'block' : 'none'
-        }}
-      >
-        <MainMenu />
-      </div>)}
+      {gameMode === GAME_MODES.MAIN_MENU && (
+        <div
+          style={{
+            display: gameMode === GAME_MODES.MAIN_MENU ? 'block' : 'none'
+          }}
+        >
+          <GhostPreviewProvider>
+            <MainMenu />
+          </GhostPreviewProvider>
+        </div>
+      )}
       <div
         style={{
           display: gameMode === GAME_MODES.DUEL_FUNCTION ? 'block' : 'none'
         }}
       >
-        <Duel />
+        <GhostPreviewProvider>
+          <Duel />
+        </GhostPreviewProvider>
       </div>
       <div
         style={{
           display: gameMode === GAME_MODES.ARITHMETICS ? 'block' : 'none'
         }}
       >
-        <Arithmetic />
+        <GhostPreviewProvider>
+          <Arithmetic />
+        </GhostPreviewProvider>
       </div>
       <div
         style={{

@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react'
-import { CardType } from '../../math/arithmetic'
+import { CardType } from '../../math/CardType'
 
 interface CardsChainProps {
   chain: CardType[]

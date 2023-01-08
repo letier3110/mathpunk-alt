@@ -1,4 +1,5 @@
-import { ArithmeticCardTypeEnum, ArithmeticCardTypes, CardType } from "../../math/arithmetic"
+import { ArithmeticCardTypeEnum, ArithmeticCardTypes } from "../../math/arithmetic"
+import { CardType } from "../../math/CardType"
 import { FNumberator } from "../../math/FNumberator"
 import { FormulaeCardType, FormulaeCardTypeEnum } from "../../math/formulae"
 import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, FormulaeCardTypeEnumToClass } from "../../math/math"

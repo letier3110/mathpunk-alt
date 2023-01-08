@@ -1,4 +1,5 @@
-import { CardType, IComputable } from './arithmetic'
+import { IComputable } from './arithmetic'
+import { CardType } from './CardType'
 
 export class Summator extends CardType implements IComputable {
   constructor() {

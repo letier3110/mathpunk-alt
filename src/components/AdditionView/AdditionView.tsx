@@ -1,5 +1,5 @@
 import { CSSProperties, FC } from 'react'
-import { CardType } from '../../math/arithmetic'
+import { CardType } from '../../math/CardType'
 
 interface AdditionViewProps {
   className?: string

@@ -1,4 +1,5 @@
-import { CardType, IComputable } from './arithmetic'
+import { IComputable } from './arithmetic'
+import { CardType } from './CardType'
 
 export class Numberator extends CardType implements IComputable {
   constructor(count?: number) {
@@ -9,6 +10,10 @@ export class Numberator extends CardType implements IComputable {
   }
 
   getName() {
+    return this.getCount();
+  }
+
+  getDescription() {
     return this.getCount();
   }
 

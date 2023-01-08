@@ -1,5 +1,5 @@
 import { CSSProperties, FC } from 'react'
-import { CardType } from '../../math/arithmetic'
+import { CardType } from '../../math/CardType'
 import { formatNumber } from '../../math/utils'
 import { ItemTypes } from '../../shared/constants'
 import { AdditionView } from '../AdditionView/AdditionView'

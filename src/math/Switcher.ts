@@ -1,4 +1,5 @@
-import { CardType, IChangable, IComputable, SwitcherValue } from './arithmetic'
+import { IChangable, IComputable, SwitcherValue } from './arithmetic'
+import { CardType } from './CardType'
 
 export class Switcher extends CardType implements IComputable, IChangable<SwitcherValue> {
   private switcherValue: SwitcherValue = SwitcherValue.DIFFERENCATOR

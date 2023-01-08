@@ -1,4 +1,4 @@
-import { CardType } from './arithmetic'
+import { CardType } from './CardType'
 import { FormulaeCardType } from './formulae'
 
 export class FNumberator extends FormulaeCardType {

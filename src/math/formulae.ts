@@ -1,4 +1,4 @@
-import { CardType } from './arithmetic'
+import { CardType } from './CardType'
 
 export enum FormulaeCardTypeEnum {
   LINENATOR = 'LINENATOR',

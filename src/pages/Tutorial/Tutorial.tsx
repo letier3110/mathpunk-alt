@@ -1,14 +1,20 @@
-import { FC, Fragment, useMemo, useState } from 'react'
+import { CSSProperties, FC, Fragment, useMemo, useState } from 'react'
 import { AdditionView } from '../../components/AdditionView/AdditionView'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
 import { CardTypeView } from '../../components/CardTypeView/CardTypeView'
-import { ArithmeticCardTypeEnum, ArithmeticCardTypes, CardType } from '../../math/arithmetic'
+import { ArithmeticCardTypeEnum, ArithmeticCardTypes } from '../../math/arithmetic'
+import { CardType } from '../../math/CardType'
 import { ArithmeticCardTypeEnumToClass, GAME_MODES } from '../../math/math'
 import { Numberator } from '../../math/Numberator'
+import { Navigator } from '../../math/Navigator'
 import { Summator } from '../../math/Summator'
 import { formatNumber } from '../../math/utils'
 import { useGameModeContext } from '../../shared/GameState.constate'
+import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
 import { useInventoryContext } from '../Inventory/Inventory.constate'
+import { INITIAL_CHAIN, INITIAL_DECK, INITIAL_ENEMY_HP, targetEnemyHp, tutorialSeries } from './Tutorial.const'
+import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
+import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
 
 interface AddCardProps {
   card: CardType
@@ -19,153 +25,25 @@ interface TutorialProps {
   //
 }
 
-interface TutorialEntity {
-  target: number
-  maxChain: number
-  cards: CardType[]
-  chain: CardType[]
-}
+const RESTART_TUTORIAL_NAME = 'Restart tutorial?'
+const CONTINUE_NAME = 'Continue to actual gameplay?'
 
-interface TutorialSetup {
-  name: ArithmeticCardTypeEnum
-  tutorials: TutorialEntity[]
-}
+const START_AGAIN_NAME = 'Start tutorial again?'
+const CONTINUE_LESSON_NAME = 'Continue to next lesson?'
+const SKIP_NAME = 'Skip?'
 
-const summatorTutorials: TutorialEntity[] = [
-  {
-    target: 4,
-    maxChain: 2,
-    cards: [new Numberator(1), new Numberator(2), new Numberator(3)],
-    chain: []
-  },
-  {
-    target: 6,
-    maxChain: 2,
-    cards: [new Numberator(1), new Numberator(2), new Numberator(3), new Numberator(4)],
-    chain: []
-  },
-  {
-    target: 10,
-    maxChain: 3,
-    cards: [new Numberator(1), new Numberator(2), new Numberator(3), new Numberator(5)],
-    chain: []
-  },
-  {
-    target: 50,
-    maxChain: 3,
-    cards: [new Numberator(12), new Numberator(23), new Numberator(18), new Numberator(15), new Numberator(15)],
-    chain: []
-  }
+const gameOverDeck = [
+  // new Navigator('Continue')
+  new Navigator(RESTART_TUTORIAL_NAME),
+  new Navigator(CONTINUE_NAME)
 ]
 
-const differencatorTutorials: TutorialEntity[] = [
-  {
-    target: 1,
-    maxChain: 2,
-    cards: [new Numberator(5), new Numberator(2), new Numberator(3), new Numberator(4)],
-    chain: []
-  },
-  {
-    target: 5,
-    maxChain: 2,
-    cards: [new Numberator(7), new Numberator(17), new Numberator(21), new Numberator(12)],
-    chain: []
-  },
-  {
-    target: 2,
-    maxChain: 2,
-    cards: [new Numberator(19), new Numberator(31), new Numberator(-5), new Numberator(-7)],
-    chain: []
-  },
-  {
-    target: 50,
-    maxChain: 2,
-    cards: [new Numberator(12), new Numberator(-23), new Numberator(-18), new Numberator(55), new Numberator(5)],
-    chain: []
-  }
-]
-
-const multiplicatorTutorials: TutorialEntity[] = [
-  {
-    target: 10,
-    maxChain: 2,
-    cards: [new Numberator(5), new Numberator(2), new Numberator(3), new Numberator(4)],
-    chain: []
-  },
-  {
-    target: 21 * 17,
-    maxChain: 2,
-    cards: [new Numberator(7), new Numberator(17), new Numberator(21), new Numberator(12)],
-    chain: []
-  },
-  {
-    target: -5 * 31 * 19,
-    maxChain: 3,
-    cards: [new Numberator(19), new Numberator(31), new Numberator(-5), new Numberator(-7)],
-    chain: []
-  },
-  {
-    target: -32 * -18,
-    maxChain: 2,
-    cards: [new Numberator(-32), new Numberator(-23), new Numberator(-18), new Numberator(55), new Numberator(5)],
-    chain: []
-  }
-]
-
-const denominatorTutorials: TutorialEntity[] = [
-  {
-    target: 5 / 2,
-    maxChain: 2,
-    cards: [new Numberator(5), new Numberator(2), new Numberator(3), new Numberator(4)],
-    chain: []
-  },
-  {
-    target: 17 / 21,
-    maxChain: 2,
-    cards: [new Numberator(7), new Numberator(17), new Numberator(21), new Numberator(12)],
-    chain: []
-  },
-  {
-    target: -7 / 19 / 31,
-    maxChain: 3,
-    cards: [new Numberator(19), new Numberator(31), new Numberator(-5), new Numberator(-7)],
-    chain: []
-  },
-  {
-    target: -23 / -18,
-    maxChain: 2,
-    cards: [new Numberator(12), new Numberator(-23), new Numberator(-18), new Numberator(55), new Numberator(5)],
-    chain: []
-  }
-]
-
-const tutorialSeries: TutorialSetup[] = [
-  {
-    name: ArithmeticCardTypes.SUMMATOR,
-    tutorials: summatorTutorials
-  },
-  {
-    name: ArithmeticCardTypes.DIFFERENCATOR,
-    tutorials: differencatorTutorials
-  },
-  {
-    name: ArithmeticCardTypes.MULTIPLICATOR,
-    tutorials: multiplicatorTutorials
-  },
-  {
-    name: ArithmeticCardTypes.DENOMINATOR,
-    tutorials: denominatorTutorials
-  }
-]
-
-const INITIAL_CHAIN: CardType[] = tutorialSeries[0].tutorials[0].chain
-const INITIAL_DECK: CardType[] = tutorialSeries[0].tutorials[0].cards
-const INITIAL_ENEMY_HP = 10
-const targetEnemyHp = 0
+const lessonEndDeck = [new Navigator(START_AGAIN_NAME), new Navigator(CONTINUE_LESSON_NAME), new Navigator(SKIP_NAME)]
 
 export const Tutorial: FC<TutorialProps> = () => {
   const { setGameMode } = useGameModeContext()
   const { addMathOperator } = useInventoryContext()
+  const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const [tutorialStep, setTutorialStep] = useState<ArithmeticCardTypeEnum>(tutorialSeries[0].name)
   const [tutorialInnerStep, setTutorialInnerStep] = useState(0)
   const [chain, setChain] = useState<CardType[]>(INITIAL_CHAIN)
@@ -215,6 +93,7 @@ export const Tutorial: FC<TutorialProps> = () => {
   const isGameEnded = enemyHp <= targetEnemyHp
 
   const handleAddCard = ({ card, index }: AddCardProps) => {
+    console.log('handleAdd', card)
     if (chain.length === maxChain) return
     if (!index) {
       const newArr = chain.concat(card)
@@ -309,132 +188,267 @@ export const Tutorial: FC<TutorialProps> = () => {
     setTutorialEnded(false)
   }
 
+  const handleEndGameClick = (card: CardType) => {
+    if (card.getName() === RESTART_TUTORIAL_NAME) {
+      handleRestartTutorial()
+      return
+    }
+    if (card.getName() === CONTINUE_NAME) {
+      handleNextGameMode()
+      return
+    }
+    if (card.getName() === START_AGAIN_NAME) {
+      handleStartAgain()
+      return
+    }
+    if (card.getName() === CONTINUE_LESSON_NAME) {
+      handleNextStep()
+      return
+    }
+    if (card.getName() === SKIP_NAME) {
+      handleSkip()
+      return
+    }
+  }
+
   return (
-    <>
-      <div className='root'>
-        {tutorialEnded === true && (
-          <>
+    <div className='root'>
+      {tutorialEnded === true && (
+        <>
+          <div className='hps flex1'>
+            <div>Tap the card to continue</div>
+          </div>
+          <div
+            className={[selectedCard ? 'border' : '', 'win mt32'].join(' ')}
+            style={{
+              backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+            }}
+            onMouseUp={() => {
+              if (selectedCard) {
+                handleEndGameClick(selectedCard)
+                setSelectedCard(null)
+              }
+            }}
+          >
+            <div>🥳🥳🥳</div>
+            <div>You completed tutorials!</div>
+          </div>
+          {selectedCard && <GhostPreview deck={gameOverDeck} card={selectedCard} />}
+          <div
+            className={[selectedCard ? 'border' : '', 'chain mt32'].join(' ')}
+            style={{
+              backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+            }}
+            onMouseUp={() => {
+              if (selectedCard) {
+                setSelectedCard(null)
+              }
+            }}
+          >
+            <CardsHand keys={gameOverDeck.map((x) => x.getId().toString())}>
+              {gameOverDeck.map((x) => {
+                const isSelected = x.getId() === selectedCard?.getId()
+                const style: CSSProperties = {
+                  scale: isSelected ? '1.2' : '1',
+                  zIndex: isSelected ? 200 : '',
+                  visibility: !isSelected ? 'visible' : 'hidden'
+                }
+                return (
+                  <NavigatorTypeView
+                    key={x.getId()}
+                    card={x}
+                    handleCardClick={() => {
+                      handleEndGameClick(x)
+                      setSelectedCard(null)
+                    }}
+                    style={style}
+                    handleMouseDown={(card: CardType) =>
+                      setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                    }
+                  />
+                )
+              })}
+            </CardsHand>
+          </div>
+        </>
+      )}
+      {tutorialEnded === false && (
+        <>
+          {isGameEnded === true && (
             <div className='hps flex1'>
               <div>Tap the card to continue</div>
             </div>
-            <div className='win mt32'>
-              <div>🥳🥳🥳</div>
-              <div>You completed tutorials!</div>
+          )}
+          {isGameEnded === false && error === null && (
+            <div className='hps'>
+              <div>Play cards to reach result:</div>
+              <div>{formatNumber(targetCount)}</div>
             </div>
-            <div className='chain mt32'>
-              <CardsHand keys={['1', '2', '3']}>
-                <div className='card' onClick={handleRestartTutorial}>
-                  Restart tutorial?
-                </div>
-                <div className='card' onClick={handleNextGameMode}>
-                  Continue to actual gameplay?
-                </div>
-              </CardsHand>
+          )}
+          {isGameEnded === false && error !== null && (
+            <div className='hps'>
+              <div>{error}</div>
             </div>
-          </>
-        )}
-        {tutorialEnded === false && (
-          <>
-            {isGameEnded === true && (
-              <div className='hps flex1'>
-                <div>Tap the card to continue</div>
-              </div>
-            )}
-            {isGameEnded === false && error === null && (
-              <div className='hps'>
-                <div>Play cards to reach result:</div>
-                <div>{formatNumber(targetCount)}</div>
-              </div>
-            )}
-            {isGameEnded === false && error !== null && (
-              <div className='hps'>
-                <div>{error}</div>
-              </div>
-            )}
-            {isGameEnded === false && (
-              <>
-                <div className='flex1 chainElem'>
-                  {new Array(maxChain).fill(1).map((x, i) => {
-                    const gapElement = (
-                      <div className=''>
-                        <AdditionView
-                          showPreview
-                          card={
-                            new ArithmeticCardTypeEnumToClass[tutorialSeries[currentTutorialIndex].name]({ name: '' })
-                          }
-                        />
-                      </div>
-                    )
-                    if (chain.length > i && chain[i]) {
-                      return (
-                        <Fragment key={chain[i].getId()}>
-                          {i > 0 ? gapElement : null}
-                          <CardTypeView
-                            card={chain[i]}
-                            noAddition
-                            className='card noAddition'
-                            handleCardClick={() => handleRemoveCard({ card: chain[i], index: i })}
-                          />
-                        </Fragment>
-                      )
-                    }
+          )}
+          {isGameEnded === false && (
+            <>
+              {selectedCard && <GhostPreview deck={deck} card={selectedCard} />}
+              <div className={['flex1 chainElem'].join(' ')}>
+                {new Array(maxChain).fill(1).map((x, i) => {
+                  const gapElement = (
+                    <div>
+                      <AdditionView
+                        showPreview
+                        card={
+                          new ArithmeticCardTypeEnumToClass[tutorialSeries[currentTutorialIndex].name]({ name: '' })
+                        }
+                      />
+                    </div>
+                  )
+                  if (chain.length > i && chain[i]) {
                     return (
-                      <Fragment key={i}>
+                      <Fragment key={chain[i].getId()}>
                         {i > 0 ? gapElement : null}
-                        <CardTypeView card={new Numberator()} noAddition className='cardPlace noAddition' />
+                        <CardTypeView
+                          card={chain[i]}
+                          noAddition
+                          className={['card noAddition'].join(' ')}
+                          handleCardClick={() => handleRemoveCard({ card: chain[i], index: i })}
+                        />
                       </Fragment>
                     )
-                  })}
-                  {chain.length === maxChain && (
-                    <div className='chainResultElem'>
-                      <div className={['cardAddition', 'equalizer'].join(' ')}>
-                        <div className='additionText'>=</div>
-                      </div>
-                      <div onClick={handleEqual} className='card'>
-                        <div className='mainText'>
-                          {equalizerResult.toString().indexOf('.') >= 0 ? equalizerResult.toFixed(2) : equalizerResult}
-                        </div>
+                  }
+                  return (
+                    <Fragment key={i}>
+                      {i > 0 ? gapElement : null}
+                      <CardTypeView
+                        card={new Numberator()}
+                        noAddition
+                        className={[selectedCard ? 'border' : '', 'cardPlace noAddition'].join(' ')}
+                        style={{
+                          backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : '',
+                          zIndex: 0
+                        }}
+                        handleMouseUp={() => {
+                          if (selectedCard) {
+                            // handleEndGameClick(selectedCard)
+                            handleAddCard({ card: selectedCard })
+                            setSelectedCard(null)
+                          }
+                        }}
+                      />
+                    </Fragment>
+                  )
+                })}
+                {chain.length === maxChain && (
+                  <div className='chainResultElem'>
+                    <div className={['cardAddition', 'equalizer'].join(' ')}>
+                      <div className='additionText'>=</div>
+                    </div>
+                    <div onClick={handleEqual} className='card'>
+                      <div className='mainText'>
+                        {equalizerResult.toString().indexOf('.') >= 0 ? equalizerResult.toFixed(2) : equalizerResult}
                       </div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
+              </div>
+              <div
+                className={[selectedCard ? 'border' : ''].join(' ')}
+                style={{
+                  backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+                }}
+                onMouseUp={() => {
+                  if (selectedCard) {
+                    setSelectedCard(null)
+                  }
+                }}
+              >
                 <CardsHand keys={deck.map((x) => x.getId().toString())}>
-                  {deck.map((x) => (
-                    <CardTypeView
-                      key={x.getId()}
-                      card={x}
-                      handleCardClick={() => handleAddCard({ card: x })}
-                      noAddition
-                      className='card noAddition'
-                    />
-                  ))}
+                  {deck.map((x) => {
+                    const isSelected = x.getId() === selectedCard?.getId()
+                    const style: CSSProperties = {
+                      scale: isSelected ? '1.2' : '1',
+                      zIndex: isSelected ? 200 : '',
+                      visibility: !isSelected ? 'visible' : 'hidden'
+                    }
+
+                    return (
+                      <CardTypeView
+                        key={x.getId()}
+                        card={x}
+                        handleCardClick={() => handleAddCard({ card: x })}
+                        noAddition
+                        className='card noAddition'
+                        style={style}
+                        handleMouseDown={(card: CardType) =>
+                          setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                        }
+                      />
+                    )
+                  })}
                 </CardsHand>
-              </>
-            )}
-            {isGameEnded === true && (
-              <>
-                <div className='win'>
-                  <div>🥳🥳🥳</div>
-                  <div>You won!</div>
-                </div>
-                <div className='chain mt32'>
-                  <CardsHand keys={['1', '2', '3']}>
-                    <div className='card' onClick={handleStartAgain}>
-                      Start tutorial again?
-                    </div>
-                    <div className='card' onClick={handleNextStep}>
-                      Continue to next lesson?
-                    </div>
-                    <div className='card' onClick={handleSkip}>
-                      Skip?
-                    </div>
-                  </CardsHand>
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </div>
-    </>
+              </div>
+            </>
+          )}
+          {isGameEnded === true && (
+            <>
+              <div
+                className={[selectedCard ? 'border' : '', 'win'].join(' ')}
+                style={{
+                  backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+                }}
+                onMouseUp={() => {
+                  if (selectedCard) {
+                    handleEndGameClick(selectedCard)
+                    setSelectedCard(null)
+                  }
+                }}
+              >
+                <div>🥳🥳🥳</div>
+                <div>You won!</div>
+              </div>
+              {selectedCard && <GhostPreview deck={lessonEndDeck} card={selectedCard} />}
+              <div
+                className={[selectedCard ? 'border' : '', 'chain mt32'].join(' ')}
+                style={{
+                  backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+                }}
+                onMouseUp={() => {
+                  if (selectedCard) {
+                    setSelectedCard(null)
+                  }
+                }}
+              >
+                <CardsHand keys={lessonEndDeck.map((x) => x.getId().toString())}>
+                  {lessonEndDeck.map((x) => {
+                    const isSelected = x.getId() === selectedCard?.getId()
+                    const style: CSSProperties = {
+                      scale: isSelected ? '1.2' : '1',
+                      zIndex: isSelected ? 200 : '',
+                      visibility: !isSelected ? 'visible' : 'hidden'
+                    }
+                    return (
+                      <NavigatorTypeView
+                        key={x.getId()}
+                        card={x}
+                        handleCardClick={() => {
+                          handleEndGameClick(x)
+                          setSelectedCard(null)
+                        }}
+                        style={style}
+                        handleMouseDown={(card: CardType) =>
+                          setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                        }
+                      />
+                    )
+                  })}
+                </CardsHand>
+              </div>
+            </>
+          )}
+        </>
+      )}
+    </div>
   )
 }

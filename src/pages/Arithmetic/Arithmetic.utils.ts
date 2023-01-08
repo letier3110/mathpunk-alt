@@ -1,4 +1,5 @@
-import { ArithmeticCardTypeEnum, ArithmeticCardTypes, CardType } from "../../math/arithmetic"
+import { ArithmeticCardTypeEnum, ArithmeticCardTypes } from "../../math/arithmetic"
+import { CardType } from "../../math/CardType"
 import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, DifficultySettings } from "../../math/math"
 import { weightedRand } from "../../math/utils"
 
