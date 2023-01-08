@@ -5,9 +5,10 @@ import { CardsHand } from "../CardsHand/CardsHand"
 interface GhostPreviewProps {
   card: CardType
   deck: Array<CardType>
+  showField?: 'description' | 'count'
 }
 
-export const GhostPreview: FC<GhostPreviewProps> = ({ card, deck }) => {
+export const GhostPreview: FC<GhostPreviewProps> = ({ card, deck, showField = 'description' }) => {
   const cardRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export const GhostPreview: FC<GhostPreviewProps> = ({ card, deck }) => {
               style={style}
               ref={isSelected ? cardRef : null}
             >
-              {card.getDescription()}
+              {showField === 'description' ? card.getDescription() : card.getCount()}
             </div>
           )
         })}

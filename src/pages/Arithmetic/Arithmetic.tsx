@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react'
+import { CSSProperties, FC, useEffect, useMemo, useState } from 'react'
 import { CardsChain } from '../../components/CardsChain/CardsChain'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
 import { CardTypeView } from '../../components/CardTypeView/CardTypeView'
@@ -9,7 +9,11 @@ import { formatNumber } from '../../math/utils'
 import { ARITHMETIC_VALUES, generateTargetArithmetic, getDeckPoolArithmetic } from './Arithmetic.utils'
 import { useGameModeContext } from '../../shared/GameState.constate'
 
+import { Navigator } from '../../math/Navigator'
 import { Reroll } from '../../components/Reroll/Reroll'
+import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
+import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
+import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
 
 interface AddCardProps {
   card: CardType
@@ -20,8 +24,13 @@ interface ArithmeticProps {
   //
 }
 
+const START_NEW_NAME = 'Start new game?'
+
+const lessonEndDeck = [new Navigator(START_NEW_NAME)]
+
 export const Arithmetic: FC<ArithmeticProps> = () => {
   const { setGameMode } = useGameModeContext()
+  const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const [hardMode, setHardMode] = useState<boolean>(false)
   const [count, setCount] = useState(generateTargetArithmetic())
   const [left, setLeft] = useState(3)
@@ -114,6 +123,29 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
     handleStartNewRound()
   }
 
+  const handleEndGameClick = (card: CardType) => {
+    if (card.getName() === START_NEW_NAME) {
+      handleStartNewGame()
+      return
+    }
+    // if (card.getName() === CONTINUE_NAME) {
+    //   handleNextGameMode()
+    //   return
+    // }
+    // if (card.getName() === START_AGAIN_NAME) {
+    //   handleStartAgain()
+    //   return
+    // }
+    // if (card.getName() === CONTINUE_LESSON_NAME) {
+    //   handleNextStep()
+    //   return
+    // }
+    // if (card.getName() === SKIP_NAME) {
+    //   handleSkip()
+    //   return
+    // }
+  }
+
   return (
     <>
       <div className='header'>
@@ -136,33 +168,88 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
         </div>
         {isGameEnded === false && (
           <>
-            <div className='flex1 count'>{count}</div>
-            <CardsChain
-              chain={chain}
-              keys={chain.map((x) => x.getId().toString())}
-              equalizerResult={formatNumber(equalizerResult)}
-              handleEqual={handleEqual}
+            <div
+              className={[selectedCard ? 'border' : ''].join(' ')}
+              style={{
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : '',
+                minHeight: '100px',
+                minWidth: '100px'
+              }}
+              onMouseUp={() => {
+                if (selectedCard) {
+                  handleAddCard({ card: selectedCard })
+                  setSelectedCard(null)
+                }
+              }}
             >
-              {chain.map((x) => (
-                <CardTypeView
-                  key={x.getId()}
-                  card={x}
-                  showPreview
-                  className='card noAddition'
-                  handleCardClick={() => handleRemoveCard({ card: x })}
-                />
-              ))}
-            </CardsChain>
-            <CardsHand keys={deck.map((x) => x.getId().toString())}>
-              {deck.map((x) => (
-                <CardTypeView key={x.getId()} card={x} handleCardClick={() => handleAddCard({ card: x })} />
-              ))}
-            </CardsHand>
+              <div className='flex1 count'>{count}</div>
+              <CardsChain
+                chain={chain}
+                keys={chain.map((x) => x.getId().toString())}
+                equalizerResult={formatNumber(equalizerResult)}
+                handleEqual={handleEqual}
+              >
+                {chain.map((x) => (
+                  <CardTypeView
+                    key={x.getId()}
+                    card={x}
+                    showPreview
+                    className='card noAddition'
+                    handleCardClick={() => handleRemoveCard({ card: x })}
+                  />
+                ))}
+              </CardsChain>
+            </div>
+            {selectedCard && <GhostPreview deck={deck} card={selectedCard} showField={'count'} />}
+            <div
+              className={[selectedCard ? 'border' : ''].join(' ')}
+              style={{
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+              }}
+              onMouseUp={() => {
+                if (selectedCard) {
+                  setSelectedCard(null)
+                }
+              }}
+            >
+              <CardsHand keys={deck.map((x) => x.getId().toString())}>
+                {deck.map((x) => {
+                  const isSelected = x.getId() === selectedCard?.getId()
+                  const style: CSSProperties = {
+                    scale: isSelected ? '1.2' : '1',
+                    zIndex: isSelected ? 200 : '',
+                    visibility: !isSelected ? 'visible' : 'hidden'
+                  }
+                  return (
+                    <CardTypeView
+                      key={x.getId()}
+                      card={x}
+                      style={style}
+                      handleCardClick={() => handleAddCard({ card: x })}
+                      handleMouseDown={(card: CardType) =>
+                        setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                      }
+                    />
+                  )
+                })}
+              </CardsHand>
+            </div>
           </>
         )}
         {isGameEnded === true && (
           <>
-            <div className='win'>
+            <div
+              className={[selectedCard ? 'border' : '', 'win'].join(' ')}
+              style={{
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+              }}
+              onMouseUp={() => {
+                if (selectedCard) {
+                  handleEndGameClick(selectedCard)
+                  setSelectedCard(null)
+                }
+              }}
+            >
               <div>🥳🥳🥳</div>
               <div>You won!</div>
               <div>
@@ -170,12 +257,42 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
                 <input type='checkbox' checked={hardMode} onChange={(e) => setHardMode(e.target.checked)} />
               </div>
             </div>
-            <CardsHand keys={['1']}>
-              <div className='card' onClick={handleStartNewGame}>
-                Start new game?
-              </div>
-              <></>
-            </CardsHand>
+            {selectedCard && <GhostPreview deck={lessonEndDeck} card={selectedCard} />}
+            <div
+              className={[selectedCard ? 'border' : ''].join(' ')}
+              style={{
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+              }}
+              onMouseUp={() => {
+                if (selectedCard) {
+                  setSelectedCard(null)
+                }
+              }}
+            >
+              <CardsHand keys={lessonEndDeck.map((x) => x.getId().toString())}>
+                {lessonEndDeck.map((x) => {
+                  const isSelected = x.getId() === selectedCard?.getId()
+                  const style: CSSProperties = {
+                    scale: isSelected ? '1.2' : '1',
+                    zIndex: isSelected ? 200 : '',
+                    visibility: !isSelected ? 'visible' : 'hidden'
+                  }
+                  return (
+                    <NavigatorTypeView
+                      key={x.getId()}
+                      card={x}
+                      handleCardClick={() => {
+                        handleEndGameClick(x)
+                      }}
+                      style={style}
+                      handleMouseDown={(card: CardType) =>
+                        setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                      }
+                    />
+                  )
+                })}
+              </CardsHand>
+            </div>
           </>
         )}
       </div>
