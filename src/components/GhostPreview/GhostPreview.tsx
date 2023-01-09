@@ -26,10 +26,12 @@ export const GhostPreview: FC<GhostPreviewProps> = ({
       const x = e.pageX
       const y = e.pageY
       const newposX = x - 60
-      const newposY = y + 60
-      cardRef.current.style.transform = `matrix(1.2, 0, 0, 1.2, ${newposX},${newposY})`
+      const newposY = y - 120
+      cardRef.current.style.transform = `matrix(1, 0, 0, 1, ${newposX},${newposY})`
       cardRef.current.style.rotate = `0deg`
       cardRef.current.style.visibility = `visible`
+      cardRef.current.style.pointerEvents = `none`
+      
     }
     document.addEventListener('mousemove', mouseMoveHandler)
     return () => {
