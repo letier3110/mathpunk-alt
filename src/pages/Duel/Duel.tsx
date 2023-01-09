@@ -218,11 +218,9 @@ export const Duel: FC<DuelProps> = () => {
               ))}
             </CardsHand>
             <div
-              className={[selectedCard ? 'border' : ''].join(' ')}
+              className={[selectedCard ? 'border' : '', 'flex1 duel'].join(' ')}
               style={{
-                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : '',
-                minHeight: '100px',
-                minWidth: '100px'
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
               }}
               onMouseUp={() => {
                 if (selectedCard) {
@@ -259,7 +257,18 @@ export const Duel: FC<DuelProps> = () => {
                 ))}
               </CardsChain>
             </div>
-            {selectedCard && <GhostPreview deck={deck} card={selectedCard} showField={'count'} />}
+            {selectedCard && (
+              <GhostPreview
+                deck={deck}
+                card={selectedCard}
+                showField={'count'}
+                handleMouseUp={() => {
+                  if (selectedCard) {
+                    setSelectedCard(null)
+                  }
+                }}
+              />
+            )}
             <div
               className={[selectedCard ? 'border' : ''].join(' ')}
               style={{

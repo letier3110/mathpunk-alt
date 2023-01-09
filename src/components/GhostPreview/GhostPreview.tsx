@@ -6,9 +6,17 @@ interface GhostPreviewProps {
   card: CardType
   deck: Array<CardType>
   showField?: 'description' | 'count' | 'name'
+  handleMouseDown?: () => void
+  handleMouseUp?: () => void
 }
 
-export const GhostPreview: FC<GhostPreviewProps> = ({ card, deck, showField = 'description' }) => {
+export const GhostPreview: FC<GhostPreviewProps> = ({
+  card,
+  deck,
+  showField = 'description',
+  handleMouseDown = () => {},
+  handleMouseUp = () => {}
+}) => {
   const cardRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -35,8 +43,10 @@ export const GhostPreview: FC<GhostPreviewProps> = ({ card, deck, showField = 'd
       keys={deck.map((x) => x.getId().toString())}
       styles={deck.map((x) => {
         const isSelected = x.getId().toString() === card?.getId().toString()
-        return isSelected ? { position: 'fixed', top: '0px', left: '0px', rotate: '0deg' } : {}
+        return isSelected ? { position: 'fixed', top: '0px', left: '0px', rotate: '0deg', zIndex: 200 } : {}
       })}
+      handleMouseDown={handleMouseDown}
+      handleMouseUp={handleMouseUp}
     >
       {deck
         // .filter((x) => x.getDescription() !== selectedCard?.getDescription())

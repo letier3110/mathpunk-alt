@@ -14,12 +14,20 @@ body {
 
 .root {
   width: 100%;
-  min-height: calc(100vh - 48px);
+  min-height: calc(100vh - 32px);
+  height: calc(100vh - 32px);
 
   display: flex;
   flex-direction: column;
 
   align-items: center;
+}
+
+.duel {
+  min-height: 100px;
+  min-width: 100px;
+  display: flex;
+  justify-content: center;
 }
 
 .flex {
@@ -271,7 +279,7 @@ body {
 }
 
 .chain {
-  margin-bottom: 120px;
+  margin-bottom: 60px;
   display: flex;
   position: relative;
   justify-content: center;

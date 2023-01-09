@@ -153,7 +153,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
         {isGameEnded === false && (
           <>
             <div
-              className={[selectedCard ? 'border' : ''].join(' ')}
+              className={[selectedCard ? 'border' : '', 'flex1'].join(' ')}
               style={{
                 backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : '',
                 minHeight: '100px',

@@ -1,4 +1,5 @@
 import { CSSProperties, FC, ReactNode } from 'react'
+import { CardType } from '../../math/CardType'
 import { ItemTypes } from '../../shared/constants'
 
 interface CardsHandProps {
@@ -7,9 +8,19 @@ interface CardsHandProps {
   styles?: Array<CSSProperties>
   keys?: string[]
   hide?: boolean
+  handleMouseDown?: () => void
+  handleMouseUp?: () => void
 }
 
-export const CardsHand: FC<CardsHandProps> = ({ children, styles, className = '', keys, hide = false }) => {
+export const CardsHand: FC<CardsHandProps> = ({
+  children,
+  styles,
+  className = '',
+  keys,
+  hide = false,
+  handleMouseDown = () => {},
+  handleMouseUp = () => {}
+}) => {
   const height = Math.abs(-Math.floor(children.length / 2))
   if (hide) return null
   return (
@@ -18,6 +29,8 @@ export const CardsHand: FC<CardsHandProps> = ({ children, styles, className = ''
       style={{
         height: `${height * height * 5 + 116}px`
       }}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
     >
       {children.map((Element, index, deck) => {
         const delta = Math.abs(-Math.floor(deck.length / 2) + index)
@@ -29,7 +42,7 @@ export const CardsHand: FC<CardsHandProps> = ({ children, styles, className = ''
           rotate: `${(rotate + index) * 6}deg`,
           margin: '0px -12px',
           translate: `${translateY}px ${translateX}px`,
-          ...currentStyle,
+          ...currentStyle
         }
         return (
           <div key={(keys ?? [(index = index)])[index]} style={style}>
