@@ -121,11 +121,13 @@ export const Tutorial: FC<TutorialProps> = () => {
   const handleEqual = () => {
     if (currentTutorialIndex < 0) return
     if (equalizerResult !== targetCount) {
+      setSelectedCard(null)
       setError(`${formatNumber(equalizerResult)} is not equal ${formatNumber(targetCount)}, try again`)
       setDeck(initialDeckStepPlus)
       setChain(initiaChain)
       return
     } else {
+      setSelectedCard(null)
       setError(null)
       setEnemyHp(targetEnemyHp)
       return
@@ -333,7 +335,8 @@ export const Tutorial: FC<TutorialProps> = () => {
                           card={chain[i]}
                           noAddition
                           className={['card noAddition'].join(' ')}
-                          handleCardClick={() => handleRemoveCard({ card: chain[i], index: i })}
+                          // handleCardClick={() => handleRemoveCard({ card: chain[i], index: i })}
+                          // handleMouseDown={() => handleRemoveCard({ card: chain[i], index: i })}
                         />
                       </Fragment>
                     )

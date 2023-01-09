@@ -119,6 +119,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
   }
 
   const handleEqual = () => {
+    setSelectedCard(null)
     setEnemyHp(enemyHp + prediction)
     handleStartNewRound()
   }

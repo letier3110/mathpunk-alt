@@ -172,6 +172,7 @@ export const Duel: FC<DuelProps> = () => {
   }
 
   const handleEqual = () => {
+    setSelectedCard(null)
     // setRounds(rounds + prediction)
     handleStartNewRound()
   }

@@ -126,6 +126,7 @@ export const Plotting: FC<PlottingProps> = () => {
   }
 
   const handleEqual = () => {
+    setSelectedCard(null)
     setEnemyHp(enemyHp + prediction)
     handleStartNewRound()
   }
