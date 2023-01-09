@@ -335,7 +335,6 @@ export const Tutorial: FC<TutorialProps> = () => {
                           card={chain[i]}
                           noAddition
                           className={['card noAddition'].join(' ')}
-                          // handleCardClick={() => handleRemoveCard({ card: chain[i], index: i })}
                           handleMouseDown={() => {
                             handleRemoveCard({ card: chain[i], index: i })
                             setSelectedCard((prev) => (prev?.getId() === chain[i].getId() ? null : chain[i]))
