@@ -184,7 +184,18 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
                 ))}
               </CardsChain>
             </div>
-            {selectedCard && <GhostPreview deck={deck} card={selectedCard} showField={'count'} />}
+            {selectedCard && (
+              <GhostPreview
+                deck={deck}
+                card={selectedCard}
+                showField={'count'}
+                handleMouseUp={() => {
+                  if (selectedCard) {
+                    setSelectedCard(null)
+                  }
+                }}
+              />
+            )}
             <div
               className={[selectedCard ? 'border' : ''].join(' ')}
               style={{

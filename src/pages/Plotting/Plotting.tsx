@@ -216,12 +216,23 @@ export const Plotting: FC<PlottingProps> = () => {
                 />
               ))}
             </CardsChain>
-            {selectedCard && <GhostPreview deck={deck} card={selectedCard} showField={'name'} />}
+            {selectedCard && (
+              <GhostPreview
+                deck={deck}
+                card={selectedCard}
+                showField={'name'}
+                handleMouseUp={() => {
+                  if (selectedCard) {
+                    setSelectedCard(null)
+                  }
+                }}
+              />
+            )}
             <div
               className={[selectedCard ? 'border' : ''].join(' ')}
               style={{
                 backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : '',
-                padding:'0px 40px'
+                padding: '0px 40px'
               }}
               onMouseUp={() => {
                 if (selectedCard) {
@@ -273,7 +284,17 @@ export const Plotting: FC<PlottingProps> = () => {
                 <input type='checkbox' checked={hardMode} onChange={(e) => setHardMode(e.target.checked)} />
               </div>
             </div>
-            {selectedCard && <GhostPreview deck={lessonEndDeck} card={selectedCard} />}
+            {selectedCard && (
+              <GhostPreview
+                deck={lessonEndDeck}
+                card={selectedCard}
+                handleMouseUp={() => {
+                  if (selectedCard) {
+                    setSelectedCard(null)
+                  }
+                }}
+              />
+            )}
             <div
               className={[selectedCard ? 'border' : ''].join(' ')}
               style={{

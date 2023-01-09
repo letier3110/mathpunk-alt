@@ -85,7 +85,17 @@ export const MainMenu: FC<MainMenuProps> = () => {
           <MainMenuLoader />
         </div>
       </div>
-      {selectedCard && <GhostPreview deck={deck} card={selectedCard} />}
+      {selectedCard && (
+        <GhostPreview
+          deck={deck}
+          card={selectedCard}
+          handleMouseUp={() => {
+            if (selectedCard) {
+              setSelectedCard(null)
+            }
+          }}
+        />
+      )}
       <div
         className={[selectedCard ? 'border' : ''].join(' ')}
         style={{

@@ -233,7 +233,17 @@ export const Tutorial: FC<TutorialProps> = () => {
             <div>🥳🥳🥳</div>
             <div>You completed tutorials!</div>
           </div>
-          {selectedCard && <GhostPreview deck={gameOverDeck} card={selectedCard} />}
+          {selectedCard && (
+            <GhostPreview
+              deck={gameOverDeck}
+              card={selectedCard}
+              handleMouseUp={() => {
+                if (selectedCard) {
+                  setSelectedCard(null)
+                }
+              }}
+            />
+          )}
           <div
             className={[selectedCard ? 'border' : '', 'chain mt32'].join(' ')}
             style={{
@@ -292,7 +302,17 @@ export const Tutorial: FC<TutorialProps> = () => {
           )}
           {isGameEnded === false && (
             <>
-              {selectedCard && <GhostPreview deck={deck} card={selectedCard} />}
+              {selectedCard && (
+                <GhostPreview
+                  deck={deck}
+                  card={selectedCard}
+                  handleMouseUp={() => {
+                    if (selectedCard) {
+                      setSelectedCard(null)
+                    }
+                  }}
+                />
+              )}
               <div className={['flex1 chainElem'].join(' ')}>
                 {new Array(maxChain).fill(1).map((x, i) => {
                   const gapElement = (
@@ -408,7 +428,17 @@ export const Tutorial: FC<TutorialProps> = () => {
                 <div>🥳🥳🥳</div>
                 <div>You won!</div>
               </div>
-              {selectedCard && <GhostPreview deck={lessonEndDeck} card={selectedCard} />}
+              {selectedCard && (
+                <GhostPreview
+                  deck={lessonEndDeck}
+                  card={selectedCard}
+                  handleMouseUp={() => {
+                    if (selectedCard) {
+                      setSelectedCard(null)
+                    }
+                  }}
+                />
+              )}
               <div
                 className={[selectedCard ? 'border' : '', 'chain mt32'].join(' ')}
                 style={{
