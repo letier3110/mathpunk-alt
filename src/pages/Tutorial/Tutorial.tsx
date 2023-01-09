@@ -356,7 +356,6 @@ export const Tutorial: FC<TutorialProps> = () => {
                         }}
                         handleMouseUp={() => {
                           if (selectedCard) {
-                            // handleEndGameClick(selectedCard)
                             handleAddCard({ card: selectedCard })
                             setSelectedCard(null)
                           }

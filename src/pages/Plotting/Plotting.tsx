@@ -253,6 +253,7 @@ export const Plotting: FC<PlottingProps> = () => {
                     <FunctionalTypeView
                       key={x.getId().toString()}
                       card={x}
+                      style={style}
                       handleCardClick={() => handleAddCard({ card: x })}
                       handleMouseDown={(card: CardType) =>
                         setSelectedCard((prev) => (prev?.getId().toString() === card.getId().toString() ? null : card))
