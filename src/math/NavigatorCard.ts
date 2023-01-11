@@ -1,6 +1,6 @@
 import { CardType } from './CardType'
 
-export class Navigator extends CardType {
+export class NavigatorCard extends CardType {
   constructor(name = 'Navigator') {
     super({ name })
   }

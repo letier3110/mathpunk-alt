@@ -14,7 +14,7 @@ import {
 } from './Duel.utils'
 import { useGameModeContext } from '../../shared/GameState.constate'
 
-import { Navigator } from '../../math/Navigator'
+import { NavigatorCard } from '../../math/NavigatorCard'
 import { Reroll } from '../../components/Reroll/Reroll'
 import { Numberator } from '../../math/Numberator'
 import { Switcher } from '../../math/Switcher'
@@ -45,7 +45,7 @@ initialChainCard.setCount(generateTargetArithmetic())
 
 const START_NEW_NAME = 'Start new game?'
 
-const lessonEndDeck = [new Navigator(START_NEW_NAME)]
+const lessonEndDeck = [new NavigatorCard(START_NEW_NAME)]
 
 export const Duel: FC<DuelProps> = () => {
   const { setGameMode } = useGameModeContext()
@@ -305,6 +305,7 @@ export const Duel: FC<DuelProps> = () => {
                     />
                   )
                 })}
+                {/* <Reroll left={left} handleReroll={handleReroll} /> */}
               </CardsHand>
             </div>
           </>
@@ -369,7 +370,6 @@ export const Duel: FC<DuelProps> = () => {
           </>
         )}
       </div>
-      <Reroll left={left} handleReroll={handleReroll} />
     </>
   )
 }

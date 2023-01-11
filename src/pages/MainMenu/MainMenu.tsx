@@ -5,37 +5,28 @@ import { CardsHand } from '../../components/CardsHand/CardsHand'
 import { GAME_MODES } from '../../math/math'
 import { useGameModeContext } from '../../shared/GameState.constate'
 
-import { Navigator } from '../../math/Navigator'
+import { NavigatorCard } from '../../math/NavigatorCard'
 import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
 import { MainMenuLoader } from './MainMenuLoader'
 import { CardType } from '../../math/CardType'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
+import { ARITHMETIC_NAME, DUEL_NAME, PLOTTING_NAME, TUTORIAL_NAME } from '../../shared/decks.data'
+import { useDeck } from '../../shared/DeckState.constate'
 
 interface MainMenuProps {
   //
 }
 
-const TUTORIAL_NAME = 'Start Tutorial?'
-const ARITHMETIC_NAME = 'Start Arithmetic?'
-const PLOTTING_NAME = 'Start Plotting?'
-const DUEL_NAME = 'Start Duel?'
-
-const deck = [
-  // new Navigator('Continue')
-  new Navigator(TUTORIAL_NAME),
-  new Navigator(ARITHMETIC_NAME),
-  new Navigator(PLOTTING_NAME),
-  new Navigator(DUEL_NAME)
-]
-
 export const MainMenu: FC<MainMenuProps> = () => {
-  const { setGameMode } = useGameModeContext()
+  const { gameMode, setGameMode } = useGameModeContext()
   const [gameModeState, setGameModeState] = useState(GAME_MODES.MAIN_MENU)
+  const { getDeck } = useDeck()
+  const deck = getDeck(gameMode)
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const handleCardClick = (card: Navigator) => {
+  const handleCardClick = (card: NavigatorCard) => {
     if (card.getName() === TUTORIAL_NAME) {
       setGameModeState(GAME_MODES.TUTORIAL)
       return

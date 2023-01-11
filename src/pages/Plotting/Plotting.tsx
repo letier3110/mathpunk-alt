@@ -9,7 +9,7 @@ import { FunctionalTypeView } from '../../components/FunctionalTypeView/Function
 import { X_SIZE, Y_SIZE } from './Plottings.data'
 import { useGraph } from './useGraph.hook'
 
-import { Navigator } from '../../math/Navigator'
+import { NavigatorCard } from '../../math/NavigatorCard'
 import { generateTargetPlotting, getDeckPoolPlotting } from './Plotting.utils'
 import { usePlottingContext } from './Plotting.constate'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
@@ -31,7 +31,7 @@ interface AddCardProps {
 
 const START_NEW_NAME = 'Start new game?'
 
-const lessonEndDeck = [new Navigator(START_NEW_NAME)]
+const lessonEndDeck = [new NavigatorCard(START_NEW_NAME)]
 
 export const Plotting: FC<PlottingProps> = () => {
   const { setGameMode } = useGameModeContext()

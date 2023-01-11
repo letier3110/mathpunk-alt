@@ -9,7 +9,7 @@ import { formatNumber } from '../../math/utils'
 import { ARITHMETIC_VALUES, generateTargetArithmetic, getDeckPoolArithmetic } from './Arithmetic.utils'
 import { useGameModeContext } from '../../shared/GameState.constate'
 
-import { Navigator } from '../../math/Navigator'
+import { NavigatorCard } from '../../math/NavigatorCard'
 import { Reroll } from '../../components/Reroll/Reroll'
 import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
@@ -26,7 +26,7 @@ interface ArithmeticProps {
 
 const START_NEW_NAME = 'Start new game?'
 
-const lessonEndDeck = [new Navigator(START_NEW_NAME)]
+const lessonEndDeck = [new NavigatorCard(START_NEW_NAME)]
 
 export const Arithmetic: FC<ArithmeticProps> = () => {
   const { setGameMode } = useGameModeContext()

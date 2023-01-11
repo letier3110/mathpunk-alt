@@ -1,4 +1,4 @@
-import { CSSProperties, FC, Fragment, useMemo, useState } from 'react'
+import { CSSProperties, FC, Fragment, useCallback, useMemo, useState } from 'react'
 import { AdditionView } from '../../components/AdditionView/AdditionView'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
 import { CardTypeView } from '../../components/CardTypeView/CardTypeView'
@@ -6,7 +6,7 @@ import { ArithmeticCardTypeEnum, ArithmeticCardTypes } from '../../math/arithmet
 import { CardType } from '../../math/CardType'
 import { ArithmeticCardTypeEnumToClass, GAME_MODES } from '../../math/math'
 import { Numberator } from '../../math/Numberator'
-import { Navigator } from '../../math/Navigator'
+import { NavigatorCard } from '../../math/NavigatorCard'
 import { Summator } from '../../math/Summator'
 import { formatNumber } from '../../math/utils'
 import { useGameModeContext } from '../../shared/GameState.constate'
@@ -15,6 +15,8 @@ import { useInventoryContext } from '../Inventory/Inventory.constate'
 import { INITIAL_CHAIN, INITIAL_DECK, INITIAL_ENEMY_HP, targetEnemyHp, tutorialSeries } from './Tutorial.const'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
+import { CONTINUE_LESSON_NAME, CONTINUE_NAME, gameOverDeck, lessonEndDeck, RESTART_TUTORIAL_NAME, SKIP_NAME, START_AGAIN_NAME } from '../../shared/decks.data'
+import { useDeck } from '../../shared/DeckState.constate'
 
 interface AddCardProps {
   card: CardType
@@ -25,29 +27,19 @@ interface TutorialProps {
   //
 }
 
-const RESTART_TUTORIAL_NAME = 'Restart tutorial?'
-const CONTINUE_NAME = 'Continue to actual gameplay?'
-
-const START_AGAIN_NAME = 'Start tutorial again?'
-const CONTINUE_LESSON_NAME = 'Continue to next lesson?'
-const SKIP_NAME = 'Skip?'
-
-const gameOverDeck = [
-  // new Navigator('Continue')
-  new Navigator(RESTART_TUTORIAL_NAME),
-  new Navigator(CONTINUE_NAME)
-]
-
-const lessonEndDeck = [new Navigator(START_AGAIN_NAME), new Navigator(CONTINUE_LESSON_NAME), new Navigator(SKIP_NAME)]
-
 export const Tutorial: FC<TutorialProps> = () => {
-  const { setGameMode } = useGameModeContext()
+  const { gameMode, setGameMode } = useGameModeContext()
   const { addMathOperator } = useInventoryContext()
+  const { getDeck, updateDeck } = useDeck()
+  const deck = getDeck(gameMode)
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const [tutorialStep, setTutorialStep] = useState<ArithmeticCardTypeEnum>(tutorialSeries[0].name)
   const [tutorialInnerStep, setTutorialInnerStep] = useState(0)
   const [chain, setChain] = useState<CardType[]>(INITIAL_CHAIN)
-  const [deck, setDeck] = useState<CardType[]>(INITIAL_DECK)
+  // const [deck, setDeck] = useState<CardType[]>(INITIAL_DECK)
+  // const setDeck = useCallback((cards: Array<CardType>) => {
+  //   updateDeck(gameMode, cards)
+  // }, [updateDeck])
   const [error, setError] = useState<string | null>(null)
   const [enemyHp, setEnemyHp] = useState(INITIAL_ENEMY_HP)
   const [tutorialEnded, setTutorialEnded] = useState(false)
@@ -93,27 +85,26 @@ export const Tutorial: FC<TutorialProps> = () => {
   const isGameEnded = enemyHp <= targetEnemyHp
 
   const handleAddCard = ({ card, index }: AddCardProps) => {
-    console.log('handleAdd', card)
     if (chain.length === maxChain) return
     if (!index) {
       const newArr = chain.concat(card)
       setChain(newArr)
-      setDeck(deck.filter((x) => x.getId() !== card.getId()))
+      updateDeck(gameMode, deck.filter((x) => x.getId().toString() !== card.getId().toString()))
     } else {
       const newArr = [...chain.slice(0, index), card, ...chain.slice(index)]
       setChain(newArr)
-      setDeck(deck.filter((x) => x.getId() !== card.getId()))
+      updateDeck(gameMode, deck.filter((x) => x.getId().toString() !== card.getId().toString()))
     }
   }
 
   const handleRemoveCard = ({ card, index }: AddCardProps) => {
     if (!index) {
       const newArr = deck.concat(card)
-      setDeck(newArr)
+      updateDeck(gameMode, newArr)
       setChain(chain.filter((x) => x.getId() !== card.getId()))
     } else {
       const newArr = [...deck.slice(0, index), card, ...deck.slice(index)]
-      setDeck(newArr)
+      updateDeck(gameMode, newArr)
       setChain(chain.filter((x) => x.getId() !== card.getId()))
     }
   }
@@ -123,7 +114,7 @@ export const Tutorial: FC<TutorialProps> = () => {
     if (equalizerResult !== targetCount) {
       setSelectedCard(null)
       setError(`${formatNumber(equalizerResult)} is not equal ${formatNumber(targetCount)}, try again`)
-      setDeck(initialDeckStepPlus)
+      updateDeck(gameMode, initialDeckStepPlus)
       setChain(initiaChain)
       return
     } else {
@@ -136,13 +127,12 @@ export const Tutorial: FC<TutorialProps> = () => {
 
   const handleStartAgain = () => {
     setChain(initiaChain)
-    setDeck(initialDeckStepPlus)
+    updateDeck(gameMode, initialDeckStepPlus)
     setEnemyHp(INITIAL_ENEMY_HP)
   }
 
   const handleNextStep = () => {
     const allLocalTutorials = tutorialSeries[currentTutorialIndex].tutorials
-    console.log('handleNextStep', tutorialInnerStep, allLocalTutorials.length - 1)
     if (tutorialInnerStep >= allLocalTutorials.length - 1) {
       addMathOperator(tutorialStep)
       handleNextMacroTutorial()
@@ -151,19 +141,18 @@ export const Tutorial: FC<TutorialProps> = () => {
       const newDeck: CardType[] = allLocalTutorials[tutorialInnerStep + 1].cards
       setTutorialInnerStep(tutorialInnerStep + 1)
       setChain(newChain)
-      setDeck(newDeck)
+      updateDeck(gameMode, newDeck)
       setEnemyHp(INITIAL_ENEMY_HP)
     }
   }
 
   const handleNextMacroTutorial = () => {
     const newIndex = currentTutorialIndex + 1
-    console.log('handleNextMacroTutorial', currentTutorialIndex + 1, tutorialSeries.length)
     if (newIndex < tutorialSeries.length) {
       const newChain: CardType[] = tutorialSeries[newIndex].tutorials[0].chain
       const newDeck: CardType[] = tutorialSeries[newIndex].tutorials[0].cards
       setChain(newChain)
-      setDeck(newDeck)
+      updateDeck(gameMode, newDeck)
       setEnemyHp(INITIAL_ENEMY_HP)
       setTutorialInnerStep(0)
       setTutorialStep(tutorialSeries[newIndex].name)
@@ -185,7 +174,7 @@ export const Tutorial: FC<TutorialProps> = () => {
     setTutorialInnerStep(0)
     setTutorialStep(ArithmeticCardTypes.SUMMATOR)
     setChain(INITIAL_CHAIN)
-    setDeck(INITIAL_DECK)
+    updateDeck(gameMode, INITIAL_DECK)
     setEnemyHp(INITIAL_ENEMY_HP)
     setTutorialEnded(false)
   }
@@ -401,7 +390,7 @@ export const Tutorial: FC<TutorialProps> = () => {
                       <CardTypeView
                         key={x.getId()}
                         card={x}
-                        handleCardClick={() => handleAddCard({ card: x })}
+                        // handleCardClick={() => handleAddCard({ card: x })}
                         noAddition
                         className='card noAddition'
                         style={style}

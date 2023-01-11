@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
 import { InventoryProvider } from './pages/Inventory/Inventory.constate'
+import { DeckProvider } from './shared/DeckState.constate'
 import { GameModeProvider } from './shared/GameState.constate'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <GameModeProvider>
       <InventoryProvider>
-        <App />
+        <DeckProvider>
+          <App />
+        </DeckProvider>
       </InventoryProvider>
     </GameModeProvider>
   </React.StrictMode>
