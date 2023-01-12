@@ -9,7 +9,7 @@ import { formatNumber } from '../../math/utils'
 import {
   ARITHMETIC_VALUES,
   generateTargetArithmetic,
-  getDeckPoolArithmetic,
+  getDeckPoolDuel,
   getEnemyDeckPoolArithmetic
 } from './Duel.utils'
 import { useGameModeContext } from '../../shared/GameState.constate'
@@ -21,6 +21,7 @@ import { Switcher } from '../../math/Switcher'
 import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
 import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
+import { useDeck } from '../../shared/DeckState.constate'
 
 interface AddCardProps {
   card: CardType
@@ -48,19 +49,17 @@ const START_NEW_NAME = 'Start new game?'
 const lessonEndDeck = [new NavigatorCard(START_NEW_NAME)]
 
 export const Duel: FC<DuelProps> = () => {
-  const { setGameMode } = useGameModeContext()
+  const { gameMode, setGameMode } = useGameModeContext()
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
+  const { getDeck, updateDeck } = useDeck()
+  const deck = getDeck(GAME_MODES.DUEL_FUNCTION)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [hardMode, setHardMode] = useState<boolean>(false)
   const [currentTurn, setCurrentTurn] = useState<TurnsType>(startingTurn)
-  // const [count, setCount] = useState(generateTargetArithmetic())
   const [left, setLeft] = useState(3)
   const [rounds, setRounds] = useState(initialRounds)
-  // const [round, setRound] = useState<number>(1)
   const [chain, setChain] = useState<CardType[]>([initialChainCard])
-  const [deck, setDeck] = useState<CardType[]>(getDeckPoolArithmetic())
   const [enemyDeck, setEnemyDeck] = useState<CardType[]>(getEnemyDeckPoolArithmetic())
-  // const [prediction, setPrediction] = useState(0)
 
   const equalizerResult: number = useMemo(() => {
     if (chain.length === 0) return 0
@@ -94,11 +93,17 @@ export const Duel: FC<DuelProps> = () => {
     if (!index) {
       const newArr = chain.concat(card)
       setChain(newArr)
-      setDeck(deck.filter((x) => x.getId() !== card.getId()))
+      updateDeck(
+        GAME_MODES.DUEL_FUNCTION,
+        deck.filter((x) => x.getId() !== card.getId())
+      )
     } else {
       const newArr = [...chain.slice(0, index), card, ...chain.slice(index)]
       setChain(newArr)
-      setDeck(deck.filter((x) => x.getId() !== card.getId()))
+      updateDeck(
+        GAME_MODES.DUEL_FUNCTION,
+        deck.filter((x) => x.getId() !== card.getId())
+      )
     }
   }
 
@@ -117,11 +122,11 @@ export const Duel: FC<DuelProps> = () => {
   const handleRemoveCard = ({ card, index }: AddCardProps) => {
     if (!index) {
       const newArr = deck.concat(card)
-      setDeck(newArr)
+      updateDeck(GAME_MODES.DUEL_FUNCTION, newArr)
       setChain(chain.filter((x) => x.getId() !== card.getId()))
     } else {
       const newArr = [...deck.slice(0, index), card, ...deck.slice(index)]
-      setDeck(newArr)
+      updateDeck(GAME_MODES.DUEL_FUNCTION, newArr)
       setChain(chain.filter((x) => x.getId() !== card.getId()))
     }
   }
@@ -135,7 +140,7 @@ export const Duel: FC<DuelProps> = () => {
     }
     if (currentTurn === TurnsType.COMPETITOR) {
       setCurrentTurn(TurnsType.PLAYER)
-      setDeck(getDeckPoolArithmetic(hardMode))
+      updateDeck(GAME_MODES.DUEL_FUNCTION, getDeckPoolDuel(hardMode))
     } else {
       setEnemyDeck(getEnemyDeckPoolArithmetic(hardMode))
       setCurrentTurn(TurnsType.COMPETITOR)
@@ -158,7 +163,7 @@ export const Duel: FC<DuelProps> = () => {
     const sw = new Switcher()
     sw.setCount(generateTargetArithmetic(hardMode))
     setChain([sw])
-    setDeck(getDeckPoolArithmetic(hardMode))
+    updateDeck(GAME_MODES.DUEL_FUNCTION, getDeckPoolDuel(hardMode))
     setEnemyDeck(getEnemyDeckPoolArithmetic(hardMode))
     setRounds(initialRounds)
     setLeft(3)
@@ -167,7 +172,7 @@ export const Duel: FC<DuelProps> = () => {
   const handleReroll = () => {
     if (left > 0) {
       setLeft(left - 1)
-      setDeck(getDeckPoolArithmetic(hardMode))
+      updateDeck(GAME_MODES.DUEL_FUNCTION, getDeckPoolDuel(hardMode))
     }
   }
 

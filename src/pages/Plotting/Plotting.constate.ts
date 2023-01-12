@@ -1,16 +1,19 @@
-import constate from "constate";
-import { useState } from "react";
-import { FormulaeCardType } from "../../math/formulae";
-import { getDeckPoolPlotting } from "./Plotting.utils";
+import constate from 'constate'
+import { useState } from 'react'
+import { CardType } from '../../math/CardType'
+import { FormulaeCardType } from '../../math/formulae'
+import { GAME_MODES } from '../../math/math'
+import { useDeck } from '../../shared/DeckState.constate'
+import { useGameModeContext } from '../../shared/GameState.constate'
 
-// 2️⃣ Wrap your hook with the constate factory
 export const [PlottingProvider, usePlottingContext] = constate(() => {
   const [chain, setChain] = useState<FormulaeCardType[]>([])
-  const [deck, setDeck] = useState<FormulaeCardType[]>(getDeckPoolPlotting({}))
-  return { 
+  const { getDeck, updateDeck } = useDeck()
+  const deck = getDeck(GAME_MODES.PLOTTING)
+  return {
     chain,
     deck,
     setChain,
-    setDeck
-   };
-});
+    setDeck: (deck: CardType[]) => updateDeck(GAME_MODES.PLOTTING, deck)
+  }
+})

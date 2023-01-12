@@ -24,7 +24,7 @@ export const GhostPreview: FC<GhostPreviewProps> = ({
       if (!card) return
       if (!cardRef.current) return
       const x = e.pageX
-      const y = e.pageY
+      const y = e.pageY - window.scrollY
       const newposX = x - 60
       const newposY = y - 120
       cardRef.current.style.transform = `matrix(1, 0, 0, 1, ${newposX},${newposY})`

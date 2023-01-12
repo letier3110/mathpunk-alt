@@ -1,80 +1,66 @@
-import { CSSProperties, FC, useEffect, useRef, useState } from 'react'
-
+import { CSSProperties, FC, useEffect, useMemo, useRef, useState } from 'react'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
-
-import { GAME_MODES } from '../../math/math'
-import { useGameModeContext } from '../../shared/GameState.constate'
-
-import { NavigatorCard } from '../../math/NavigatorCard'
-import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
-import { MainMenuLoader } from './MainMenuLoader'
 import { CardType } from '../../math/CardType'
-import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
+import { GAME_MODES } from '../../math/math'
+import { NavigatorCard } from '../../math/NavigatorCard'
 import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
-import { ARITHMETIC_NAME, DUEL_NAME, PLOTTING_NAME, TUTORIAL_NAME } from '../../shared/decks.data'
+import { useInventoryContext } from '../Inventory/Inventory.constate'
+import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
+import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
 import { useDeck } from '../../shared/DeckState.constate'
+import { NAVIGATION_POWER_NAME } from '../../shared/decks.data'
 
-interface MainMenuProps {
+interface IntroProps {
   //
 }
 
-export const MainMenu: FC<MainMenuProps> = () => {
-  const { setGameMode } = useGameModeContext()
-  const [gameModeState, setGameModeState] = useState(GAME_MODES.MAIN_MENU)
+export const Intro: FC<IntroProps> = () => {
+  const { addPower } = useInventoryContext()
   const { getDeck } = useDeck()
-  const deck = getDeck(GAME_MODES.MAIN_MENU)
+  const deck = getDeck(GAME_MODES.INTRO)
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
+  const { powers } = useInventoryContext()
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [gatherPower, setGatherPower] = useState(false);
+
+  const isPowerCollected = useMemo(() => gatherPower === true, [gatherPower])
+  const commandLabel = useMemo(() => isPowerCollected ? 'Scroll down to powers and drag it' : 'Drag card here to collect new power' , [isPowerCollected]) 
 
   const handleCardClick = (card: NavigatorCard) => {
-    if (card.getName() === TUTORIAL_NAME) {
-      setGameModeState(GAME_MODES.TUTORIAL)
-      return
-    }
-    if (card.getName() === ARITHMETIC_NAME) {
-      setGameModeState(GAME_MODES.ARITHMETICS)
-      return
-    }
-    if (card.getName() === PLOTTING_NAME) {
-      setGameModeState(GAME_MODES.PLOTTING)
-      return
-    }
-    if (card.getName() === DUEL_NAME) {
-      setGameModeState(GAME_MODES.DUEL_FUNCTION)
+    if (card.getName() === NAVIGATION_POWER_NAME) {
+      addPower(card)
       return
     }
   }
 
   useEffect(() => {
-    if (gameModeState !== GAME_MODES.MAIN_MENU) {
+    if (powers.length > 0) {
       timerRef.current = setTimeout(() => {
-        setGameMode(gameModeState)
-      }, 1100)
+        setGatherPower(true)
+      }, 1000)
     }
     return () => {
       if (timerRef && timerRef.current) {
         clearTimeout(timerRef.current)
       }
     }
-  }, [gameModeState])
+  }, [powers.length])
 
   return (
     <div className='root'>
-      <div className='flex flex1 aic jcc'>
-        <div
-          className={[selectedCard ? 'border' : ''].join(' ')}
-          style={{
-            backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
-          }}
-          onMouseUp={() => {
-            if (selectedCard) {
-              handleCardClick(selectedCard)
-              setSelectedCard(null)
-            }
-          }}
-        >
-          <MainMenuLoader />
-        </div>
+      <div
+        className={[selectedCard ? 'border' : '', isPowerCollected ? 'labelsShow' : '', 'flex flex1 aic jcc'].join(' ')}
+        style={{
+          backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+        }}
+        onMouseUp={() => {
+          if (selectedCard) {
+            handleCardClick(selectedCard)
+            setSelectedCard(null)
+          }
+        }}
+      >
+        {commandLabel}
       </div>
       {selectedCard && (
         <GhostPreview
@@ -87,8 +73,8 @@ export const MainMenu: FC<MainMenuProps> = () => {
           }}
         />
       )}
-      <div
-        className={[selectedCard ? 'border' : ''].join(' ')}
+      {!isPowerCollected && (<div
+        className={[selectedCard ? 'border' : '', 'flex1'].join(' ')}
         style={{
           backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
         }}
@@ -99,7 +85,7 @@ export const MainMenu: FC<MainMenuProps> = () => {
         }}
       >
         <CardsHand
-          className={gameModeState !== GAME_MODES.MAIN_MENU ? 'cardsHide' : ''}
+        className={powers.length > 0 ? 'cardsHide' : ''}
           keys={deck.map((x) => x.getId().toString())}
         >
           {deck.map((x) => {
@@ -124,7 +110,7 @@ export const MainMenu: FC<MainMenuProps> = () => {
             )
           })}
         </CardsHand>
-      </div>
+      </div>)}
     </div>
   )
 }

@@ -40,19 +40,15 @@ export const Plotting: FC<PlottingProps> = () => {
   const [count, setCount] = useState(generateTargetPlotting())
   const [left, setLeft] = useState(3)
   const [enemyHp, setEnemyHp] = useState(10)
-  // const [round, setRound] = useState<number>(1)
   const { chain, deck, setDeck, setChain } = usePlottingContext()
 
   const equalizerResult: string = useMemo(() => {
-    // console.log('return 0', 0)
     if (chain.length === 0) return '0'
-    // console.log('chain[0].getCount()', chain[0].getName())
     if (chain.length === 1) return chain[0].getName()
     const strResult = chain.reduce(
       (a, p, i) => a.concat(p.getName().toString(), i === chain.length - 1 ? '' : p.getAddition().getName()),
       ''
     )
-    // console.log('strResult', strResult)
     return strResult
   }, [chain])
 
@@ -252,9 +248,9 @@ export const Plotting: FC<PlottingProps> = () => {
                   return (
                     <FunctionalTypeView
                       key={x.getId().toString()}
-                      card={x}
+                      card={x as FormulaeCardType}
                       style={style}
-                      handleCardClick={() => handleAddCard({ card: x })}
+                      handleCardClick={() => handleAddCard({ card: x as FormulaeCardType })}
                       handleMouseDown={(card: CardType) =>
                         setSelectedCard((prev) => (prev?.getId().toString() === card.getId().toString() ? null : card))
                       }

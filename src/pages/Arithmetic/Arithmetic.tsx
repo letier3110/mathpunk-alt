@@ -14,6 +14,7 @@ import { Reroll } from '../../components/Reroll/Reroll'
 import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
+import { useDeck } from '../../shared/DeckState.constate'
 
 interface AddCardProps {
   card: CardType
@@ -31,13 +32,14 @@ const lessonEndDeck = [new NavigatorCard(START_NEW_NAME)]
 export const Arithmetic: FC<ArithmeticProps> = () => {
   const { setGameMode } = useGameModeContext()
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
+  const { getDeck, updateDeck } = useDeck()
+  const deck = getDeck(GAME_MODES.ARITHMETICS)
   const [hardMode, setHardMode] = useState<boolean>(false)
   const [count, setCount] = useState(generateTargetArithmetic())
   const [left, setLeft] = useState(3)
   const [enemyHp, setEnemyHp] = useState(10)
   const [round, setRound] = useState<number>(1)
   const [chain, setChain] = useState<CardType[]>([])
-  const [deck, setDeck] = useState<CardType[]>(getDeckPoolArithmetic())
   const [prediction, setPrediction] = useState(0)
 
   const equalizerResult: number = useMemo(() => {
@@ -72,22 +74,22 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
     if (!index) {
       const newArr = chain.concat(card)
       setChain(newArr)
-      setDeck(deck.filter((x) => x.getId() !== card.getId()))
+      updateDeck(GAME_MODES.ARITHMETICS, deck.filter((x) => x.getId() !== card.getId()))
     } else {
       const newArr = [...chain.slice(0, index), card, ...chain.slice(index)]
       setChain(newArr)
-      setDeck(deck.filter((x) => x.getId() !== card.getId()))
+      updateDeck(GAME_MODES.ARITHMETICS, deck.filter((x) => x.getId() !== card.getId()))
     }
   }
 
   const handleRemoveCard = ({ card, index }: AddCardProps) => {
     if (!index) {
       const newArr = deck.concat(card)
-      setDeck(newArr)
+      updateDeck(GAME_MODES.ARITHMETICS, newArr)
       setChain(chain.filter((x) => x.getId() !== card.getId()))
     } else {
       const newArr = [...deck.slice(0, index), card, ...deck.slice(index)]
-      setDeck(newArr)
+      updateDeck(GAME_MODES.ARITHMETICS, newArr)
       setChain(chain.filter((x) => x.getId() !== card.getId()))
     }
   }
@@ -98,7 +100,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
     setRound(round + 1)
     setChain([])
     setLeft(3)
-    setDeck(getDeckPoolArithmetic(hardMode))
+    updateDeck(GAME_MODES.ARITHMETICS, getDeckPoolArithmetic(hardMode))
   }
 
   const handleStartNewGame = () => {
@@ -106,7 +108,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
     setCount(generateTargetArithmetic(hardMode))
     setRound(1)
     setChain([])
-    setDeck(getDeckPoolArithmetic(hardMode))
+    updateDeck(GAME_MODES.ARITHMETICS, getDeckPoolArithmetic(hardMode))
     setEnemyHp(10)
     setLeft(3)
   }
@@ -114,7 +116,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
   const handleReroll = () => {
     if (left > 0) {
       setLeft(left - 1)
-      setDeck(getDeckPoolArithmetic(hardMode))
+      updateDeck(GAME_MODES.ARITHMETICS, getDeckPoolArithmetic(hardMode))
     }
   }
 

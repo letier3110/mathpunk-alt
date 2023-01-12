@@ -4,7 +4,7 @@ import { GAME_MODES } from "../math/math";
 
 // const initialGameplay: GAME_MODES = GAME_MODES.TUTORIAL
 // const initialGameplay: GAME_MODES = GAME_MODES.DUEL_FUNCTION
-const initialGameplay: GAME_MODES = GAME_MODES.MAIN_MENU
+const initialGameplay: GAME_MODES = GAME_MODES.INTRO
 
 export const [GameModeProvider, useGameModeContext] = constate(() => {
   const [gameMode, setGameMode] = useState<GAME_MODES>(initialGameplay)

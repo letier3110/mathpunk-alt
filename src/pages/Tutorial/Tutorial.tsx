@@ -31,15 +31,11 @@ export const Tutorial: FC<TutorialProps> = () => {
   const { gameMode, setGameMode } = useGameModeContext()
   const { addMathOperator } = useInventoryContext()
   const { getDeck, updateDeck } = useDeck()
-  const deck = getDeck(gameMode)
+  const deck = getDeck(GAME_MODES.TUTORIAL)
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const [tutorialStep, setTutorialStep] = useState<ArithmeticCardTypeEnum>(tutorialSeries[0].name)
   const [tutorialInnerStep, setTutorialInnerStep] = useState(0)
   const [chain, setChain] = useState<CardType[]>(INITIAL_CHAIN)
-  // const [deck, setDeck] = useState<CardType[]>(INITIAL_DECK)
-  // const setDeck = useCallback((cards: Array<CardType>) => {
-  //   updateDeck(gameMode, cards)
-  // }, [updateDeck])
   const [error, setError] = useState<string | null>(null)
   const [enemyHp, setEnemyHp] = useState(INITIAL_ENEMY_HP)
   const [tutorialEnded, setTutorialEnded] = useState(false)
@@ -89,22 +85,22 @@ export const Tutorial: FC<TutorialProps> = () => {
     if (!index) {
       const newArr = chain.concat(card)
       setChain(newArr)
-      updateDeck(gameMode, deck.filter((x) => x.getId().toString() !== card.getId().toString()))
+      updateDeck(GAME_MODES.TUTORIAL, deck.filter((x) => x.getId().toString() !== card.getId().toString()))
     } else {
       const newArr = [...chain.slice(0, index), card, ...chain.slice(index)]
       setChain(newArr)
-      updateDeck(gameMode, deck.filter((x) => x.getId().toString() !== card.getId().toString()))
+      updateDeck(GAME_MODES.TUTORIAL, deck.filter((x) => x.getId().toString() !== card.getId().toString()))
     }
   }
 
   const handleRemoveCard = ({ card, index }: AddCardProps) => {
     if (!index) {
       const newArr = deck.concat(card)
-      updateDeck(gameMode, newArr)
+      updateDeck(GAME_MODES.TUTORIAL, newArr)
       setChain(chain.filter((x) => x.getId() !== card.getId()))
     } else {
       const newArr = [...deck.slice(0, index), card, ...deck.slice(index)]
-      updateDeck(gameMode, newArr)
+      updateDeck(GAME_MODES.TUTORIAL, newArr)
       setChain(chain.filter((x) => x.getId() !== card.getId()))
     }
   }
@@ -114,7 +110,7 @@ export const Tutorial: FC<TutorialProps> = () => {
     if (equalizerResult !== targetCount) {
       setSelectedCard(null)
       setError(`${formatNumber(equalizerResult)} is not equal ${formatNumber(targetCount)}, try again`)
-      updateDeck(gameMode, initialDeckStepPlus)
+      updateDeck(GAME_MODES.TUTORIAL, initialDeckStepPlus)
       setChain(initiaChain)
       return
     } else {
@@ -127,7 +123,7 @@ export const Tutorial: FC<TutorialProps> = () => {
 
   const handleStartAgain = () => {
     setChain(initiaChain)
-    updateDeck(gameMode, initialDeckStepPlus)
+    updateDeck(GAME_MODES.TUTORIAL, initialDeckStepPlus)
     setEnemyHp(INITIAL_ENEMY_HP)
   }
 
@@ -141,7 +137,7 @@ export const Tutorial: FC<TutorialProps> = () => {
       const newDeck: CardType[] = allLocalTutorials[tutorialInnerStep + 1].cards
       setTutorialInnerStep(tutorialInnerStep + 1)
       setChain(newChain)
-      updateDeck(gameMode, newDeck)
+      updateDeck(GAME_MODES.TUTORIAL, newDeck)
       setEnemyHp(INITIAL_ENEMY_HP)
     }
   }
@@ -152,7 +148,7 @@ export const Tutorial: FC<TutorialProps> = () => {
       const newChain: CardType[] = tutorialSeries[newIndex].tutorials[0].chain
       const newDeck: CardType[] = tutorialSeries[newIndex].tutorials[0].cards
       setChain(newChain)
-      updateDeck(gameMode, newDeck)
+      updateDeck(GAME_MODES.TUTORIAL, newDeck)
       setEnemyHp(INITIAL_ENEMY_HP)
       setTutorialInnerStep(0)
       setTutorialStep(tutorialSeries[newIndex].name)
@@ -174,7 +170,7 @@ export const Tutorial: FC<TutorialProps> = () => {
     setTutorialInnerStep(0)
     setTutorialStep(ArithmeticCardTypes.SUMMATOR)
     setChain(INITIAL_CHAIN)
-    updateDeck(gameMode, INITIAL_DECK)
+    updateDeck(GAME_MODES.TUTORIAL, INITIAL_DECK)
     setEnemyHp(INITIAL_ENEMY_HP)
     setTutorialEnded(false)
   }

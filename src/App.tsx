@@ -10,6 +10,7 @@ import { Inventory } from './pages/Inventory/Inventory'
 import { Duel } from './pages/Duel/Duel'
 import { MainMenu } from './pages/MainMenu/MainMenu'
 import { GhostPreviewProvider } from './shared/GhostPreview.constate'
+import { Intro } from './pages/Intro/Intro'
 
 function App() {
   const { gameMode } = useGameModeContext()
@@ -17,6 +18,13 @@ function App() {
   // const [tutorial, setTutorial] = useState(true)
   return (
     <>
+      {gameMode === GAME_MODES.INTRO && (
+        <div>
+          <GhostPreviewProvider>
+            <Intro />
+          </GhostPreviewProvider>
+        </div>
+      )}
       <div
         style={{
           display: gameMode === GAME_MODES.TUTORIAL ? 'block' : 'none'
@@ -66,7 +74,9 @@ function App() {
           </PlottingProvider>
         </GhostPreviewProvider>
       </div>
-      <Inventory />
+      <GhostPreviewProvider>
+        <Inventory />
+      </GhostPreviewProvider>
     </>
   )
 }

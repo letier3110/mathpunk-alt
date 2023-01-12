@@ -50,7 +50,7 @@ export const generateNumenator = (hardMode = false): number => {
   return res
 }
 
-export const getDeckPoolArithmetic = (hardMode = false): CardType[] => {
+export const getDeckPoolDuel = (hardMode = false): CardType[] => {
   const array = Array(5).fill((x: number) => x)
   const res = array.map((): CardType => {
     const result = new ArithmeticCardTypeEnumToClass[weightedRand<ArithmeticCardTypeEnum>(StartCardPool)()]({

@@ -40,7 +40,8 @@ export enum GAME_MODES {
   TUTORIAL = 'tutorial',
   ARITHMETICS = 'arithmetic',
   PLOTTING = 'plotting',
-  DUEL_FUNCTION = 'duel function'
+  DUEL_FUNCTION = 'duel function',
+  INTRO = 'intro'
 }
 
 export interface DifficultySettings {

@@ -11,8 +11,11 @@
   flex: 1;
 }
 
+.headers {
+  padding: 16px 0px;
+}
+
 .operatorsGrid {
-  margin-top: 16px;
   display: flex;
 
   flex-wrap: wrap;
