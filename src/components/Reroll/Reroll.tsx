@@ -5,7 +5,7 @@ interface RerollProps {
   className?: string
   left: number
   style?: CSSProperties
-  handleReroll: () => void
+  handleReroll?: () => void
   handleMouseDown?: () => void
 }
 

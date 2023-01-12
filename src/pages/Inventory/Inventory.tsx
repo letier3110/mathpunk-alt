@@ -7,13 +7,15 @@ import { CardType } from '../../math/CardType'
 import { ArithmeticCardTypeEnumToClass, GAME_MODES } from '../../math/math'
 import { NavigatorCard } from '../../math/NavigatorCard'
 import { Numberator } from '../../math/Numberator'
-import { NAVIGATION_POWER_NAME } from '../../shared/decks.data'
-import { useGameModeContext } from '../../shared/GameState.constate'
-import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
+import { NAVIGATION_POWER_NAME, REROLL_POWER_NAME } from '../../shared/decks.data'
+import { useGameModeContext } from '../../hooks/GameState.constate'
+import { useGhostPreviewContext } from '../../hooks/GhostPreview.constate'
 
 import { useInventoryContext } from './Inventory.constate'
 
 import s from './Inventory.module.css'
+import { Reroll } from '../../components/Reroll/Reroll'
+import { useRerolls } from '../../hooks/Rerolls.constate'
 
 interface InventoryProps {
   //
@@ -28,10 +30,16 @@ export const Inventory: FC<InventoryProps> = () => {
   const { setGameMode } = useGameModeContext()
   const { mathOperators, powers } = useInventoryContext()
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
+  const { reroll, restoreLeft, left } = useRerolls()
 
   const handleCardClick = (card: CardType) => {
     if (card.getName() === NAVIGATION_POWER_NAME) {
+      restoreLeft()
       setGameMode(GAME_MODES.MAIN_MENU)
+      return
+    }
+    if (card.getName() === REROLL_POWER_NAME) {
+      reroll()
       return
     }
   }
@@ -96,6 +104,18 @@ export const Inventory: FC<InventoryProps> = () => {
                     ?
                   </div>
                 )
+
+              if (x.getName() === REROLL_POWER_NAME) {
+                return (
+                  <Reroll
+                    key={x.getId()}
+                    left={left}
+                    style={style}
+                    className={[isSelected ? 'border' : '', 'card'].join(' ')}
+                    handleMouseDown={() => setSelectedCard((prev) => (prev?.getId() === x.getId() ? null : x))}
+                  />
+                )
+              }
               return (
                 <NavigatorTypeView
                   key={x.getId()}

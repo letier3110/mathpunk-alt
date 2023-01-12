@@ -29,7 +29,12 @@ export const SKIP_NAME = 'Skip?'
 export const lessonEndDeck = [new NavigatorCard(START_AGAIN_NAME), new NavigatorCard(CONTINUE_LESSON_NAME), new NavigatorCard(SKIP_NAME)]
 
 export const NAVIGATION_POWER_NAME = 'To Bar'
+export const REROLL_POWER_NAME = 'Recieve Reroll power'
 
 export const introDeck = [
   new NavigatorCard(NAVIGATION_POWER_NAME)
+]
+
+export const arithmeticWinDeck = [
+  new NavigatorCard(REROLL_POWER_NAME)
 ]

@@ -1,7 +1,7 @@
-import constate from "constate";
-import { useState } from "react";
-import { ArithmeticCardTypeEnum } from "../../math/arithmetic";
-import { CardType } from "../../math/CardType";
+import constate from 'constate'
+import { useState } from 'react'
+import { ArithmeticCardTypeEnum } from '../../math/arithmetic'
+import { CardType } from '../../math/CardType'
 
 const INITIAL_MATH_OPERATORS: ArithmeticCardTypeEnum[] = []
 
@@ -20,17 +20,19 @@ interface InventoryValues {
   addPower: addPowerDescriptor
 }
 
+const initialPowers: Array<CardType> = []
+
 // 2️⃣ Wrap your hook with the constate factory
 export const [InventoryProvider, useInventoryContext] = constate((): InventoryValues => {
   const [mathOperators, sOperators] = useState(INITIAL_MATH_OPERATORS)
-  const [powers, setPowers] = useState<Array<CardType>>([])
+  const [powers, setPowers] = useState<Array<CardType>>(initialPowers)
 
   const setMathOperators: setMathOperatorsDescriptor = (operators: ArithmeticCardTypeEnum[]) => {
     sOperators(operators)
   }
 
   const addMathOperator: addMathOperatorsDescriptor = (operator: ArithmeticCardTypeEnum) => {
-    sOperators((prev) => prev.filter(x => x !== operator).concat(operator))
+    sOperators((prev) => prev.filter((x) => x !== operator).concat(operator))
   }
 
   const setPower: setPowerDescriptor = (newPowers: CardType[]) => {
@@ -38,15 +40,15 @@ export const [InventoryProvider, useInventoryContext] = constate((): InventoryVa
   }
 
   const addPower: addPowerDescriptor = (newPower: CardType) => {
-    setPowers((prev) => prev.filter(x => x !== newPower).concat(newPower))
+    setPowers((prev) => prev.filter((x) => x !== newPower).concat(newPower))
   }
 
-  return { 
+  return {
     powers,
     mathOperators,
     setMathOperators,
     addMathOperator,
     setPower,
-    addPower,
-   };
-});
+    addPower
+  }
+})

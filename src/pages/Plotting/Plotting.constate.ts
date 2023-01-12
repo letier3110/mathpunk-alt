@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { CardType } from '../../math/CardType'
 import { FormulaeCardType } from '../../math/formulae'
 import { GAME_MODES } from '../../math/math'
-import { useDeck } from '../../shared/DeckState.constate'
-import { useGameModeContext } from '../../shared/GameState.constate'
+import { useDeck } from '../../hooks/DeckState.constate'
+import { useGameModeContext } from '../../hooks/GameState.constate'
 
 export const [PlottingProvider, usePlottingContext] = constate(() => {
   const [chain, setChain] = useState<FormulaeCardType[]>([])

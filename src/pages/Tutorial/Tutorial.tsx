@@ -1,4 +1,4 @@
-import { CSSProperties, FC, Fragment, useCallback, useMemo, useState } from 'react'
+import { CSSProperties, FC, Fragment, useMemo, useState } from 'react'
 import { AdditionView } from '../../components/AdditionView/AdditionView'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
 import { CardTypeView } from '../../components/CardTypeView/CardTypeView'
@@ -6,17 +6,15 @@ import { ArithmeticCardTypeEnum, ArithmeticCardTypes } from '../../math/arithmet
 import { CardType } from '../../math/CardType'
 import { ArithmeticCardTypeEnumToClass, GAME_MODES } from '../../math/math'
 import { Numberator } from '../../math/Numberator'
-import { NavigatorCard } from '../../math/NavigatorCard'
-import { Summator } from '../../math/Summator'
 import { formatNumber } from '../../math/utils'
-import { useGameModeContext } from '../../shared/GameState.constate'
-import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
+import { useGameModeContext } from '../../hooks/GameState.constate'
+import { useGhostPreviewContext } from '../../hooks/GhostPreview.constate'
 import { useInventoryContext } from '../Inventory/Inventory.constate'
 import { INITIAL_CHAIN, INITIAL_DECK, INITIAL_ENEMY_HP, targetEnemyHp, tutorialSeries } from './Tutorial.const'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
 import { CONTINUE_LESSON_NAME, CONTINUE_NAME, gameOverDeck, lessonEndDeck, RESTART_TUTORIAL_NAME, SKIP_NAME, START_AGAIN_NAME } from '../../shared/decks.data'
-import { useDeck } from '../../shared/DeckState.constate'
+import { useDeck } from '../../hooks/DeckState.constate'
 
 interface AddCardProps {
   card: CardType

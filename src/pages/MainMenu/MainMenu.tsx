@@ -3,16 +3,16 @@ import { CSSProperties, FC, useEffect, useRef, useState } from 'react'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
 
 import { GAME_MODES } from '../../math/math'
-import { useGameModeContext } from '../../shared/GameState.constate'
+import { useGameModeContext } from '../../hooks/GameState.constate'
 
 import { NavigatorCard } from '../../math/NavigatorCard'
 import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
 import { MainMenuLoader } from './MainMenuLoader'
 import { CardType } from '../../math/CardType'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
-import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
+import { useGhostPreviewContext } from '../../hooks/GhostPreview.constate'
 import { ARITHMETIC_NAME, DUEL_NAME, PLOTTING_NAME, TUTORIAL_NAME } from '../../shared/decks.data'
-import { useDeck } from '../../shared/DeckState.constate'
+import { useDeck } from '../../hooks/DeckState.constate'
 
 interface MainMenuProps {
   //

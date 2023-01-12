@@ -3,11 +3,11 @@ import { CardsHand } from '../../components/CardsHand/CardsHand'
 import { CardType } from '../../math/CardType'
 import { GAME_MODES } from '../../math/math'
 import { NavigatorCard } from '../../math/NavigatorCard'
-import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
+import { useGhostPreviewContext } from '../../hooks/GhostPreview.constate'
 import { useInventoryContext } from '../Inventory/Inventory.constate'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
-import { useDeck } from '../../shared/DeckState.constate'
+import { useDeck } from '../../hooks/DeckState.constate'
 import { NAVIGATION_POWER_NAME } from '../../shared/decks.data'
 
 interface IntroProps {
@@ -33,8 +33,10 @@ export const Intro: FC<IntroProps> = () => {
     }
   }
 
+  const isPowersAdded = useMemo(() => powers.find(x => x.getName() === NAVIGATION_POWER_NAME), [powers])
+
   useEffect(() => {
-    if (powers.length > 0) {
+    if (isPowersAdded) {
       timerRef.current = setTimeout(() => {
         setGatherPower(true)
       }, 1000)
@@ -44,7 +46,7 @@ export const Intro: FC<IntroProps> = () => {
         clearTimeout(timerRef.current)
       }
     }
-  }, [powers.length])
+  }, [isPowersAdded])
 
   return (
     <div className='root'>
@@ -85,7 +87,7 @@ export const Intro: FC<IntroProps> = () => {
         }}
       >
         <CardsHand
-        className={powers.length > 0 ? 'cardsHide' : ''}
+        className={isPowersAdded ? 'cardsHide' : ''}
           keys={deck.map((x) => x.getId().toString())}
         >
           {deck.map((x) => {

@@ -12,16 +12,16 @@ import {
   getDeckPoolDuel,
   getEnemyDeckPoolArithmetic
 } from './Duel.utils'
-import { useGameModeContext } from '../../shared/GameState.constate'
+import { useGameModeContext } from '../../hooks/GameState.constate'
 
 import { NavigatorCard } from '../../math/NavigatorCard'
 import { Reroll } from '../../components/Reroll/Reroll'
 import { Numberator } from '../../math/Numberator'
 import { Switcher } from '../../math/Switcher'
-import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
+import { useGhostPreviewContext } from '../../hooks/GhostPreview.constate'
 import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
-import { useDeck } from '../../shared/DeckState.constate'
+import { useDeck } from '../../hooks/DeckState.constate'
 
 interface AddCardProps {
   card: CardType

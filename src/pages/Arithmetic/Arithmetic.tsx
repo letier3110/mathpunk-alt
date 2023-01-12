@@ -7,14 +7,16 @@ import { CardType } from '../../math/CardType'
 import { DIFFICULTIES, GAME_MODES } from '../../math/math'
 import { formatNumber } from '../../math/utils'
 import { ARITHMETIC_VALUES, generateTargetArithmetic, getDeckPoolArithmetic } from './Arithmetic.utils'
-import { useGameModeContext } from '../../shared/GameState.constate'
+import { useGameModeContext } from '../../hooks/GameState.constate'
 
 import { NavigatorCard } from '../../math/NavigatorCard'
 import { Reroll } from '../../components/Reroll/Reroll'
-import { useGhostPreviewContext } from '../../shared/GhostPreview.constate'
+import { useGhostPreviewContext } from '../../hooks/GhostPreview.constate'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
-import { useDeck } from '../../shared/DeckState.constate'
+import { useDeck } from '../../hooks/DeckState.constate'
+import { arithmeticWinDeck, REROLL_POWER_NAME } from '../../shared/decks.data'
+import { useInventoryContext } from '../Inventory/Inventory.constate'
 
 interface AddCardProps {
   card: CardType
@@ -27,9 +29,8 @@ interface ArithmeticProps {
 
 const START_NEW_NAME = 'Start new game?'
 
-const lessonEndDeck = [new NavigatorCard(START_NEW_NAME)]
-
 export const Arithmetic: FC<ArithmeticProps> = () => {
+  const { powers, addPower } = useInventoryContext()
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const { getDeck, updateDeck } = useDeck()
   const deck = getDeck(GAME_MODES.ARITHMETICS)
@@ -55,6 +56,11 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
   const isGameEnded = enemyHp <= 0
   const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY
   const preciseness = ARITHMETIC_VALUES[mode].preciseness
+
+  const lessonEndDeck = useMemo(() => {
+    const newArrs = arithmeticWinDeck.filter(x => !powers.find(y => y.getName() === x.getName()))
+    return [new NavigatorCard(START_NEW_NAME)].concat(newArrs)
+  }, [powers])
 
   useEffect(() => {
     if (equalizerResult === count) {
@@ -121,6 +127,10 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
   const handleEndGameClick = (card: CardType) => {
     if (card.getName() === START_NEW_NAME) {
       handleStartNewGame()
+      return
+    }
+    if (card.getName() === REROLL_POWER_NAME) {
+      addPower(card)
       return
     }
   }

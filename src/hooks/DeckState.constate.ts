@@ -7,7 +7,7 @@ import { getDeckPoolArithmetic } from '../pages/Arithmetic/Arithmetic.utils'
 import { getDeckPoolDuel } from '../pages/Duel/Duel.utils'
 import { getDeckPoolPlotting } from '../pages/Plotting/Plotting.utils'
 import { INITIAL_DECK } from '../pages/Tutorial/Tutorial.const'
-import { introDeck, mainMenuDeck } from './decks.data'
+import { introDeck, mainMenuDeck } from '../shared/decks.data'
 
 const initialState: Record<GAME_MODES, Array<CardType>> = {
   [GAME_MODES.ARITHMETICS]: getDeckPoolArithmetic(),
@@ -38,10 +38,38 @@ export const [DeckProvider, useDeck] = constate(() => {
     [deckState]
   )
 
+  const refreshDeck = useCallback((mode: GAME_MODES) => {
+    if(mode === GAME_MODES.INTRO) return;
+    if(mode === GAME_MODES.MAIN_MENU) return;
+    if(mode === GAME_MODES.TUTORIAL) return;
+    if(mode === GAME_MODES.PLOTTING) {
+      setDeckState((prev) => ({
+        ...prev,
+        [mode]: getDeckPoolPlotting({})
+      }))  
+      return;
+    }
+    if(mode === GAME_MODES.ARITHMETICS) {
+      setDeckState((prev) => ({
+        ...prev,
+        [mode]: getDeckPoolArithmetic()
+      }))  
+      return;
+    }
+    if(mode === GAME_MODES.DUEL_FUNCTION) {
+      setDeckState((prev) => ({
+        ...prev,
+        [mode]: getDeckPoolDuel()
+      }))  
+      return;
+    }
+  }, [deckState])
+
   return {
     deckState,
     updateDeck,
     getDeck,
+    refreshDeck,
     setDeckState
   }
 })

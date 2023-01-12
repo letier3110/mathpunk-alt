@@ -5,12 +5,13 @@ import { PlottingProvider } from './pages/Plotting/Plotting.constate'
 import { GAME_MODES } from './math/math'
 
 import './App.css'
-import { useGameModeContext } from './shared/GameState.constate'
+import { useGameModeContext } from './hooks/GameState.constate'
 import { Inventory } from './pages/Inventory/Inventory'
 import { Duel } from './pages/Duel/Duel'
 import { MainMenu } from './pages/MainMenu/MainMenu'
-import { GhostPreviewProvider } from './shared/GhostPreview.constate'
+import { GhostPreviewProvider } from './hooks/GhostPreview.constate'
 import { Intro } from './pages/Intro/Intro'
+import { RerollsProvider } from './hooks/Rerolls.constate'
 
 function App() {
   const { gameMode } = useGameModeContext()
@@ -75,7 +76,9 @@ function App() {
         </GhostPreviewProvider>
       </div>
       <GhostPreviewProvider>
-        <Inventory />
+        <RerollsProvider>
+          <Inventory />
+        </RerollsProvider>
       </GhostPreviewProvider>
     </>
   )
