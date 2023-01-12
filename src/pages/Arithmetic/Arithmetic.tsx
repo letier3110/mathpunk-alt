@@ -30,13 +30,12 @@ const START_NEW_NAME = 'Start new game?'
 const lessonEndDeck = [new NavigatorCard(START_NEW_NAME)]
 
 export const Arithmetic: FC<ArithmeticProps> = () => {
-  const { setGameMode } = useGameModeContext()
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const { getDeck, updateDeck } = useDeck()
   const deck = getDeck(GAME_MODES.ARITHMETICS)
   const [hardMode, setHardMode] = useState<boolean>(false)
   const [count, setCount] = useState(generateTargetArithmetic())
-  const [left, setLeft] = useState(3)
+  // const [left, setLeft] = useState(3)
   const [enemyHp, setEnemyHp] = useState(10)
   const [round, setRound] = useState<number>(1)
   const [chain, setChain] = useState<CardType[]>([])
@@ -99,7 +98,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
     setCount(generateTargetArithmetic(hardMode))
     setRound(round + 1)
     setChain([])
-    setLeft(3)
+    // setLeft(3)
     updateDeck(GAME_MODES.ARITHMETICS, getDeckPoolArithmetic(hardMode))
   }
 
@@ -110,14 +109,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
     setChain([])
     updateDeck(GAME_MODES.ARITHMETICS, getDeckPoolArithmetic(hardMode))
     setEnemyHp(10)
-    setLeft(3)
-  }
-
-  const handleReroll = () => {
-    if (left > 0) {
-      setLeft(left - 1)
-      updateDeck(GAME_MODES.ARITHMETICS, getDeckPoolArithmetic(hardMode))
-    }
+    // setLeft(3)
   }
 
   const handleEqual = () => {
@@ -135,11 +127,6 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
 
   return (
     <>
-      <div className='header'>
-        <div className='card' onClick={() => setGameMode(GAME_MODES.PLOTTING)}>
-          Next gamemode?
-        </div>
-      </div>
       <div className='root'>
         <div className='hps'>
           <div>
@@ -294,7 +281,6 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
           </>
         )}
       </div>
-      <Reroll left={left} handleReroll={handleReroll} />
     </>
   )
 }

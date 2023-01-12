@@ -56,7 +56,7 @@ export const Duel: FC<DuelProps> = () => {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [hardMode, setHardMode] = useState<boolean>(false)
   const [currentTurn, setCurrentTurn] = useState<TurnsType>(startingTurn)
-  const [left, setLeft] = useState(3)
+  // const [left, setLeft] = useState(3)
   const [rounds, setRounds] = useState(initialRounds)
   const [chain, setChain] = useState<CardType[]>([initialChainCard])
   const [enemyDeck, setEnemyDeck] = useState<CardType[]>(getEnemyDeckPoolArithmetic())
@@ -73,21 +73,6 @@ export const Duel: FC<DuelProps> = () => {
   }, [chain])
 
   const isGameEnded = rounds <= 0
-  // const mode = hardMode ? DIFFICULTIES.HARD : DIFFICULTIES.EASY
-  // const preciseness = ARITHMETIC_VALUES[mode].preciseness
-
-  // useEffect(() => {
-  //   if (equalizerResult === count) {
-  //     setPrediction(-5)
-  //   }
-  //   const localPreciseness = preciseness / 100
-  //   if (equalizerResult > count * (1 - localPreciseness) && equalizerResult < count * (1 + localPreciseness)) {
-  //     const res = Math.round((1 - Math.abs((equalizerResult - count) / count)) * 5)
-  //     setPrediction(-res)
-  //   } else {
-  //     setPrediction(5)
-  //   }
-  // }, [equalizerResult, count, mode, preciseness, setPrediction])
 
   const handleAddCard = ({ card, index }: AddCardProps) => {
     if (!index) {
@@ -144,9 +129,9 @@ export const Duel: FC<DuelProps> = () => {
     } else {
       setEnemyDeck(getEnemyDeckPoolArithmetic(hardMode))
       setCurrentTurn(TurnsType.COMPETITOR)
-      if (left > 0) {
-        setLeft(left - 1)
-      }
+      // if (left > 0) {
+      //   setLeft(left - 1)
+      // }
     }
     setRounds(rounds - 1)
     const sw = new Switcher()
@@ -166,15 +151,15 @@ export const Duel: FC<DuelProps> = () => {
     updateDeck(GAME_MODES.DUEL_FUNCTION, getDeckPoolDuel(hardMode))
     setEnemyDeck(getEnemyDeckPoolArithmetic(hardMode))
     setRounds(initialRounds)
-    setLeft(3)
+    // setLeft(3)
   }
 
-  const handleReroll = () => {
-    if (left > 0) {
-      setLeft(left - 1)
-      updateDeck(GAME_MODES.DUEL_FUNCTION, getDeckPoolDuel(hardMode))
-    }
-  }
+  // const handleReroll = () => {
+  //   if (left > 0) {
+  //     // setLeft(left - 1)
+  //     updateDeck(GAME_MODES.DUEL_FUNCTION, getDeckPoolDuel(hardMode))
+  //   }
+  // }
 
   const handleEqual = () => {
     setSelectedCard(null)

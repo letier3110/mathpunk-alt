@@ -34,7 +34,6 @@ const START_NEW_NAME = 'Start new game?'
 const lessonEndDeck = [new NavigatorCard(START_NEW_NAME)]
 
 export const Plotting: FC<PlottingProps> = () => {
-  const { setGameMode } = useGameModeContext()
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const [hardMode, setHardMode] = useState<boolean>(false)
   const [count, setCount] = useState(generateTargetPlotting())
@@ -136,11 +135,6 @@ export const Plotting: FC<PlottingProps> = () => {
 
   return (
     <>
-      <div className='backHeader'>
-        <div className='card' onClick={() => setGameMode(GAME_MODES.ARITHMETICS)}>
-          Prev gamemode?
-        </div>
-      </div>
       <div className='root'>
         <div className='hps'>
           <div>
