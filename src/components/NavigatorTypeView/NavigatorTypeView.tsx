@@ -3,11 +3,13 @@ import { CardType } from '../../math/CardType'
 import { formatNumber } from '../../math/utils'
 import { ItemTypes } from '../../shared/constants'
 import { AdditionView } from '../AdditionView/AdditionView'
+import { RewardEffect } from '../RewardEffect/RewardEffect'
 
 interface NavigatorViewProps {
   className?: string
   card: CardType
   style?: CSSProperties
+  isReward?: boolean
   handleCardClick?: () => void
   handleMouseDown?: (card: CardType) => void
 }
@@ -15,6 +17,7 @@ interface NavigatorViewProps {
 export const NavigatorTypeView: FC<NavigatorViewProps> = ({
   card,
   className = 'card',
+  isReward = false,
   style = {},
   handleCardClick = () => {},
   handleMouseDown = () => {}
@@ -38,6 +41,7 @@ export const NavigatorTypeView: FC<NavigatorViewProps> = ({
       onClick={handleClick}
       onMouseDown={handleDown}
     >
+      {isReward && <RewardEffect />}
       <div className='mainText'>{name}</div>
     </div>
   )

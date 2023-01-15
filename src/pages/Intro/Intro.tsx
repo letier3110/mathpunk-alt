@@ -21,10 +21,13 @@ export const Intro: FC<IntroProps> = () => {
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const { powers } = useInventoryContext()
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [gatherPower, setGatherPower] = useState(false);
+  const [gatherPower, setGatherPower] = useState(false)
 
   const isPowerCollected = useMemo(() => gatherPower === true, [gatherPower])
-  const commandLabel = useMemo(() => isPowerCollected ? 'Scroll down to powers and drag it' : 'Drag card here to collect new power' , [isPowerCollected]) 
+  const commandLabel = useMemo(
+    () => (isPowerCollected ? 'Scroll down to powers and drag it' : 'Drag card here to collect new power'),
+    [isPowerCollected]
+  )
 
   const handleCardClick = (card: NavigatorCard) => {
     if (card.getName() === NAVIGATION_POWER_NAME) {
@@ -33,7 +36,7 @@ export const Intro: FC<IntroProps> = () => {
     }
   }
 
-  const isPowersAdded = useMemo(() => powers.find(x => x.getName() === NAVIGATION_POWER_NAME), [powers])
+  const isPowersAdded = useMemo(() => powers.find((x) => x.getName() === NAVIGATION_POWER_NAME), [powers])
 
   useEffect(() => {
     if (isPowersAdded) {
@@ -68,6 +71,7 @@ export const Intro: FC<IntroProps> = () => {
         <GhostPreview
           deck={deck}
           card={selectedCard}
+          isReward
           handleMouseUp={() => {
             if (selectedCard) {
               setSelectedCard(null)
@@ -75,44 +79,44 @@ export const Intro: FC<IntroProps> = () => {
           }}
         />
       )}
-      {!isPowerCollected && (<div
-        className={[selectedCard ? 'border' : '', 'flex1'].join(' ')}
-        style={{
-          backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
-        }}
-        onMouseUp={() => {
-          if (selectedCard) {
-            setSelectedCard(null)
-          }
-        }}
-      >
-        <CardsHand
-        className={isPowersAdded ? 'cardsHide' : ''}
-          keys={deck.map((x) => x.getId().toString())}
-        >
-          {deck.map((x) => {
-            const isSelected = x.getId() === selectedCard?.getId()
-            const style: CSSProperties = {
-              scale: isSelected ? '1.2' : '1',
-              zIndex: isSelected ? 200 : '',
-              visibility: !isSelected ? 'visible' : 'hidden'
+      {!isPowerCollected && (
+        <div
+          className={[selectedCard ? 'border' : '', 'flex1'].join(' ')}
+          style={{
+            backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+          }}
+          onMouseUp={() => {
+            if (selectedCard) {
+              setSelectedCard(null)
             }
-            return (
-              <NavigatorTypeView
-                key={x.getId()}
-                card={x}
-                handleCardClick={() => {
-                  handleCardClick(x)
-                }}
-                style={style}
-                handleMouseDown={(card: CardType) =>
-                  setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
-                }
-              />
-            )
-          })}
-        </CardsHand>
-      </div>)}
+          }}
+        >
+          <CardsHand className={isPowersAdded ? 'cardsHide' : ''} keys={deck.map((x) => x.getId().toString())}>
+            {deck.map((x) => {
+              const isSelected = x.getId() === selectedCard?.getId()
+              const style: CSSProperties = {
+                scale: isSelected ? '1.2' : '1',
+                zIndex: isSelected ? 200 : '',
+                visibility: !isSelected ? 'visible' : 'hidden'
+              }
+              return (
+                <NavigatorTypeView
+                  key={x.getId()}
+                  card={x}
+                  handleCardClick={() => {
+                    handleCardClick(x)
+                  }}
+                  isReward
+                  style={style}
+                  handleMouseDown={(card: CardType) =>
+                    setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                  }
+                />
+              )
+            })}
+          </CardsHand>
+        </div>
+      )}
     </div>
   )
 }

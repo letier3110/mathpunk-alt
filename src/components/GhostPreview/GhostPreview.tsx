@@ -1,10 +1,13 @@
 import { CSSProperties, FC, useEffect, useRef } from 'react'
 import { CardType } from '../../math/CardType'
 import { CardsHand } from '../CardsHand/CardsHand'
+import { RewardEffect } from '../RewardEffect/RewardEffect'
 
 interface GhostPreviewProps {
   card: CardType
+  className?: string
   deck: Array<CardType>
+  isReward?: boolean
   showField?: 'description' | 'count' | 'name'
   handleMouseDown?: () => void
   handleMouseUp?: () => void
@@ -14,6 +17,7 @@ export const GhostPreview: FC<GhostPreviewProps> = ({
   card,
   deck,
   showField = 'description',
+  isReward = false,
   handleMouseDown = () => {},
   handleMouseUp = () => {}
 }) => {
@@ -31,7 +35,6 @@ export const GhostPreview: FC<GhostPreviewProps> = ({
       cardRef.current.style.rotate = `0deg`
       cardRef.current.style.visibility = `visible`
       cardRef.current.style.pointerEvents = `none`
-      
     }
     document.addEventListener('mousemove', mouseMoveHandler)
     return () => {
@@ -68,6 +71,7 @@ export const GhostPreview: FC<GhostPreviewProps> = ({
               style={style}
               ref={isSelected ? cardRef : null}
             >
+              {isReward && <RewardEffect />}
               {showField === 'description'
                 ? card.getDescription()
                 : showField === 'name'

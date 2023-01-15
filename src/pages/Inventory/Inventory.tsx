@@ -121,6 +121,7 @@ export const Inventory: FC<InventoryProps> = () => {
                   key={x.getId()}
                   card={x}
                   style={style}
+                  isReward
                   className={[isSelected ? 'border' : '', 'card'].join(' ')}
                   handleMouseDown={(card: CardType) =>
                     setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))

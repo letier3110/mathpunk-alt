@@ -90,6 +90,8 @@ body {
 }
 
 .card {
+  z-index: 1;
+  
   cursor: pointer;
   user-select: none;
   position: relative;
@@ -170,6 +172,33 @@ body {
   top: 0px;
   cursor: default;
   /* display: contents; */
+}
+
+.rewardCard {
+  background: radial-gradient(circle, rgba(255, 255, 190, 1) 0%, rgba(240, 255, 27, 1) 35%, rgba(0, 212, 255, 1) 100%);
+}
+
+.rewardSvgWrapper {
+  z-index: -1;
+  overflow: hidden;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+}
+
+.rewardSvg {
+  position: absolute;
+  left: -20px;
+  top: -150px;
+}
+
+.rewardSvg:last-child {
+  position: absolute;
+  left: 0px;
+  rotate: 180deg;
+  top: -30px;
 }
 
 .cardDisabled {
