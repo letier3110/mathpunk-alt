@@ -10,7 +10,6 @@ import { ARITHMETIC_VALUES, generateTargetArithmetic, getDeckPoolArithmetic } fr
 import { useGameModeContext } from '../../hooks/GameState.constate'
 
 import { NavigatorCard } from '../../math/NavigatorCard'
-import { Reroll } from '../../components/Reroll/Reroll'
 import { useGhostPreviewContext } from '../../hooks/GhostPreview.constate'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
@@ -58,7 +57,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
   const preciseness = ARITHMETIC_VALUES[mode].preciseness
 
   const lessonEndDeck = useMemo(() => {
-    const newArrs = arithmeticWinDeck.filter(x => !powers.find(y => y.getName() === x.getName()))
+    const newArrs = arithmeticWinDeck.filter((x) => !powers.find((y) => y.getName() === x.getName()))
     return [new NavigatorCard(START_NEW_NAME)].concat(newArrs)
   }, [powers])
 
@@ -79,11 +78,17 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
     if (!index) {
       const newArr = chain.concat(card)
       setChain(newArr)
-      updateDeck(GAME_MODES.ARITHMETICS, deck.filter((x) => x.getId() !== card.getId()))
+      updateDeck(
+        GAME_MODES.ARITHMETICS,
+        deck.filter((x) => x.getId() !== card.getId())
+      )
     } else {
       const newArr = [...chain.slice(0, index), card, ...chain.slice(index)]
       setChain(newArr)
-      updateDeck(GAME_MODES.ARITHMETICS, deck.filter((x) => x.getId() !== card.getId()))
+      updateDeck(
+        GAME_MODES.ARITHMETICS,
+        deck.filter((x) => x.getId() !== card.getId())
+      )
     }
   }
 
@@ -252,7 +257,13 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
                 <input type='checkbox' checked={hardMode} onChange={(e) => setHardMode(e.target.checked)} />
               </div>
             </div>
-            {selectedCard && <GhostPreview deck={lessonEndDeck} card={selectedCard} />}
+            {selectedCard && (
+              <GhostPreview
+                isReward={selectedCard.getName() === REROLL_POWER_NAME}
+                deck={lessonEndDeck}
+                card={selectedCard}
+              />
+            )}
             <div
               className={[selectedCard ? 'border' : ''].join(' ')}
               style={{
@@ -279,6 +290,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
                       handleCardClick={() => {
                         handleEndGameClick(x)
                       }}
+                      isReward={x.getName() === REROLL_POWER_NAME}
                       style={style}
                       handleMouseDown={(card: CardType) =>
                         setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
