@@ -8,7 +8,8 @@ import { useInventoryContext } from '../Inventory/Inventory.constate'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
 import { useDeck } from '../../hooks/DeckState.constate'
-import { NAVIGATION_POWER_NAME } from '../../shared/decks.data'
+import { LOAD_SAVES_NAME, NAVIGATION_POWER_NAME } from '../../shared/decks.data'
+import { useGameModeContext } from '../../hooks/GameState.constate'
 
 interface IntroProps {
   //
@@ -19,7 +20,7 @@ export const Intro: FC<IntroProps> = () => {
   const { getDeck } = useDeck()
   const deck = getDeck(GAME_MODES.INTRO)
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
-  const { powers } = useInventoryContext()
+  const { powers, loadSave } = useInventoryContext()
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [gatherPower, setGatherPower] = useState(false)
 
@@ -32,6 +33,10 @@ export const Intro: FC<IntroProps> = () => {
   const handleCardClick = (card: NavigatorCard) => {
     if (card.getName() === NAVIGATION_POWER_NAME) {
       addPower(card)
+      return
+    }
+    if (card.getName() === LOAD_SAVES_NAME) {
+      loadSave()
       return
     }
   }
