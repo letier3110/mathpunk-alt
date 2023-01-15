@@ -280,6 +280,12 @@ body {
   z-index: 1000;
 }
 
+.cardRewards {
+  position: absolute;
+  top: 20px;
+  zoom: 0.2;
+}
+
 .labelsShow {
   transform: translateY(0px);
   opacity: 1;

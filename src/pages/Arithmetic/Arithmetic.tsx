@@ -311,7 +311,9 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
                       handleMouseDown={(card: CardType) =>
                         setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
                       }
-                    />
+                    >
+                      <div className='mainText'>{x.getName()}</div>
+                    </NavigatorTypeView>
                   )
                 })}
               </CardsHand>

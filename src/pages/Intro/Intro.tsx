@@ -116,7 +116,9 @@ export const Intro: FC<IntroProps> = () => {
                   handleMouseDown={(card: CardType) =>
                     setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
                   }
-                />
+                >
+                  <div className='mainText'>{x.getName()}</div>
+                </NavigatorTypeView>
               )
             })}
           </CardsHand>

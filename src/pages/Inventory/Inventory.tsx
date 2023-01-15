@@ -126,14 +126,16 @@ export const Inventory: FC<InventoryProps> = () => {
                   handleMouseDown={(card: CardType) =>
                     setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
                   }
-                />
+                >
+                  <div className='mainText'>{x.getName()}</div>
+                </NavigatorTypeView>
               )
             })}
           </div>
         </div>
         <div className={[s.section, s.operatorsSection].join(' ')}>
           <div className={s.headers}>Math Operators</div>
-          <div className={s.operatorsGrid}>
+          <div className={[s.operatorsGrid].join(' ')}>
             {ALL_OPERATORS.map((x, i) => {
               const isInList = mathOperators.indexOf(arithmeticOperators[i])
               return <AdditionView key={x.getId()} className={s.addition} card={isInList >= 0 ? x : new Numberator()} />

@@ -1,4 +1,4 @@
-import { CSSProperties, FC } from 'react'
+import { CSSProperties, FC, ReactNode } from 'react'
 import { CardType } from '../../math/CardType'
 import { formatNumber } from '../../math/utils'
 import { ItemTypes } from '../../shared/constants'
@@ -10,6 +10,7 @@ interface NavigatorViewProps {
   card: CardType
   style?: CSSProperties
   isReward?: boolean
+  children: ReactNode
   handleCardClick?: () => void
   handleMouseDown?: (card: CardType) => void
 }
@@ -19,6 +20,7 @@ export const NavigatorTypeView: FC<NavigatorViewProps> = ({
   className = 'card',
   isReward = false,
   style = {},
+  children,
   handleCardClick = () => {},
   handleMouseDown = () => {}
 }) => {
@@ -42,7 +44,7 @@ export const NavigatorTypeView: FC<NavigatorViewProps> = ({
       onMouseDown={handleDown}
     >
       {isReward && <RewardEffect />}
-      <div className='mainText'>{name}</div>
+      {children}
     </div>
   )
 }

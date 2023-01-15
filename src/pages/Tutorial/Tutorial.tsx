@@ -260,7 +260,9 @@ export const Tutorial: FC<TutorialProps> = () => {
                     handleMouseDown={(card: CardType) =>
                       setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
                     }
-                  />
+                  >
+                    <div className='mainText'>{x.getName()}</div>
+                  </NavigatorTypeView>
                 )
               })}
             </CardsHand>
@@ -457,7 +459,9 @@ export const Tutorial: FC<TutorialProps> = () => {
                         handleMouseDown={(card: CardType) =>
                           setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
                         }
-                      />
+                      >
+                        <div className='mainText'>{x.getName()}</div>
+                      </NavigatorTypeView>
                     )
                   })}
                 </CardsHand>

@@ -332,7 +332,9 @@ export const Plotting: FC<PlottingProps> = () => {
                       handleMouseDown={(card: CardType) =>
                         setSelectedCard((prev) => (prev?.getId().toString() === card.getId().toString() ? null : card))
                       }
-                    />
+                    >
+                      <div className='mainText'>{x.getName()}</div>
+                    </NavigatorTypeView>
                   )
                 })}
               </CardsHand>
