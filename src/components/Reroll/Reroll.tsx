@@ -1,5 +1,6 @@
 import { CSSProperties, FC } from 'react'
 import { CardType } from '../../math/CardType'
+import { RewardEffect } from '../RewardEffect/RewardEffect'
 
 interface RerollProps {
   className?: string
@@ -29,6 +30,7 @@ export const Reroll: FC<RerollProps> = ({
       onClick={handleReroll}
       onMouseDown={handleDown}
     >
+      <RewardEffect />
       reroll? {left} left
     </div>
   )

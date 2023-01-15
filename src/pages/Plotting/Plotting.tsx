@@ -2,7 +2,6 @@ import { CSSProperties, FC, useMemo, useState } from 'react'
 
 import { GAME_MODES } from '../../math/math'
 
-import { Reroll } from '../../components/Reroll/Reroll'
 import { FormulaeCardType } from '../../math/formulae'
 import { formatNumber } from '../../math/utils'
 import { FunctionalTypeView } from '../../components/FunctionalTypeView/FunctionalTypeView'
@@ -37,7 +36,7 @@ export const Plotting: FC<PlottingProps> = () => {
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const [hardMode, setHardMode] = useState<boolean>(false)
   const [count, setCount] = useState(generateTargetPlotting())
-  const [left, setLeft] = useState(3)
+  // const [left, setLeft] = useState(3)
   const [enemyHp, setEnemyHp] = useState(10)
   const { chain, deck, setDeck, setChain } = usePlottingContext()
 
@@ -71,7 +70,7 @@ export const Plotting: FC<PlottingProps> = () => {
   })
 
   const handleAddCard = ({ card, index }: AddCardProps) => {
-    if (!index) {
+    if (index === undefined) {
       const newArr = chain.concat(card)
       setChain(newArr)
       setDeck(deck.filter((x) => x.getId() !== card.getId()))
@@ -99,7 +98,7 @@ export const Plotting: FC<PlottingProps> = () => {
     setCount(generateTargetPlotting())
     // setRound(round + 1)
     setChain([])
-    setLeft(3)
+    // setLeft(3)
     setDeck(getDeckPoolPlotting({ hardMode }))
   }
 
@@ -110,15 +109,15 @@ export const Plotting: FC<PlottingProps> = () => {
     setChain([])
     setDeck(getDeckPoolPlotting({ hardMode }))
     setEnemyHp(10)
-    setLeft(3)
+    // setLeft(3)
   }
 
-  const handleReroll = () => {
-    if (left > 0) {
-      setLeft(left - 1)
-      setDeck(getDeckPoolPlotting({ hardMode }))
-    }
-  }
+  // const handleReroll = () => {
+  //   if (left > 0) {
+  //     setLeft(left - 1)
+  //     setDeck(getDeckPoolPlotting({ hardMode }))
+  //   }
+  // }
 
   const handleEqual = () => {
     setSelectedCard(null)
@@ -151,14 +150,14 @@ export const Plotting: FC<PlottingProps> = () => {
         {isGameEnded === false && (
           <>
             <div
-              className={[selectedCard ? 'border' : '', 'plot flex1 mb32'].join(' ')}
+              className={[chain.length === 0 && selectedCard ? 'border' : '', 'plot flex1 mb32'].join(' ')}
               style={{
-                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : '',
+                backgroundColor: chain.length === 0 && selectedCard ? 'rgba(0, 255, 0,.3)' : '',
                 minHeight: '100px',
                 minWidth: '100px'
               }}
               onMouseUp={() => {
-                if (selectedCard) {
+                if (chain.length === 0 && selectedCard) {
                   handleAddCard({ card: selectedCard as FormulaeCardType })
                   setSelectedCard(null)
                 }
@@ -197,13 +196,29 @@ export const Plotting: FC<PlottingProps> = () => {
               equalizerResult={equalizerResult}
               handleEqual={handleEqual}
             >
-              {chain.map((x) => (
+              {chain.map((x, i) => (
                 <FunctionalTypeView
                   key={x.getId()}
                   card={x}
                   showPreview
                   className='card noAddition'
-                  handleCardClick={() => handleRemoveCard({ card: x })}
+                  isHoverable={selectedCard !== null}
+                  handleMouseUpBefore={() => {
+                    if (selectedCard) {
+                      handleAddCard({ card: selectedCard as FormulaeCardType, index: i })
+                      setSelectedCard(null)
+                    }
+                  }}
+                  handleMouseUpAfter={() => {
+                    if (selectedCard) {
+                      handleAddCard({ card: selectedCard as FormulaeCardType, index: i + 1 })
+                      setSelectedCard(null)
+                    }
+                  }}
+                  handleMouseDown={(card: FormulaeCardType) => {
+                    handleRemoveCard({ card })
+                    setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                  }}
                 />
               ))}
             </CardsChain>
@@ -325,7 +340,6 @@ export const Plotting: FC<PlottingProps> = () => {
           </>
         )}
       </div>
-      <Reroll left={left} handleReroll={handleReroll} />
     </>
   )
 }

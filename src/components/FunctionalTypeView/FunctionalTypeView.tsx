@@ -11,9 +11,13 @@ interface FunctionalTypeViewProps {
   card: FormulaeCardType
   showPreview?: boolean
   style?: CSSProperties
+  isHoverable?: boolean
   handleCardClick?: () => void
-  handleMouseDown?: (card: CardType) => void
-  handleMouseUp?: (card: CardType) => void
+  handleMouseDown?: (card: FormulaeCardType) => void
+  handleMouseUpBefore?: (card: FormulaeCardType) => void
+  handleMouseUpAfter?: (card: FormulaeCardType) => void
+  handleMouseUp?: (card: FormulaeCardType) => void
+  handleHover?: (card: FormulaeCardType, before: boolean) => void
 }
 
 export const FunctionalTypeView: FC<FunctionalTypeViewProps> = ({
@@ -21,9 +25,13 @@ export const FunctionalTypeView: FC<FunctionalTypeViewProps> = ({
   showPreview = false,
   className = 'card',
   style = {},
+  isHoverable = false,
   handleCardClick = () => {},
   handleMouseDown = () => {},
-  handleMouseUp = () => {}
+  handleMouseUpBefore = () => {},
+  handleMouseUpAfter = () => {},
+  handleMouseUp = () => {},
+  handleHover
 }) => {
   // const count = card.getCount()
   const cardName = card.getName()
@@ -54,12 +62,34 @@ export const FunctionalTypeView: FC<FunctionalTypeViewProps> = ({
     handleMouseDown(card)
   }
 
+  
+  const handleUpBefore = () => {
+    handleMouseUpBefore(card)
+  }
+
+  const handleUpAfter = () => {
+    handleMouseUpAfter(card)
+  }
+
   const handleUp = () => {
     handleMouseUp(card)
   }
 
+  const handleHoverBefore = () => {
+    if(handleHover) {
+      handleHover(card, true)
+    }
+  }
+
+  const handleHoverAfter = () => {
+    if(handleHover) {
+      handleHover(card, false)
+    }
+  }
+
   return (
     <>
+    {isHoverable && <div className='hoverZone' onMouseUp={handleUpBefore} onMouseEnter={handleHoverBefore}></div>}
       <div style={style} className={className} onClick={handleClick} onMouseDown={handleDown} onMouseUp={handleUp}>
         <div className='mainText'>{cardName}</div>
         <AdditionView card={addition} />
@@ -72,6 +102,7 @@ export const FunctionalTypeView: FC<FunctionalTypeViewProps> = ({
           handleAdditionClick={handleAdditionClick}
         />
       )}
+      {isHoverable && <div className='hoverZone' onMouseDown={handleUpAfter} onMouseEnter={handleHoverAfter}></div>}
     </>
   )
 }

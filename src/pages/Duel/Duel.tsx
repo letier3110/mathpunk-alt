@@ -75,7 +75,7 @@ export const Duel: FC<DuelProps> = () => {
   const isGameEnded = rounds <= 0
 
   const handleAddCard = ({ card, index }: AddCardProps) => {
-    if (!index) {
+    if (index === undefined) {
       const newArr = chain.concat(card)
       setChain(newArr)
       updateDeck(
@@ -209,12 +209,13 @@ export const Duel: FC<DuelProps> = () => {
               ))}
             </CardsHand>
             <div
-              className={[selectedCard ? 'border' : '', 'flex1 duel'].join(' ')}
+              className={[chain.length === 0 && selectedCard ? 'border' : '', 'flex1 duel'].join(' ')}
               style={{
-                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+                backgroundColor: chain.length === 0 && selectedCard ? 'rgba(0, 255, 0,.3)' : ''
               }}
               onMouseUp={() => {
-                if (selectedCard) {
+                if (currentTurn === TurnsType.COMPETITOR) return
+                if (chain.length === 0 && selectedCard) {
                   handleAddCard({ card: selectedCard })
                   setSelectedCard(null)
                 }
@@ -233,16 +234,34 @@ export const Duel: FC<DuelProps> = () => {
                   handleEqual()
                 }}
               >
-                {chain.map((x) => (
+                {chain.map((x, i) => (
                   <CardTypeView
                     key={x.getId()}
                     card={x}
                     showPreview
                     className='card noAddition'
-                    handleCardClick={() => {
+                    isHoverable={selectedCard !== null}
+                    handleMouseDown={(card: CardType) => {
                       if (currentTurn === TurnsType.COMPETITOR) return
                       if (x instanceof Switcher) return
-                      handleRemoveCard({ card: x })
+                      handleRemoveCard({ card })
+                      setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                    }}
+                    handleMouseUpBefore={() => {
+                      if (currentTurn === TurnsType.COMPETITOR) return
+                      if (x instanceof Switcher) return
+                      if (selectedCard) {
+                        handleAddCard({ card: selectedCard, index: i })
+                        setSelectedCard(null)
+                      }
+                    }}
+                    handleMouseUpAfter={() => {
+                      if (currentTurn === TurnsType.COMPETITOR) return
+                      if (x instanceof Switcher) return
+                      if (selectedCard) {
+                        handleAddCard({ card: selectedCard, index: i + 1 })
+                        setSelectedCard(null)
+                      }
                     }}
                   />
                 ))}

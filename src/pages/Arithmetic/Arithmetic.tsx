@@ -75,7 +75,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
   }, [equalizerResult, count, mode, preciseness, setPrediction])
 
   const handleAddCard = ({ card, index }: AddCardProps) => {
-    if (!index) {
+    if (index === undefined) {
       const newArr = chain.concat(card)
       setChain(newArr)
       updateDeck(
@@ -83,7 +83,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
         deck.filter((x) => x.getId() !== card.getId())
       )
     } else {
-      const newArr = [...chain.slice(0, index), card, ...chain.slice(index)]
+      const newArr = chain.slice(0, index).concat(card).concat(chain.slice(index))
       setChain(newArr)
       updateDeck(
         GAME_MODES.ARITHMETICS,
@@ -158,14 +158,14 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
         {isGameEnded === false && (
           <>
             <div
-              className={[selectedCard ? 'border' : '', 'flex1'].join(' ')}
+              className={[chain.length === 0 && selectedCard ? 'border' : '', 'flex1'].join(' ')}
               style={{
-                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : '',
+                backgroundColor: chain.length === 0 && selectedCard ? 'rgba(0, 255, 0,.3)' : '',
                 minHeight: '100px',
                 minWidth: '100px'
               }}
               onMouseUp={() => {
-                if (selectedCard) {
+                if (chain.length === 0 && selectedCard) {
                   handleAddCard({ card: selectedCard })
                   setSelectedCard(null)
                 }
@@ -178,13 +178,29 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
                 equalizerResult={formatNumber(equalizerResult)}
                 handleEqual={handleEqual}
               >
-                {chain.map((x) => (
+                {chain.map((x, i) => (
                   <CardTypeView
                     key={x.getId()}
                     card={x}
                     showPreview
                     className='card noAddition'
-                    handleCardClick={() => handleRemoveCard({ card: x })}
+                    isHoverable={selectedCard !== null}
+                    handleMouseUpBefore={() => {
+                      if (selectedCard) {
+                        handleAddCard({ card: selectedCard, index: i })
+                        setSelectedCard(null)
+                      }
+                    }}
+                    handleMouseUpAfter={() => {
+                      if (selectedCard) {
+                        handleAddCard({ card: selectedCard, index: i + 1 })
+                        setSelectedCard(null)
+                      }
+                    }}
+                    handleMouseDown={(card: CardType) => {
+                      handleRemoveCard({ card })
+                      setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                    }}
                   />
                 ))}
               </CardsChain>
