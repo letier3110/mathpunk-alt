@@ -32,8 +32,6 @@ export const MainMenu: FC<MainMenuProps> = () => {
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const isMathOperators = useMemo(() => mathOperators.length > 0, [mathOperators])
-
   const handleCardClick = useCallback(
     (card: NavigatorCard) => {
       if (card.getName() === TUTORIAL_NAME) {
@@ -64,7 +62,6 @@ export const MainMenu: FC<MainMenuProps> = () => {
       operators: Array<CardType>
     } => {
       if (card.getName() === TUTORIAL_NAME) {
-        // setGameModeState(GAME_MODES.TUTORIAL)
         return {
           powers: [],
           operators: [
@@ -72,25 +69,26 @@ export const MainMenu: FC<MainMenuProps> = () => {
             ArithmeticCardTypes.DIFFERENCATOR,
             ArithmeticCardTypes.MULTIPLICATOR,
             ArithmeticCardTypes.SUMMATOR
-          ].map((x) => new ArithmeticCardTypeEnumToClass[x]({ name: '' }))
+          ]
+            .map((x) => new ArithmeticCardTypeEnumToClass[x]({ name: '' }))
+            .filter((x) => mathOperators.find((y) => x.getName() === y))
         }
       }
       if (card.getName() === ARITHMETIC_NAME) {
-        // setGameModeState(GAME_MODES.ARITHMETICS)
+        const rewardPowers = [new NavigatorCard(REROLL_POWER_NAME)]
+        const filteredPowers = rewardPowers.filter((x) => powers.find((y) => x.getName() === y.getName()))
         return {
-          powers: [new NavigatorCard(REROLL_POWER_NAME)],
+          powers: filteredPowers,
           operators: []
         }
       }
       if (card.getName() === PLOTTING_NAME) {
-        // setGameModeState(GAME_MODES.PLOTTING)
         return {
           powers: [],
           operators: []
         }
       }
       if (card.getName() === DUEL_NAME) {
-        // setGameModeState(GAME_MODES.DUEL_FUNCTION)
         return {
           powers: [],
           operators: []
