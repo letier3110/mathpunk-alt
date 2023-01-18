@@ -3,8 +3,8 @@ import { instanceOfChangable, SwitcherValue } from '../../math/arithmetic'
 import { FormulaeCardType } from '../../math/formulae'
 import { Switcher } from '../../math/Switcher'
 import { AdditionView } from '../AdditionView/AdditionView'
-import { usePlottingContext } from '../../pages/Plotting/Plotting.constate'
 import { CardType } from '../../math/CardType'
+import { useChainContext } from '../../hooks/Chain.constate'
 
 interface FunctionalTypeViewProps {
   className?: string
@@ -38,7 +38,7 @@ export const FunctionalTypeView: FC<FunctionalTypeViewProps> = ({
   const addition = card.getAddition()
   const isInteractiveAddition = useMemo(() => instanceOfChangable<SwitcherValue>(addition), [addition])
 
-  const { chain, setChain } = usePlottingContext()
+  const { chain, setChain } = useChainContext()
 
   const handleClick = () => {
     if (handleCardClick) {

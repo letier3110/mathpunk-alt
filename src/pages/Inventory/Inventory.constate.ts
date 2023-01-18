@@ -35,7 +35,6 @@ interface InventoryValues {
 
 const initialPowers: Array<CardType> = []
 
-// 2️⃣ Wrap your hook with the constate factory
 export const [InventoryProvider, useInventoryContext] = constate((): InventoryValues => {
   const { setGameMode } = useGameModeContext()
   const [mathOperators, sOperators] = useState(INITIAL_MATH_OPERATORS)

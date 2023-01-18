@@ -29,7 +29,7 @@ interface ArithmeticProps {
 const START_NEW_NAME = 'Start new game?'
 
 export const Arithmetic: FC<ArithmeticProps> = () => {
-  const { powers, addPower } = useInventoryContext()
+  const { powers, mathOperators, addPower } = useInventoryContext()
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const { getDeck, updateDeck } = useDeck()
   const deck = getDeck(GAME_MODES.ARITHMETICS)
@@ -110,7 +110,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
     setRound(round + 1)
     setChain([])
     // setLeft(3)
-    updateDeck(GAME_MODES.ARITHMETICS, getDeckPoolArithmetic(hardMode))
+    updateDeck(GAME_MODES.ARITHMETICS, getDeckPoolArithmetic(mathOperators, hardMode))
   }
 
   const handleStartNewGame = () => {
@@ -118,7 +118,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
     setCount(generateTargetArithmetic(hardMode))
     setRound(1)
     setChain([])
-    updateDeck(GAME_MODES.ARITHMETICS, getDeckPoolArithmetic(hardMode))
+    updateDeck(GAME_MODES.ARITHMETICS, getDeckPoolArithmetic(mathOperators, hardMode))
     setEnemyHp(10)
     // setLeft(3)
   }

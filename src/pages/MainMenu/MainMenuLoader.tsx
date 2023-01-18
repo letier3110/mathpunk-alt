@@ -4,11 +4,6 @@ interface MainMenuLoaderProps {
   //
 }
 
-const TUTORIAL_NAME = 'Start Tutorial?'
-const ARITHMETIC_NAME = 'Start Arithmetic?'
-const PLOTTING_NAME = 'Start Plotting?'
-const DUEL_NAME = 'Start Duel?'
-
 const INITIAL_PROGRESS = 15
 const PROGRESS_DELTA = 5
 const FINAL_PROGRESS = 175

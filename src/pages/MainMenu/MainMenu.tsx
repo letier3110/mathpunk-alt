@@ -1,4 +1,4 @@
-import { CSSProperties, FC, useCallback, useEffect, useRef, useState } from 'react'
+import { CSSProperties, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { CardsHand } from '../../components/CardsHand/CardsHand'
 
@@ -31,6 +31,8 @@ export const MainMenu: FC<MainMenuProps> = () => {
   const deck = getDeck(GAME_MODES.MAIN_MENU)
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const isMathOperators = useMemo(() => mathOperators.length > 0, [mathOperators])
 
   const handleCardClick = useCallback(
     (card: NavigatorCard) => {
@@ -168,17 +170,17 @@ export const MainMenu: FC<MainMenuProps> = () => {
             }
             const name = x.getName()
             const rewards = getRewards(x)
+            const isDisabled = mathOperators.length === 0 && name !== TUTORIAL_NAME
             return (
               <NavigatorTypeView
                 key={x.getId()}
                 card={x}
-                handleCardClick={() => {
-                  handleCardClick(x)
-                }}
+                className={[isDisabled ? 'cardPlace' : 'card'].join(' ')}
                 style={style}
-                handleMouseDown={(card: CardType) =>
+                handleMouseDown={(card: CardType) => {
+                  if (isDisabled) return
                   setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
-                }
+                }}
               >
                 {rewards.powers.length > 0 && (
                   <div className='cardRewards'>

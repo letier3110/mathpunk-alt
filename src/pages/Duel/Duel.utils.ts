@@ -1,15 +1,18 @@
-import { ArithmeticCardTypeEnum, ArithmeticCardTypes } from "../../math/arithmetic"
-import { CardType } from "../../math/CardType"
-import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, DifficultySettings } from "../../math/math"
-import { weightedRand } from "../../math/utils"
+import { ArithmeticCardTypeEnum, ArithmeticCardTypes } from '../../math/arithmetic'
+import { CardType } from '../../math/CardType'
+import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, DifficultySettings } from '../../math/math'
+import { weightedRand } from '../../math/utils'
 
-const StartCardPool: Record<ArithmeticCardTypeEnum, number> = {
-  [ArithmeticCardTypes.DENOMINATOR]: 1,
-  [ArithmeticCardTypes.SUMMATOR]: 1,
-  [ArithmeticCardTypes.MULTIPLICATOR]: 1,
-  [ArithmeticCardTypes.DIFFERENCATOR]: 1,
-  [ArithmeticCardTypes.SWITCHER]: 0
-  // [CardTypeEnum.NUMBERATOR]: 3,
+const getStartCardPool = (operators: Array<ArithmeticCardTypeEnum>): Record<ArithmeticCardTypeEnum, number> => {
+  const baseOperators = {
+    [ArithmeticCardTypes.DENOMINATOR]: 0,
+    [ArithmeticCardTypes.SUMMATOR]: 0,
+    [ArithmeticCardTypes.MULTIPLICATOR]: 0,
+    [ArithmeticCardTypes.DIFFERENCATOR]: 0,
+    [ArithmeticCardTypes.SWITCHER]: 0
+    // [CardTypeEnum.NUMBERATOR]: 3,
+  }
+  return operators.reduce((p, c) => ({ ...p, [c]: 1 }), baseOperators)
 }
 
 export const ARITHMETIC_VALUES: Record<DIFFICULTIES, DifficultySettings> = {
@@ -50,10 +53,11 @@ export const generateNumenator = (hardMode = false): number => {
   return res
 }
 
-export const getDeckPoolDuel = (hardMode = false): CardType[] => {
+export const getDeckPoolDuel = (operators: Array<ArithmeticCardTypeEnum>, hardMode = false): CardType[] => {
+  if (operators.length === 0) return []
   const array = Array(5).fill((x: number) => x)
   const res = array.map((): CardType => {
-    const result = new ArithmeticCardTypeEnumToClass[weightedRand<ArithmeticCardTypeEnum>(StartCardPool)()]({
+    const result = new ArithmeticCardTypeEnumToClass[weightedRand<ArithmeticCardTypeEnum>(getStartCardPool(operators))()]({
       name: ''
     })
     result.setCount(generateNumenator(hardMode))
@@ -63,9 +67,18 @@ export const getDeckPoolDuel = (hardMode = false): CardType[] => {
 }
 
 export const getEnemyDeckPoolArithmetic = (hardMode = false): CardType[] => {
+  const operators = [
+    ArithmeticCardTypes.DENOMINATOR,
+    ArithmeticCardTypes.DIFFERENCATOR,
+    ArithmeticCardTypes.MULTIPLICATOR,
+    ArithmeticCardTypes.SUMMATOR,
+    ArithmeticCardTypes.SWITCHER
+  ]
   const array = Array(3).fill((x: number) => x)
   const res = array.map((): CardType => {
-    const result = new ArithmeticCardTypeEnumToClass[weightedRand<ArithmeticCardTypeEnum>(StartCardPool)()]({
+    const result = new ArithmeticCardTypeEnumToClass[
+      weightedRand<ArithmeticCardTypeEnum>(getStartCardPool(operators))()
+    ]({
       name: ''
     })
     result.setCount(generateNumenator(hardMode))

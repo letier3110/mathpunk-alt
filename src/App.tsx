@@ -1,7 +1,6 @@
 import { Arithmetic } from './pages/Arithmetic/Arithmetic'
 import { Plotting } from './pages/Plotting/Plotting'
 import { Tutorial } from './pages/Tutorial/Tutorial'
-import { PlottingProvider } from './pages/Plotting/Plotting.constate'
 import { GAME_MODES } from './math/math'
 
 import './App.css'
@@ -12,6 +11,7 @@ import { MainMenu } from './pages/MainMenu/MainMenu'
 import { GhostPreviewProvider } from './hooks/GhostPreview.constate'
 import { Intro } from './pages/Intro/Intro'
 import { RerollsProvider } from './hooks/Rerolls.constate'
+import { ChainProvider } from './hooks/Chain.constate'
 
 function App() {
   const { gameMode } = useGameModeContext()
@@ -52,7 +52,9 @@ function App() {
         }}
       >
         <GhostPreviewProvider>
-          <Duel />
+          <ChainProvider gameMode={GAME_MODES.DUEL_FUNCTION}>
+            <Duel />
+          </ChainProvider>
         </GhostPreviewProvider>
       </div>
       <div
@@ -61,7 +63,9 @@ function App() {
         }}
       >
         <GhostPreviewProvider>
-          <Arithmetic />
+          <ChainProvider gameMode={GAME_MODES.ARITHMETICS}>
+            <Arithmetic />
+          </ChainProvider>
         </GhostPreviewProvider>
       </div>
       <div
@@ -70,9 +74,9 @@ function App() {
         }}
       >
         <GhostPreviewProvider>
-          <PlottingProvider>
+          <ChainProvider gameMode={GAME_MODES.PLOTTING}>
             <Plotting />
-          </PlottingProvider>
+          </ChainProvider>
         </GhostPreviewProvider>
       </div>
       <GhostPreviewProvider>

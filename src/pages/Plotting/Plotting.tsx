@@ -1,7 +1,5 @@
 import { CSSProperties, FC, useMemo, useState } from 'react'
 
-import { GAME_MODES } from '../../math/math'
-
 import { FormulaeCardType } from '../../math/formulae'
 import { formatNumber } from '../../math/utils'
 import { FunctionalTypeView } from '../../components/FunctionalTypeView/FunctionalTypeView'
@@ -10,14 +8,15 @@ import { useGraph } from './useGraph.hook'
 
 import { NavigatorCard } from '../../math/NavigatorCard'
 import { generateTargetPlotting, getDeckPoolPlotting } from './Plotting.utils'
-import { usePlottingContext } from './Plotting.constate'
 import { CardsHand } from '../../components/CardsHand/CardsHand'
 import { CardsChain } from '../../components/CardsChain/CardsChain'
-import { useGameModeContext } from '../../hooks/GameState.constate'
 import { useGhostPreviewContext } from '../../hooks/GhostPreview.constate'
 import { CardType } from '../../math/CardType'
 import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
+import { useInventoryContext } from '../Inventory/Inventory.constate'
+import { useChainContext } from '../../hooks/Chain.constate'
+import { GAME_MODES } from '../../math/math'
 
 interface PlottingProps {
   //
@@ -33,18 +32,19 @@ const START_NEW_NAME = 'Start new game?'
 const lessonEndDeck = [new NavigatorCard(START_NEW_NAME)]
 
 export const Plotting: FC<PlottingProps> = () => {
+  const { mathOperators } = useInventoryContext()
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const [hardMode, setHardMode] = useState<boolean>(false)
   const [count, setCount] = useState(generateTargetPlotting())
   // const [left, setLeft] = useState(3)
   const [enemyHp, setEnemyHp] = useState(10)
-  const { chain, deck, setDeck, setChain } = usePlottingContext()
+  const { chain, deck, setDeck, setChain } = useChainContext()
 
   const equalizerResult: string = useMemo(() => {
     if (chain.length === 0) return '0'
     if (chain.length === 1) return chain[0].getName()
     const strResult = chain.reduce(
-      (a, p, i) => a.concat(p.getName().toString(), i === chain.length - 1 ? '' : p.getAddition().getName()),
+      (a, p, i) => a.concat(p.getName().toString(), i === chain.length - 1 ? '' : (p as FormulaeCardType).getAddition().getName()),
       ''
     )
     return strResult
@@ -99,7 +99,7 @@ export const Plotting: FC<PlottingProps> = () => {
     // setRound(round + 1)
     setChain([])
     // setLeft(3)
-    setDeck(getDeckPoolPlotting({ hardMode }))
+    setDeck(getDeckPoolPlotting({ hardMode, operators: mathOperators }))
   }
 
   const handleStartNewGame = () => {
@@ -107,7 +107,7 @@ export const Plotting: FC<PlottingProps> = () => {
     setCount(generateTargetPlotting())
     // setRound(1)
     setChain([])
-    setDeck(getDeckPoolPlotting({ hardMode }))
+    setDeck(getDeckPoolPlotting({ hardMode, operators: mathOperators }))
     setEnemyHp(10)
     // setLeft(3)
   }
@@ -199,7 +199,7 @@ export const Plotting: FC<PlottingProps> = () => {
               {chain.map((x, i) => (
                 <FunctionalTypeView
                   key={x.getId()}
-                  card={x}
+                  card={x as FormulaeCardType}
                   showPreview
                   className='card noAddition'
                   isHoverable={selectedCard !== null}
