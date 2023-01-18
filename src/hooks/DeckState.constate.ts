@@ -73,7 +73,14 @@ export const [DeckProvider, useDeck] = constate(() => {
   )
 
   useEffect(() => {
-    setDeckState(getInitialState(mathOperators))
+    const newDeck = getInitialState(mathOperators)
+    setDeckState((prev) => ({
+      ...prev,
+      ...newDeck,
+      [GAME_MODES.MAIN_MENU]: prev[GAME_MODES.MAIN_MENU],
+      [GAME_MODES.INTRO]: prev[GAME_MODES.INTRO],
+      [GAME_MODES.TUTORIAL]: prev[GAME_MODES.TUTORIAL]
+    }))
   }, [mathOperators])
 
   return {

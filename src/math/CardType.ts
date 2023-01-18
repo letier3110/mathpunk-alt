@@ -36,6 +36,11 @@ export class CardType implements ICardType {
     return this.name.toString()
   }
 
+  getCountNumber() {
+    if(this.count < 0) return `(-${Math.abs(this.count)})`
+    return this.count.toString()
+  }
+
   getCount() {
     return this.count.toString()
   }

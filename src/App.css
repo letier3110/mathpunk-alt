@@ -375,6 +375,14 @@ body {
   padding: 8px 12px;
 }
 
+.addition.tutorialAdditionReward {
+  margin-top: 12px;
+  position: relative;
+  width: 5px;
+  top: inherit;
+  right: inherit;
+}
+
 .noDrop {
   cursor: no-drop;
   user-select: auto;

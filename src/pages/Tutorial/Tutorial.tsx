@@ -69,7 +69,7 @@ export const Tutorial: FC<TutorialProps> = () => {
     }
     const strResult = chain.reduce(
       (a, p, i) =>
-        a.concat(p.getCount().toString(), i === chain.length - 1 ? '' : ops[tutorialStep as ArithmeticCardTypeEnum]),
+        a.concat(p.getCountNumber().toString(), i === chain.length - 1 ? '' : ops[tutorialStep as ArithmeticCardTypeEnum]),
       ''
     )
     const result: number = eval(strResult)
@@ -129,6 +129,7 @@ export const Tutorial: FC<TutorialProps> = () => {
     const allLocalTutorials = tutorialSeries[currentTutorialIndex].tutorials
     if (tutorialInnerStep >= allLocalTutorials.length - 1) {
       addMathOperator(tutorialStep)
+      setTutorialInnerStep(0)
       handleNextMacroTutorial()
     } else {
       const newChain: CardType[] = allLocalTutorials[tutorialInnerStep + 1].chain
@@ -416,6 +417,8 @@ export const Tutorial: FC<TutorialProps> = () => {
               >
                 <div>🥳🥳🥳</div>
                 <div>You won!</div>
+                <div>Complete series or Skip to recieve new operator</div>
+                <AdditionView className='tutorialAdditionReward' card={new ArithmeticCardTypeEnumToClass[tutorialStep]({name: ''})} />
               </div>
               {selectedCard && (
                 <GhostPreview
