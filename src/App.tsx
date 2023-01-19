@@ -20,13 +20,14 @@ function App() {
   return (
     <>
       {gameMode === GAME_MODES.INTRO && (
-        <div>
+        <div className='boardParent'>
           <GhostPreviewProvider>
             <Intro />
           </GhostPreviewProvider>
         </div>
       )}
       <div
+        className='boardParent'
         style={{
           display: gameMode === GAME_MODES.TUTORIAL ? 'block' : 'none'
         }}
@@ -37,6 +38,7 @@ function App() {
       </div>
       {gameMode === GAME_MODES.MAIN_MENU && (
         <div
+          className='boardParent'
           style={{
             display: gameMode === GAME_MODES.MAIN_MENU ? 'block' : 'none'
           }}
@@ -47,6 +49,7 @@ function App() {
         </div>
       )}
       <div
+        className='boardParent'
         style={{
           display: gameMode === GAME_MODES.DUEL_FUNCTION ? 'block' : 'none'
         }}
@@ -58,6 +61,7 @@ function App() {
         </GhostPreviewProvider>
       </div>
       <div
+        className='boardParent'
         style={{
           display: gameMode === GAME_MODES.ARITHMETICS ? 'block' : 'none'
         }}
@@ -69,6 +73,7 @@ function App() {
         </GhostPreviewProvider>
       </div>
       <div
+        className='boardParent'
         style={{
           display: gameMode === GAME_MODES.PLOTTING ? 'block' : 'none'
         }}

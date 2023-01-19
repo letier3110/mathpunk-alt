@@ -12,6 +12,11 @@ body {
   text-align: center;
 }
 
+.boardParent {
+  perspective: 881px;
+  perspective-origin: 50% 107%;
+}
+
 .root {
   width: 100%;
   min-height: calc(100vh - 32px);
@@ -21,6 +26,8 @@ body {
   flex-direction: column;
 
   align-items: center;
+
+  transform: translate3d(0px, 0px, -100px) rotate3d(1, 0, 0, 22deg);
 }
 
 .duel {
