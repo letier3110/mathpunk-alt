@@ -89,9 +89,7 @@ export const getDeckPoolPlotting = (props: GetDeckPoolProps): FormulaeCardType[]
       addition: new CardType({ name: '' })
     })
     // result.setCount(generateNumenator(hardMode))
-    // console.log('plotting class', result, functionalClass, result instanceof FNumberator)
     if (result instanceof FNumberator) {
-      // console.log('f_numberator')
       result.setCount(generateNumenator(hardMode))
 
       const additionClass = new Switcher()

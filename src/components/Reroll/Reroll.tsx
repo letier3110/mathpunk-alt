@@ -29,6 +29,7 @@ export const Reroll: FC<RerollProps> = ({
       style={style}
       onClick={handleReroll}
       onMouseDown={handleDown}
+      onTouchStart={handleReroll}
     >
       <RewardEffect />
       reroll? {left} left

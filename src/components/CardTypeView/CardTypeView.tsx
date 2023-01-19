@@ -90,7 +90,7 @@ export const CardTypeView: FC<CardTypeViewProps> = ({
   return (
     <>
       {isHoverable && <div className='hoverZone' onMouseUp={handleUpBefore} onMouseEnter={handleHoverBefore}></div>}
-      <div onClick={handleClick} onMouseDown={handleDown} onMouseUp={handleUp} style={style} className={className}>
+      <div onClick={handleClick} onTouchStart={handleClick} onMouseDown={handleDown} onMouseUp={handleUp} style={style} className={className}>
         <div className='mainText'>{formatNumber(Number(count))}</div>
         {noAddition === false && (
           <AdditionView interactive={isInteractiveAddition} handleAdditionClick={handleAdditionClick} card={card} />

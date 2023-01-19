@@ -37,7 +37,6 @@ export const useGraph = ({ hardMode = false, chainLength = 0, count, equalizerRe
   useEffect(() => {
     if (chainLength === 0) return
     const checkPointsCount = 5
-    // console.log(playerEvalFunction, targetEvalFunction)
     const playerResult = Array(checkPointsCount)
       .fill(1)
       .map((x, i) => i * (X_SIZE / checkPointsCount))
@@ -60,10 +59,7 @@ export const useGraph = ({ hardMode = false, chainLength = 0, count, equalizerRe
     for (let i = 0; i < checkPointsCount; i++) {
       const lowerTarget = targetResult[i] * (1 - localPreciseness)
       const upperTarget = targetResult[i] * (1 + localPreciseness)
-      // console.log('summ i', playerResult[i], lowerTarget, upperTarget)
-      // const max = targetResult[i] * (1 - localPreciseness) > targetResult[i] * (1 + localPreciseness) ?
       if (Math.abs(playerResult[i]) > Math.abs(lowerTarget) && Math.abs(playerResult[i]) < Math.abs(upperTarget)) {
-        // console.log('res', Math.round((1 - Math.abs((playerResult[i] - targetResult[i]) / targetResult[i])) * 5))
         const res = Math.round((1 - Math.abs((playerResult[i] - targetResult[i]) / targetResult[i])) * 5)
         summ -= res
       } else {

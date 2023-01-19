@@ -181,6 +181,10 @@ export const MainMenu: FC<MainMenuProps> = () => {
                 card={x}
                 className={[isDisabled ? 'cardPlace' : 'card'].join(' ')}
                 style={style}
+                handleCardClick={() => {
+                  if(isDisabled) return
+                  handleCardClick(x)
+                }}
                 handleMouseDown={(card: CardType) => {
                   if (isDisabled) return
                   setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))

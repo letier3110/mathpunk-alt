@@ -111,7 +111,6 @@ export const Intro: FC<IntroProps> = () => {
                   isReward
                   style={style}
                   handleCardClick={() => {
-                    console.log('click')
                     handleCardClick(x)
                   }}
                   handleMouseDown={(card: CardType) => {

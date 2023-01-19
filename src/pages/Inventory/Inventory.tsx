@@ -112,6 +112,9 @@ export const Inventory: FC<InventoryProps> = () => {
                     left={left}
                     style={style}
                     className={[isSelected ? 'border' : '', 'card'].join(' ')}
+                    handleReroll={() => {
+                      handleCardClick(x)
+                    }}
                     handleMouseDown={() => setSelectedCard((prev) => (prev?.getId() === x.getId() ? null : x))}
                   />
                 )
@@ -123,6 +126,9 @@ export const Inventory: FC<InventoryProps> = () => {
                   style={style}
                   isReward
                   className={[isSelected ? 'border' : '', 'card'].join(' ')}
+                  handleCardClick={() => {
+                    handleCardClick(x)
+                  }}
                   handleMouseDown={(card: CardType) =>
                     setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
                   }

@@ -13,7 +13,15 @@ import { useInventoryContext } from '../Inventory/Inventory.constate'
 import { INITIAL_CHAIN, INITIAL_DECK, INITIAL_ENEMY_HP, targetEnemyHp, tutorialSeries } from './Tutorial.const'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorTypeView'
-import { CONTINUE_LESSON_NAME, CONTINUE_NAME, gameOverDeck, lessonEndDeck, RESTART_TUTORIAL_NAME, SKIP_NAME, START_AGAIN_NAME } from '../../shared/decks.data'
+import {
+  CONTINUE_LESSON_NAME,
+  CONTINUE_NAME,
+  gameOverDeck,
+  lessonEndDeck,
+  RESTART_TUTORIAL_NAME,
+  SKIP_NAME,
+  START_AGAIN_NAME
+} from '../../shared/decks.data'
 import { useDeck } from '../../hooks/DeckState.constate'
 
 interface AddCardProps {
@@ -69,7 +77,10 @@ export const Tutorial: FC<TutorialProps> = () => {
     }
     const strResult = chain.reduce(
       (a, p, i) =>
-        a.concat(p.getCountNumber().toString(), i === chain.length - 1 ? '' : ops[tutorialStep as ArithmeticCardTypeEnum]),
+        a.concat(
+          p.getCountNumber().toString(),
+          i === chain.length - 1 ? '' : ops[tutorialStep as ArithmeticCardTypeEnum]
+        ),
       ''
     )
     const result: number = eval(strResult)
@@ -83,11 +94,17 @@ export const Tutorial: FC<TutorialProps> = () => {
     if (!index) {
       const newArr = chain.concat(card)
       setChain(newArr)
-      updateDeck(GAME_MODES.TUTORIAL, deck.filter((x) => x.getId().toString() !== card.getId().toString()))
+      updateDeck(
+        GAME_MODES.TUTORIAL,
+        deck.filter((x) => x.getId().toString() !== card.getId().toString())
+      )
     } else {
       const newArr = [...chain.slice(0, index), card, ...chain.slice(index)]
       setChain(newArr)
-      updateDeck(GAME_MODES.TUTORIAL, deck.filter((x) => x.getId().toString() !== card.getId().toString()))
+      updateDeck(
+        GAME_MODES.TUTORIAL,
+        deck.filter((x) => x.getId().toString() !== card.getId().toString())
+      )
     }
   }
 
@@ -253,11 +270,11 @@ export const Tutorial: FC<TutorialProps> = () => {
                   <NavigatorTypeView
                     key={x.getId()}
                     card={x}
+                    style={style}
                     handleCardClick={() => {
                       handleEndGameClick(x)
                       setSelectedCard(null)
                     }}
-                    style={style}
                     handleMouseDown={(card: CardType) =>
                       setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
                     }
@@ -321,6 +338,9 @@ export const Tutorial: FC<TutorialProps> = () => {
                           card={chain[i]}
                           noAddition
                           className={['card noAddition'].join(' ')}
+                          handleCardClick={() => {
+                            handleRemoveCard({ card: chain[i], index: i })
+                          }}
                           handleMouseDown={() => {
                             handleRemoveCard({ card: chain[i], index: i })
                             setSelectedCard((prev) => (prev?.getId() === chain[i].getId() ? null : chain[i]))
@@ -340,6 +360,12 @@ export const Tutorial: FC<TutorialProps> = () => {
                           backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : '',
                           zIndex: 0
                         }}
+                        // handleCardClick={() => {
+                        //   handleRemoveCard({ card: x})
+                        // }}
+                        // handleCardClick={() => {
+                        //   handleAddCard({card: x })
+                        // }}
                         handleMouseUp={() => {
                           if (selectedCard) {
                             handleAddCard({ card: selectedCard })
@@ -391,6 +417,9 @@ export const Tutorial: FC<TutorialProps> = () => {
                         noAddition
                         className='card noAddition'
                         style={style}
+                        handleCardClick={() => {
+                          handleAddCard({ card: x })
+                        }}
                         handleMouseDown={(card: CardType) =>
                           setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
                         }
@@ -418,7 +447,10 @@ export const Tutorial: FC<TutorialProps> = () => {
                 <div>🥳🥳🥳</div>
                 <div>You won!</div>
                 <div>Complete series or Skip to recieve new operator</div>
-                <AdditionView className='tutorialAdditionReward' card={new ArithmeticCardTypeEnumToClass[tutorialStep]({name: ''})} />
+                <AdditionView
+                  className='tutorialAdditionReward'
+                  card={new ArithmeticCardTypeEnumToClass[tutorialStep]({ name: '' })}
+                />
               </div>
               {selectedCard && (
                 <GhostPreview
@@ -454,11 +486,11 @@ export const Tutorial: FC<TutorialProps> = () => {
                       <NavigatorTypeView
                         key={x.getId()}
                         card={x}
+                        style={style}
                         handleCardClick={() => {
                           handleEndGameClick(x)
                           setSelectedCard(null)
                         }}
-                        style={style}
                         handleMouseDown={(card: CardType) =>
                           setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
                         }
