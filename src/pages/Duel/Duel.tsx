@@ -239,22 +239,26 @@ export const Duel: FC<DuelProps> = () => {
                     isHoverable={selectedCard !== null}
                     handleMouseDown={(card: CardType) => {
                       if (currentTurn === TurnsType.COMPETITOR) return
-                      if (x instanceof Switcher) return
+                      // if (x instanceof Switcher) return
                       handleRemoveCard({ card })
                       setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
                     }}
                     handleMouseUpBefore={() => {
+                      console.log('before')
                       if (currentTurn === TurnsType.COMPETITOR) return
-                      if (x instanceof Switcher) return
-                      if (selectedCard) {
+                      // if (x instanceof Switcher) return
+                      if (chain.length !== 0 && selectedCard) {
                         handleAddCard({ card: selectedCard, index: i })
                         setSelectedCard(null)
                       }
                     }}
                     handleMouseUpAfter={() => {
+                      console.log('after')
                       if (currentTurn === TurnsType.COMPETITOR) return
-                      if (x instanceof Switcher) return
-                      if (selectedCard) {
+                      console.log('after2')
+                      // if (x instanceof Switcher) return
+                      console.log('after3')
+                      if (chain.length !== 0 && selectedCard) {
                         handleAddCard({ card: selectedCard, index: i + 1 })
                         setSelectedCard(null)
                       }
