@@ -108,14 +108,15 @@ export const Intro: FC<IntroProps> = () => {
                 <NavigatorTypeView
                   key={x.getId()}
                   card={x}
-                  handleCardClick={() => {
-                    handleCardClick(x)
-                  }}
                   isReward
                   style={style}
-                  handleMouseDown={(card: CardType) =>
+                  handleCardClick={() => {
+                    console.log('click')
+                    handleCardClick(x)
+                  }}
+                  handleMouseDown={(card: CardType) => {
                     setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
-                  }
+                  }}
                 >
                   <div className='mainText'>{x.getName()}</div>
                 </NavigatorTypeView>

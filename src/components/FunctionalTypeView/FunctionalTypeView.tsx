@@ -62,7 +62,6 @@ export const FunctionalTypeView: FC<FunctionalTypeViewProps> = ({
     handleMouseDown(card)
   }
 
-  
   const handleUpBefore = () => {
     handleMouseUpBefore(card)
   }
@@ -76,21 +75,21 @@ export const FunctionalTypeView: FC<FunctionalTypeViewProps> = ({
   }
 
   const handleHoverBefore = () => {
-    if(handleHover) {
+    if (handleHover) {
       handleHover(card, true)
     }
   }
 
   const handleHoverAfter = () => {
-    if(handleHover) {
+    if (handleHover) {
       handleHover(card, false)
     }
   }
 
   return (
     <>
-    {isHoverable && <div className='hoverZone' onMouseUp={handleUpBefore} onMouseEnter={handleHoverBefore}></div>}
-      <div style={style} className={className} onClick={handleClick} onMouseDown={handleDown} onMouseUp={handleUp}>
+      {isHoverable && <div className='hoverZone' onMouseUp={handleUpBefore} onMouseEnter={handleHoverBefore}></div>}
+      <div style={style} className={className} onClick={handleClick} onTouchStart={handleCardClick} onMouseDown={handleDown} onMouseUp={handleUp}>
         <div className='mainText'>{cardName}</div>
         <AdditionView card={addition} />
       </div>

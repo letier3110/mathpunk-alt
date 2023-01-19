@@ -42,6 +42,7 @@ export const NavigatorTypeView: FC<NavigatorViewProps> = ({
       className={className}
       onClick={handleClick}
       onMouseDown={handleDown}
+      onTouchStart={handleCardClick}
     >
       {isReward && <RewardEffect />}
       {children}

@@ -62,24 +62,30 @@ export const MainMenu: FC<MainMenuProps> = () => {
       operators: Array<CardType>
     } => {
       if (card.getName() === TUTORIAL_NAME) {
+        const rewardOperators = [
+          ArithmeticCardTypes.DENOMINATOR,
+          ArithmeticCardTypes.DIFFERENCATOR,
+          ArithmeticCardTypes.MULTIPLICATOR,
+          ArithmeticCardTypes.SUMMATOR
+        ].map((x) => new ArithmeticCardTypeEnumToClass[x]({ name: '' }))
+        // const filteredOperators = rewardOperators.filter((x) => mathOperators.find((y) => x.getName() !== y))
+        const filteredOperators = rewardOperators
         return {
           powers: [],
-          operators: [
-            ArithmeticCardTypes.DENOMINATOR,
-            ArithmeticCardTypes.DIFFERENCATOR,
-            ArithmeticCardTypes.MULTIPLICATOR,
-            ArithmeticCardTypes.SUMMATOR
-          ]
-            .map((x) => new ArithmeticCardTypeEnumToClass[x]({ name: '' }))
-            .filter((x) => mathOperators.find((y) => x.getName() === y))
+          operators: filteredOperators
         }
       }
       if (card.getName() === ARITHMETIC_NAME) {
+        const rewardOperators = [ArithmeticCardTypes.SWITCHER].map(
+          (x) => new ArithmeticCardTypeEnumToClass[x]({ name: '' })
+        )
+        const filteredOperators = rewardOperators.filter((x) => mathOperators.find((y) => x.getName() !== y))
         const rewardPowers = [new NavigatorCard(REROLL_POWER_NAME)]
-        const filteredPowers = rewardPowers.filter((x) => powers.find((y) => x.getName() === y.getName()))
+        // const filteredPowers = rewardPowers.filter((x) => powers.find((y) => x.getName() !== y.getName()))
+        const filteredPowers = rewardPowers
         return {
           powers: filteredPowers,
-          operators: []
+          operators: filteredOperators
         }
       }
       if (card.getName() === PLOTTING_NAME) {
