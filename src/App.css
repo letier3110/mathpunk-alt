@@ -8,7 +8,6 @@ body {
   max-width: 1280px;
   width: 100%;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -28,6 +27,35 @@ body {
   align-items: center;
 
   transform: translate3d(0px, 0px, -100px) rotate3d(1, 0, 0, 22deg);
+
+  border: 4px solid black;
+  background: white;
+}
+
+.leftSide {
+  border: 4px solid black;
+  left: 0px;
+  right: 0px;
+  position: absolute;
+  transform: translate3d(0px, 500px, 0px) rotate3d(1, 0, 0, 112deg);
+  background: wheat;
+  top: 0px;
+  bottom: 0px;
+}
+
+.bottomSide {
+  padding: 2rem;
+
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+
+  transform: translate3d(4px, 458px, -290px) rotate3d(1, 0, 0, 112deg);
+
+  background: red;
+  border: 4px solid black;
 }
 
 .duel {
@@ -54,10 +82,18 @@ body {
 }
 
 .secondPage {
-  width: 100%;
+  width: 100vw;
   height: calc(100vh - 48px);
 
-  border-top: 1px solid #eee;
+  perspective: 0px;
+}
+
+.secondPageContent {
+  background-color: white;
+}
+
+.heading {
+  padding: 2rem 0;
 }
 
 .reroll {

@@ -17,6 +17,7 @@ import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 import { useInventoryContext } from '../Inventory/Inventory.constate'
 import { useChainContext } from '../../hooks/Chain.constate'
 import { GAME_MODES } from '../../math/math'
+import { Cube } from '../../components/Cube/Cube'
 
 interface PlottingProps {
   //
@@ -134,7 +135,7 @@ export const Plotting: FC<PlottingProps> = () => {
 
   return (
     <>
-      <div className='root'>
+      <Cube>
         <div className='hps'>
           <div>
             Remaining points to beat:
@@ -341,7 +342,7 @@ export const Plotting: FC<PlottingProps> = () => {
             </div>
           </>
         )}
-      </div>
+      </Cube>
     </>
   )
 }

@@ -56,96 +56,100 @@ export const Inventory: FC<InventoryProps> = () => {
 
   return (
     <div className='secondPage'>
-      <div className='hps mt32'>Inventory</div>
-      <div className={s.sections}>
-        <div className={s.section}>
-          <div
-            className={[selectedCard ? 'border' : '', s.headers].join(' ')}
-            style={{
-              backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
-            }}
-            onMouseUp={() => {
-              if (selectedCard) {
-                handleCardClick(selectedCard)
-                setSelectedCard(null)
-              }
-            }}
-          >
-            Powers
-          </div>
-          {selectedCard && (
-            <GhostPreview
-              deck={powers}
-              card={selectedCard}
-              handleMouseUp={() => {
+      <div className='secondPageContent'>
+        <div className='hps mt32 heading'>Inventory</div>
+        <div className={s.sections}>
+          <div className={s.section}>
+            <div
+              className={[selectedCard ? 'border' : '', s.headers].join(' ')}
+              style={{
+                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+              }}
+              onMouseUp={() => {
+                if (selectedCard) {
+                  handleCardClick(selectedCard)
+                  setSelectedCard(null)
+                }
+              }}
+            >
+              Powers
+            </div>
+            {selectedCard && (
+              <GhostPreview
+                deck={powers}
+                card={selectedCard}
+                handleMouseUp={() => {
+                  if (selectedCard) {
+                    setSelectedCard(null)
+                  }
+                }}
+              />
+            )}
+            <div
+              className={[s.operatorsGrid].join(' ')}
+              onMouseUp={() => {
                 if (selectedCard) {
                   setSelectedCard(null)
                 }
               }}
-            />
-          )}
-          <div
-            className={[s.operatorsGrid].join(' ')}
-            onMouseUp={() => {
-              if (selectedCard) {
-                setSelectedCard(null)
-              }
-            }}
-          >
-            {powersWithBlocked.map((x) => {
-              const isSelected = x.getId() === selectedCard?.getId()
-              const style: CSSProperties = {
-                zIndex: isSelected ? 200 : '',
-                backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
-              }
-              if (x.getName() === 'Navigator')
-                return (
-                  <div key={x.getId()} className='cardPlace'>
-                    ?
-                  </div>
-                )
+            >
+              {powersWithBlocked.map((x) => {
+                const isSelected = x.getId() === selectedCard?.getId()
+                const style: CSSProperties = {
+                  zIndex: isSelected ? 200 : '',
+                  backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
+                }
+                if (x.getName() === 'Navigator')
+                  return (
+                    <div key={x.getId()} className='cardPlace'>
+                      ?
+                    </div>
+                  )
 
-              if (x.getName() === REROLL_POWER_NAME) {
+                if (x.getName() === REROLL_POWER_NAME) {
+                  return (
+                    <Reroll
+                      key={x.getId()}
+                      left={left}
+                      style={style}
+                      className={[isSelected ? 'border' : '', 'card'].join(' ')}
+                      handleReroll={() => {
+                        handleCardClick(x)
+                      }}
+                      handleMouseDown={() => setSelectedCard((prev) => (prev?.getId() === x.getId() ? null : x))}
+                    />
+                  )
+                }
                 return (
-                  <Reroll
+                  <NavigatorTypeView
                     key={x.getId()}
-                    left={left}
+                    card={x}
                     style={style}
+                    isReward
                     className={[isSelected ? 'border' : '', 'card'].join(' ')}
-                    handleReroll={() => {
+                    handleCardClick={() => {
                       handleCardClick(x)
                     }}
-                    handleMouseDown={() => setSelectedCard((prev) => (prev?.getId() === x.getId() ? null : x))}
-                  />
+                    handleMouseDown={(card: CardType) =>
+                      setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                    }
+                  >
+                    <div className='mainText'>{x.getName()}</div>
+                  </NavigatorTypeView>
                 )
-              }
-              return (
-                <NavigatorTypeView
-                  key={x.getId()}
-                  card={x}
-                  style={style}
-                  isReward
-                  className={[isSelected ? 'border' : '', 'card'].join(' ')}
-                  handleCardClick={() => {
-                    handleCardClick(x)
-                  }}
-                  handleMouseDown={(card: CardType) =>
-                    setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
-                  }
-                >
-                  <div className='mainText'>{x.getName()}</div>
-                </NavigatorTypeView>
-              )
-            })}
+              })}
+            </div>
           </div>
-        </div>
-        <div className={[s.section, s.operatorsSection].join(' ')}>
-          <div className={s.headers}>Math Operators</div>
-          <div className={[s.operatorsGrid].join(' ')}>
-            {ALL_OPERATORS.map((x, i) => {
-              const isInList = mathOperators.indexOf(arithmeticOperators[i])
-              return <AdditionView key={x.getId()} className={s.addition} card={isInList >= 0 ? x : new Numberator()} />
-            })}
+          <div className={[s.section, s.operatorsSection].join(' ')}>
+            <div className={s.headers}>Math Operators</div>
+            <div className={[s.operatorsGrid].join(' ')}>
+              {ALL_OPERATORS.map((x, i) => {
+                const isInList = mathOperators.indexOf(arithmeticOperators[i])
+                return (
+                  <AdditionView key={x.getId()} className={s.addition} card={isInList >= 0 ? x : new Numberator()} />
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>

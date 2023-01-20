@@ -18,6 +18,7 @@ import { useInventoryContext } from '../Inventory/Inventory.constate'
 import { AdditionView } from '../../components/AdditionView/AdditionView'
 
 import s from '../Inventory/Inventory.module.css'
+import { Cube } from '../../components/Cube/Cube'
 
 interface MainMenuProps {
   //
@@ -122,7 +123,7 @@ export const MainMenu: FC<MainMenuProps> = () => {
   }, [gameModeState])
 
   return (
-    <div className='root'>
+    <Cube>
       <div className='flex flex1 aic jcc'>
         <div
           className={[selectedCard ? 'border' : ''].join(' ')}
@@ -182,7 +183,7 @@ export const MainMenu: FC<MainMenuProps> = () => {
                 className={[isDisabled ? 'cardPlace' : 'card'].join(' ')}
                 style={style}
                 handleCardClick={() => {
-                  if(isDisabled) return
+                  if (isDisabled) return
                   handleCardClick(x)
                 }}
                 handleMouseDown={(card: CardType) => {
@@ -217,6 +218,6 @@ export const MainMenu: FC<MainMenuProps> = () => {
           })}
         </CardsHand>
       </div>
-    </div>
+    </Cube>
   )
 }

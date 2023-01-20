@@ -10,6 +10,7 @@ import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorT
 import { useDeck } from '../../hooks/DeckState.constate'
 import { LOAD_SAVES_NAME, NAVIGATION_POWER_NAME } from '../../shared/decks.data'
 import { useGameModeContext } from '../../hooks/GameState.constate'
+import { Cube } from '../../components/Cube/Cube'
 
 interface IntroProps {
   //
@@ -57,7 +58,7 @@ export const Intro: FC<IntroProps> = () => {
   }, [isPowersAdded])
 
   return (
-    <div className='root'>
+    <Cube>
       <div
         className={[selectedCard ? 'border' : '', isPowerCollected ? 'labelsShow' : '', 'flex flex1 aic jcc'].join(' ')}
         style={{
@@ -124,6 +125,6 @@ export const Intro: FC<IntroProps> = () => {
           </CardsHand>
         </div>
       )}
-    </div>
+    </Cube>
   )
 }

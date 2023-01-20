@@ -23,6 +23,7 @@ import {
   START_AGAIN_NAME
 } from '../../shared/decks.data'
 import { useDeck } from '../../hooks/DeckState.constate'
+import { Cube } from '../../components/Cube/Cube'
 
 interface AddCardProps {
   card: CardType
@@ -215,7 +216,7 @@ export const Tutorial: FC<TutorialProps> = () => {
   }
 
   return (
-    <div className='root'>
+    <Cube>
       {tutorialEnded === true && (
         <>
           <div className='hps flex1'>
@@ -505,6 +506,6 @@ export const Tutorial: FC<TutorialProps> = () => {
           )}
         </>
       )}
-    </div>
+    </Cube>
   )
 }

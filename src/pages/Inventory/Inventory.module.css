@@ -1,6 +1,7 @@
 .sections {
   display: flex;
   margin-top: 32px;
+  padding: 0rem 1rem;
 }
 
 .section {

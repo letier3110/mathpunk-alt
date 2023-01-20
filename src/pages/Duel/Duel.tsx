@@ -18,6 +18,7 @@ import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorT
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 import { useDeck } from '../../hooks/DeckState.constate'
 import { useInventoryContext } from '../Inventory/Inventory.constate'
+import { Cube } from '../../components/Cube/Cube'
 
 interface AddCardProps {
   card: CardType
@@ -196,7 +197,7 @@ export const Duel: FC<DuelProps> = () => {
           {rounds}
         </div>
       </div>
-      <div className='root'>
+      <Cube>
         {isGameEnded === false && (
           <>
             <CardsHand className={'enemyDeck'} keys={enemyDeck.map((x) => x.getId().toString())}>
@@ -376,7 +377,7 @@ export const Duel: FC<DuelProps> = () => {
             </div>
           </>
         )}
-      </div>
+      </Cube>
     </>
   )
 }
