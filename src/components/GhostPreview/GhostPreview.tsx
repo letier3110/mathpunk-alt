@@ -1,5 +1,6 @@
 import { CSSProperties, FC, useEffect, useRef } from 'react'
 import { CardType } from '../../math/CardType'
+import { getCoords } from '../../util'
 import { CardsHand } from '../CardsHand/CardsHand'
 import { RewardEffect } from '../RewardEffect/RewardEffect'
 
@@ -22,18 +23,35 @@ export const GhostPreview: FC<GhostPreviewProps> = ({
   handleMouseUp = () => {}
 }) => {
   const cardRef = useRef<HTMLDivElement | null>(null)
+  const handRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const mouseMoveHandler = (e: MouseEvent) => {
       if (!card) return
       if (!cardRef.current) return
+      if (!handRef.current) return
+      // const { top } = getCoords(e.target)
+      const { top } = getCoords(handRef.current)
+      console.log(e.pageY, window.scrollY, top)
+      // console.log(handRef.current.getBoundingClientRect().top)
       const x = e.pageX
+      // console.log(e.offsetX)
+      // const y = e.pageY
       const y = e.pageY - window.scrollY
+      // const y = e.pageY - window.scrollY - top
+      // const y = e.pageY - (top - window.scrollY)
+      // const y = e.pageY - (top) + window.scrollY
+      // const y = (top) + window.scrollY
+      // const y = e.pageY
+      // const y = top
       const newposX = x - 60
       const newposY = y - 120
       cardRef.current.style.transform = `matrix(1, 0, 0, 1, ${newposX},${newposY})`
+      // cardRef.current.style.top = `${newposY}px`
+      // cardRef.current.style.left = `${newposX}px`
       cardRef.current.style.rotate = `0deg`
       cardRef.current.style.visibility = `visible`
+      // cardRef.current.style.position = `fixed`
       cardRef.current.style.pointerEvents = `none`
     }
     document.addEventListener('mousemove', mouseMoveHandler)
@@ -45,6 +63,7 @@ export const GhostPreview: FC<GhostPreviewProps> = ({
   return (
     <CardsHand
       className={['ghostHand']}
+      ref={handRef}
       keys={deck.map((x) => x.getId().toString())}
       styles={deck.map((x) => {
         const isSelected = x.getId().toString() === card?.getId().toString()

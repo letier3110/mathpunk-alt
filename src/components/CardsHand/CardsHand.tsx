@@ -1,4 +1,4 @@
-import { CSSProperties, FC, ReactNode } from 'react'
+import { CSSProperties, FC, forwardRef, MutableRefObject, ReactNode } from 'react'
 import { CardType } from '../../math/CardType'
 import { ItemTypes } from '../../shared/constants'
 
@@ -12,7 +12,7 @@ interface CardsHandProps {
   handleMouseUp?: () => void
 }
 
-export const CardsHand: FC<CardsHandProps> = ({
+export const CardsHand = forwardRef<HTMLDivElement, CardsHandProps>(({
   children,
   styles,
   className = '',
@@ -20,7 +20,7 @@ export const CardsHand: FC<CardsHandProps> = ({
   hide = false,
   handleMouseDown = () => {},
   handleMouseUp = () => {}
-}) => {
+}, ref) => {
   const height = Math.abs(-Math.floor(children.length / 2))
   if (hide) return null
   return (
@@ -29,6 +29,7 @@ export const CardsHand: FC<CardsHandProps> = ({
       style={{
         height: `${height * height * 5 + 116}px`
       }}
+      ref={ref}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
     >
@@ -52,4 +53,4 @@ export const CardsHand: FC<CardsHandProps> = ({
       })}
     </div>
   )
-}
+})
