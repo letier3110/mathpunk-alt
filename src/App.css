@@ -11,7 +11,19 @@ body {
   text-align: center;
 }
 
+.boardGhost {
+  width: 100%;
+  min-height: calc(100vh - 32px);
+  height: calc(100vh - 32px);
+  background-color: transparent;
+}
+
 .boardParent {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
   perspective: 881px;
   perspective-origin: 50% 107%;
 }
@@ -26,10 +38,12 @@ body {
 
   align-items: center;
 
-  transform: translate3d(0px, 0px, -100px) rotate3d(1, 0, 0, 22deg);
+  transform: translate3d(0px, 0px, -100px) rotate3d(1, 0, 0, 22deg) rotate(0deg);
 
   border: 4px solid black;
   background: white;
+
+  transition: transform ease 0.3s;
 }
 
 .leftSide {
@@ -134,7 +148,7 @@ body {
 
 .card {
   z-index: 1;
-  
+
   cursor: pointer;
   user-select: none;
   position: relative;
@@ -349,7 +363,7 @@ body {
 }
 
 .cardsHide {
-  transform: translateY(300px);
+  transform: translateY(-300px);
   animation: cardsHide 1s ease;
 }
 
@@ -361,6 +375,116 @@ body {
   100% {
     transform: translateY(-300px);
     opacity: 0;
+  }
+}
+
+.boardHidden {
+  transform: translate3d(-110vw, -110vh, -100px) rotate3d(1, 0, 0, 22deg);
+  rotate: -90deg;
+}
+
+.boardHide {
+  transform: translate3d(-110vw, -110vh, -100px) rotate3d(1, 0, 0, 22deg);
+  rotate: -90deg;
+  animation: boardHide 3s cubic-bezier(0.5, 0, 0.5, 1);
+}
+
+@keyframes boardHide {
+  0% {
+    transform: translate3d(0px, 0px, -100px) rotate3d(1, 0, 0, 22deg);
+    rotate: 0deg;
+  }
+  100% {
+    transform: translate3d(-110vw, -110vh, -100px) rotate3d(1, 0, 0, 22deg);
+    rotate: -90deg;
+  }
+}
+
+.boardShow {
+  transform: translate3d(0px, 0px, -100px) rotate3d(1, 0, 0, 22deg);
+  rotate: 0deg;
+  animation: boardShow 3s linear;
+}
+
+@keyframes boardShow {
+  0% {
+    transform: translate3d(110vw, 110vh, -100px) rotate3d(1, 0, 0, 22deg);
+    /* transform: translate3d(0px, 110vh, -100px) rotate3d(1, 0, 0, 22deg); */
+    /* transform: translate3d(110vw, 0px, -100px) rotate3d(1, 0, 0, 22deg); */
+    rotate: 90deg;
+  }
+  25% {
+    transform: translate3d(92.3vw, 61.8vh, -100px) rotate3d(1, 0, 0, 22deg);
+    /* transform: translate3d(0px, 61.8vh, -100px) rotate3d(1, 0, 0, 22deg); */
+    /* transform: translate3d(92.3vw, 0px, -100px) rotate3d(1, 0, 0, 22deg); */
+    rotate: 67.5deg;
+  }
+  50% {
+    transform: translate3d(70.7vw, 29.3vh, -100px) rotate3d(1, 0, 0, 22deg);
+    /* transform: translate3d(0px, 29.3vh, -100px) rotate3d(1, 0, 0, 22deg); */
+    /* transform: translate3d(70.7vw, 0px, -100px) rotate3d(1, 0, 0, 22deg); */
+    rotate: 45deg;
+  }
+  75% {
+    transform: translate3d(38.7vw, 7.8vh, -100px) rotate3d(1, 0, 0, 22deg);
+    /* transform: translate3d(0px, 7.8vh, -100px) rotate3d(1, 0, 0, 22deg); */
+    /* transform: translate3d(38.7vw, 0px, -100px) rotate3d(1, 0, 0, 22deg); */
+    rotate: 22.5deg;
+  }
+  100% {
+    transform: translate3d(0px, 0px, -100px) rotate3d(1, 0, 0, 22deg);
+    rotate: 0deg;
+  }
+}
+
+.bottomHidden {
+  transform: translate3d(calc(-110vw + 4px), calc(-110vh + 458px), -100px) rotate3d(1, 0, 0, 112deg);
+  rotate: -90deg;
+}
+
+.bottomHide {
+  transform: translate3d(calc(-110vw + 4px), calc(-110vh + 458px), -100px) rotate3d(1, 0, 0, 112deg);
+  rotate: -90deg;
+  animation: bottomHide 3s cubic-bezier(0.5, 0, 0.5, 1);
+}
+
+@keyframes bottomHide {
+  0% {
+    transform: translate3d(4px, 458px, -290px) rotate3d(1, 0, 0, 112deg);
+    rotate: 0deg;
+  }
+  100% {
+    transform: translate3d(calc(-110vw + 4px), calc(-110vh + 458px), -100px) rotate3d(1, 0, 0, 112deg);
+    rotate: -90deg;
+  }
+}
+
+.bottomShow {
+  transform: translate3d(4px, 458px, -290px) rotate3d(1, 0, 0, 112deg);
+  rotate: 0deg;
+  animation: bottomShow 3s linear;
+}
+
+@keyframes bottomShow {
+  0% {
+    transform: translate3d(calc(4px + 110vw), calc(458px + 110vh), -100px) rotate3d(1, 0, 0, 112deg);
+    rotate: 90deg;
+  }
+  25% {
+    transform: translate3d(calc(4px + 92.3vw), calc(458px + 61.8vh), -100px) rotate3d(1, 0, 0, 112deg);
+    rotate: 67.5deg;
+  }
+  50% {
+    transform: translate3d(calc(4px + 70.7vw), calc(458px + 29.3vh), -100px) rotate3d(1, 0, 0, 112deg);
+    rotate: 45deg;
+  }
+  75% {
+    transform: translate3d(calc(4px + 38.7vw), calc(458px + 7.8vh), -100px) rotate3d(1, 0, 0, 112deg);
+    rotate: 22.5deg;
+  }
+  100% {
+    transform: translate3d(4px, 458px, -100px) rotate3d(1, 0, 0, 112deg);
+    rotate: 0deg;
   }
 }
 
@@ -386,12 +510,13 @@ body {
 .hoverZone {
   width: 100px;
   height: 180px;
-  background: linear-gradient(90deg, green 50%, transparent 50%), linear-gradient(90deg, green 50%, transparent 50%), linear-gradient(0deg, green 50%, transparent 50%), linear-gradient(0deg, green 50%, transparent 50%);
+  background: linear-gradient(90deg, green 50%, transparent 50%), linear-gradient(90deg, green 50%, transparent 50%),
+    linear-gradient(0deg, green 50%, transparent 50%), linear-gradient(0deg, green 50%, transparent 50%);
   background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
   background-size: 16px 4px, 16px 4px, 4px 16px, 4px 16px;
   background-position: 0px 0px, 100% 100%, 0px 50%, 100% 0px;
   animation: borderAnim 4s linear infinite;
-  background-color: rgba(0, 255, 0,.3);
+  background-color: rgba(0, 255, 0, 0.3);
 }
 
 .chain .chainElem:nth-last-child(2) .cardAddition {
@@ -582,7 +707,8 @@ body {
 }
 
 .border {
-  background: linear-gradient(90deg, green 50%, transparent 50%), linear-gradient(90deg, green 50%, transparent 50%), linear-gradient(0deg, green 50%, transparent 50%), linear-gradient(0deg, green 50%, transparent 50%);
+  background: linear-gradient(90deg, green 50%, transparent 50%), linear-gradient(90deg, green 50%, transparent 50%),
+    linear-gradient(0deg, green 50%, transparent 50%), linear-gradient(0deg, green 50%, transparent 50%);
   background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
   background-size: 16px 4px, 16px 4px, 4px 16px, 4px 16px;
   background-position: 0px 0px, 100% 100%, 0px 50%, 100% 0px;

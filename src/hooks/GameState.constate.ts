@@ -8,6 +8,7 @@ const initialGameplay: GAME_MODES = GAME_MODES.INTRO
 
 export const [GameModeProvider, useGameModeContext] = constate(() => {
   const [gameMode, setGameMode] = useState<GAME_MODES>(initialGameplay)
+  // const [gameMode, setGameMode] = useState<GAME_MODES>(initialGameplay)
   return { 
     gameMode,
     setGameMode

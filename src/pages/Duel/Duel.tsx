@@ -197,7 +197,7 @@ export const Duel: FC<DuelProps> = () => {
           {rounds}
         </div>
       </div>
-      <Cube>
+      <>
         {isGameEnded === false && (
           <>
             <CardsHand className={'enemyDeck'} keys={enemyDeck.map((x) => x.getId().toString())}>
@@ -377,7 +377,7 @@ export const Duel: FC<DuelProps> = () => {
             </div>
           </>
         )}
-      </Cube>
+      </>
     </>
   )
 }

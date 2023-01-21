@@ -113,6 +113,7 @@ export const MainMenu: FC<MainMenuProps> = () => {
     if (gameModeState !== GAME_MODES.MAIN_MENU) {
       timerRef.current = setTimeout(() => {
         setGameMode(gameModeState)
+        setGameModeState(GAME_MODES.MAIN_MENU)
       }, 1100)
     }
     return () => {
@@ -123,7 +124,7 @@ export const MainMenu: FC<MainMenuProps> = () => {
   }, [gameModeState])
 
   return (
-    <Cube>
+    <>
       <div className='flex flex1 aic jcc'>
         <div
           className={[selectedCard ? 'border' : ''].join(' ')}
@@ -218,6 +219,6 @@ export const MainMenu: FC<MainMenuProps> = () => {
           })}
         </CardsHand>
       </div>
-    </Cube>
+    </>
   )
 }

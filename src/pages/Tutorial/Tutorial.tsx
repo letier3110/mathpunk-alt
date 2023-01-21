@@ -216,7 +216,7 @@ export const Tutorial: FC<TutorialProps> = () => {
   }
 
   return (
-    <Cube>
+    <>
       {tutorialEnded === true && (
         <>
           <div className='hps flex1'>
@@ -506,6 +506,6 @@ export const Tutorial: FC<TutorialProps> = () => {
           )}
         </>
       )}
-    </Cube>
+    </>
   )
 }

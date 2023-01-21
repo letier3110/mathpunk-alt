@@ -1,89 +1,24 @@
-import { Arithmetic } from './pages/Arithmetic/Arithmetic'
-import { Plotting } from './pages/Plotting/Plotting'
-import { Tutorial } from './pages/Tutorial/Tutorial'
-import { GAME_MODES } from './math/math'
-
 import './App.css'
-import { useGameModeContext } from './hooks/GameState.constate'
 import { Inventory } from './pages/Inventory/Inventory'
-import { Duel } from './pages/Duel/Duel'
-import { MainMenu } from './pages/MainMenu/MainMenu'
 import { GhostPreviewProvider } from './hooks/GhostPreview.constate'
-import { Intro } from './pages/Intro/Intro'
 import { RerollsProvider } from './hooks/Rerolls.constate'
-import { ChainProvider } from './hooks/Chain.constate'
+import { IntroContainer } from './pages/Intro/IntroContainer'
+import { DuelContainer } from './pages/Duel/DuelContainer'
+import { MainMenuContainer } from './pages/MainMenu/MainMenuContainer'
+import { TutorialContainer } from './pages/Tutorial/TutorialContainer'
+import { ArithmeticContainer } from './pages/Arithmetic/ArithmeticContainer'
+import { PlottingContainer } from './pages/Plotting/PlottingContainer'
 
 function App() {
-  const { gameMode } = useGameModeContext()
-  // const [gameMode, setGameMode] = useState<GAME_MODES>(GAME_MODES.ARITHMETICS)
-  // const [tutorial, setTutorial] = useState(true)
   return (
     <>
-      {gameMode === GAME_MODES.INTRO && (
-        <div className='boardParent'>
-          <GhostPreviewProvider>
-            <Intro />
-          </GhostPreviewProvider>
-        </div>
-      )}
-      <div
-        className='boardParent'
-        style={{
-          display: gameMode === GAME_MODES.TUTORIAL ? 'block' : 'none'
-        }}
-      >
-        <GhostPreviewProvider>
-          <Tutorial />
-        </GhostPreviewProvider>
-      </div>
-      {gameMode === GAME_MODES.MAIN_MENU && (
-        <div
-          className='boardParent'
-          style={{
-            display: gameMode === GAME_MODES.MAIN_MENU ? 'block' : 'none'
-          }}
-        >
-          <GhostPreviewProvider>
-            <MainMenu />
-          </GhostPreviewProvider>
-        </div>
-      )}
-      <div
-        className='boardParent'
-        style={{
-          display: gameMode === GAME_MODES.DUEL_FUNCTION ? 'block' : 'none'
-        }}
-      >
-        <GhostPreviewProvider>
-          <ChainProvider gameMode={GAME_MODES.DUEL_FUNCTION}>
-            <Duel />
-          </ChainProvider>
-        </GhostPreviewProvider>
-      </div>
-      <div
-        className='boardParent'
-        style={{
-          display: gameMode === GAME_MODES.ARITHMETICS ? 'block' : 'none'
-        }}
-      >
-        <GhostPreviewProvider>
-          <ChainProvider gameMode={GAME_MODES.ARITHMETICS}>
-            <Arithmetic />
-          </ChainProvider>
-        </GhostPreviewProvider>
-      </div>
-      <div
-        className='boardParent'
-        style={{
-          display: gameMode === GAME_MODES.PLOTTING ? 'block' : 'none'
-        }}
-      >
-        <GhostPreviewProvider>
-          <ChainProvider gameMode={GAME_MODES.PLOTTING}>
-            <Plotting />
-          </ChainProvider>
-        </GhostPreviewProvider>
-      </div>
+      <div className='boardGhost'></div>
+      <IntroContainer />
+      <TutorialContainer />
+      <MainMenuContainer />
+      <DuelContainer />
+      <ArithmeticContainer />
+      <PlottingContainer />
       <GhostPreviewProvider>
         <RerollsProvider>
           <Inventory />

@@ -58,7 +58,7 @@ export const Intro: FC<IntroProps> = () => {
   }, [isPowersAdded])
 
   return (
-    <Cube>
+    <>
       <div
         className={[selectedCard ? 'border' : '', isPowerCollected ? 'labelsShow' : '', 'flex flex1 aic jcc'].join(' ')}
         style={{
@@ -125,6 +125,6 @@ export const Intro: FC<IntroProps> = () => {
           </CardsHand>
         </div>
       )}
-    </Cube>
+    </>
   )
 }

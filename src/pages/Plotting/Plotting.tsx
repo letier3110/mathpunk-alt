@@ -135,7 +135,7 @@ export const Plotting: FC<PlottingProps> = () => {
 
   return (
     <>
-      <Cube>
+      <>
         <div className='hps'>
           <div>
             Remaining points to beat:
@@ -342,7 +342,7 @@ export const Plotting: FC<PlottingProps> = () => {
             </div>
           </>
         )}
-      </Cube>
+      </>
     </>
   )
 }
