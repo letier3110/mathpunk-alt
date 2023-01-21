@@ -25,11 +25,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 //
 // Tech
 // todo: triangle fractals using [x1, x2, x3] arrays
-// todo: reward for arithmetic is Switcher
-// todo: reward for hardmode arithmetic is Rerolls
-// todo: add animations - hand collapse, hand draw, mech added flow down
-// todo: reserve slot for hand at bottom of first screen
-// todo: ?? main menu of game ?? - <nav> [continue, new game] </nav> <content> [patch notes] </content>
+// todo: reward for hardmode arithmetic is Switcher
 //
 // Future Gameplay
 // todo: taylor series ∞∑n=1−4[(2n−3)!!] 2(2n−3)(2n−1)! as cards
