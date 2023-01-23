@@ -5,13 +5,17 @@ export const TUTORIAL_NAME = 'Start Tutorial?'
 export const ARITHMETIC_NAME = 'Start Arithmetic?'
 export const PLOTTING_NAME = 'Start Plotting?'
 export const DUEL_NAME = 'Start Duel?'
+export const DRINKS_NAME = 'Some drinks?'
+export const EQUATIONS_NAME = 'Maybe equations?'
 
 export const mainMenuDeck = [
   // new Navigator('Continue')
   new NavigatorCard(TUTORIAL_NAME),
   new NavigatorCard(ARITHMETIC_NAME),
   new NavigatorCard(PLOTTING_NAME),
-  new NavigatorCard(DUEL_NAME)
+  new NavigatorCard(DUEL_NAME),
+  new NavigatorCard(DRINKS_NAME),
+  new NavigatorCard(EQUATIONS_NAME),
 ]
 
 export const RESTART_TUTORIAL_NAME = 'Restart tutorial?'

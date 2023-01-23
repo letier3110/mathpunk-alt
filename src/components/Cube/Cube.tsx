@@ -15,16 +15,17 @@ interface CubeProps {
 }
 
 export const Cube: FC<CubeProps> = ({ children, state = 'hidden' }) => {
-  const rootClassnames =
-    state === 'opening' ? 'boardShow' : state === 'closing' ? 'boardHide' : state === 'hidden' ? 'boardHidden' : ''
-  const bottomClassnames =
-    state === 'opening' ? 'bottomShow' : state === 'closing' ? 'bottomHide' : state === 'hidden' ? 'bottomHidden' : ''
+  const rootClassnames = ''
+  // const rootClassnames =
+  //   state === 'opening' ? 'boardShow' : state === 'closing' ? 'boardHide' : state === 'hidden' ? 'boardHidden' : ''
+  // const bottomClassnames =
+  //   state === 'opening' ? 'bottomShow' : state === 'closing' ? 'bottomHide' : state === 'hidden' ? 'bottomHidden' : ''
   // const bottomClassnames = '';
   return (
     <>
       {/* <div className="leftSide"></div> */}
       {/* <div className='rightSide'></div> */}
-      <div className={['bottomSide', bottomClassnames].join(' ')}></div>
+      {/* <div className={['bottomSide', bottomClassnames].join(' ')}></div> */}
       <div className={['root', rootClassnames].join(' ')}>{children}</div>
     </>
   )

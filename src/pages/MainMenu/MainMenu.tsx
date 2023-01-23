@@ -17,9 +17,6 @@ import { ArithmeticCardTypeEnum, ArithmeticCardTypes } from '../../math/arithmet
 import { useInventoryContext } from '../Inventory/Inventory.constate'
 import { AdditionView } from '../../components/AdditionView/AdditionView'
 
-import s from '../Inventory/Inventory.module.css'
-import { Cube } from '../../components/Cube/Cube'
-
 interface MainMenuProps {
   //
 }
@@ -207,9 +204,9 @@ export const MainMenu: FC<MainMenuProps> = () => {
                   </div>
                 )}
                 {rewards.operators.length > 0 && (
-                  <div className={s.operatorsGridZoomed}>
+                  <div className="operatorsGridZoomed">
                     {rewards.operators.map((x) => (
-                      <AdditionView key={x.getId()} className={s.addition} card={x} />
+                      <AdditionView key={x.getId()} className='addition' card={x} />
                     ))}
                   </div>
                 )}

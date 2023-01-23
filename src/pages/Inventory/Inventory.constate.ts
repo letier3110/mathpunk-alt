@@ -1,9 +1,11 @@
 import constate from 'constate'
 import { useState } from 'react'
 import { useGameModeContext } from '../../hooks/GameState.constate'
-import { ArithmeticCardTypeEnum } from '../../math/arithmetic'
+import { ArithmeticCardTypeEnum, ArithmeticCardTypes } from '../../math/arithmetic'
 import { CardType } from '../../math/CardType'
 import { GAME_MODES } from '../../math/math'
+import { NavigatorCard } from '../../math/NavigatorCard'
+import { NAVIGATION_POWER_NAME, REROLL_POWER_NAME } from '../../shared/decks.data'
 import { getItem, setItem } from '../../storage'
 import {
   getMathOperatorsItem,
@@ -13,7 +15,14 @@ import {
   setPowersItem
 } from './Inventory.storage'
 
-const INITIAL_MATH_OPERATORS: ArithmeticCardTypeEnum[] = []
+// const INITIAL_MATH_OPERATORS: ArithmeticCardTypeEnum[] = []
+const INITIAL_MATH_OPERATORS: ArithmeticCardTypeEnum[] = [
+  ArithmeticCardTypes.DENOMINATOR,
+  ArithmeticCardTypes.DIFFERENCATOR,
+  ArithmeticCardTypes.MULTIPLICATOR,
+  ArithmeticCardTypes.SUMMATOR,
+  ArithmeticCardTypes.SWITCHER
+]
 
 type setMathOperatorsDescriptor = (operators: Array<ArithmeticCardTypeEnum>) => void
 type addMathOperatorsDescriptor = (operator: ArithmeticCardTypeEnum) => void
@@ -33,7 +42,8 @@ interface InventoryValues {
   addPower: addPowerDescriptor
 }
 
-const initialPowers: Array<CardType> = []
+// const initialPowers: Array<CardType> = []
+const initialPowers: Array<CardType> = [new NavigatorCard(NAVIGATION_POWER_NAME), new NavigatorCard(REROLL_POWER_NAME)]
 
 export const [InventoryProvider, useInventoryContext] = constate((): InventoryValues => {
   const { setGameMode } = useGameModeContext()

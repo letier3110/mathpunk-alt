@@ -24,18 +24,6 @@
   row-gap: 16px;
 }
 
-.operatorsGridZoomed {
-  display: flex;
-
-  flex-wrap: wrap;
-  gap: 16px;
-  row-gap: 16px;
-
-  zoom: 0.3;
-
-  position: absolute;
-  bottom: 20px;
-}
 
 .addition {
   position: relative;
