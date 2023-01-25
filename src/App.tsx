@@ -8,6 +8,7 @@ import { MainMenuContainer } from './pages/MainMenu/MainMenuContainer'
 import { TutorialContainer } from './pages/Tutorial/TutorialContainer'
 import { ArithmeticContainer } from './pages/Arithmetic/ArithmeticContainer'
 import { PlottingContainer } from './pages/Plotting/PlottingContainer'
+import { DrinksContainer } from './pages/Drinks/DrinksContainer'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <DuelContainer />
       <ArithmeticContainer />
       <PlottingContainer />
+      <DrinksContainer />
       <GhostPreviewProvider>
         <RerollsProvider>
           <Inventory />

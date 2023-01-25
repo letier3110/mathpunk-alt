@@ -11,7 +11,7 @@ import { MainMenuLoader } from './MainMenuLoader'
 import { CardType } from '../../math/CardType'
 import { GhostPreview } from '../../components/GhostPreview/GhostPreview'
 import { useGhostPreviewContext } from '../../hooks/GhostPreview.constate'
-import { ARITHMETIC_NAME, DUEL_NAME, PLOTTING_NAME, REROLL_POWER_NAME, TUTORIAL_NAME } from '../../shared/decks.data'
+import { ARITHMETIC_NAME, DRINKS_NAME, DUEL_NAME, PLOTTING_NAME, REROLL_POWER_NAME, TUTORIAL_NAME } from '../../shared/decks.data'
 import { useDeck } from '../../hooks/DeckState.constate'
 import { ArithmeticCardTypeEnum, ArithmeticCardTypes } from '../../math/arithmetic'
 import { useInventoryContext } from '../Inventory/Inventory.constate'
@@ -46,6 +46,10 @@ export const MainMenu: FC<MainMenuProps> = () => {
       }
       if (card.getName() === DUEL_NAME) {
         setGameModeState(GAME_MODES.DUEL_FUNCTION)
+        return
+      }
+      if (card.getName() === DRINKS_NAME) {
+        setGameModeState(GAME_MODES.DRINKS)
         return
       }
     },

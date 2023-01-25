@@ -41,6 +41,7 @@ export enum GAME_MODES {
   ARITHMETICS = 'arithmetic',
   PLOTTING = 'plotting',
   DUEL_FUNCTION = 'duel function',
+  DRINKS = 'drinks',
   INTRO = 'intro'
 }
 

@@ -1,9 +1,10 @@
 import { CSSProperties, FC } from 'react'
 import { CardType } from '../../math/CardType'
+import { VectorCard } from '../../math/VectorCard'
 
 interface AdditionViewProps {
   className?: string
-  card: CardType
+  card: CardType | VectorCard
   showPreview?: boolean
   interactive?: boolean
   style?: CSSProperties

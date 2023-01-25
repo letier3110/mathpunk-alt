@@ -1,13 +1,14 @@
 import { CSSProperties, FC, useEffect, useRef } from 'react'
 import { CardType } from '../../math/CardType'
+import { VectorCard } from '../../math/VectorCard'
 import { getCoords } from '../../util'
 import { CardsHand } from '../CardsHand/CardsHand'
 import { RewardEffect } from '../RewardEffect/RewardEffect'
 
 interface GhostPreviewProps {
-  card: CardType
+  card: CardType | VectorCard
   className?: string
-  deck: Array<CardType>
+  deck: Array<CardType | VectorCard>
   isReward?: boolean
   showField?: 'description' | 'count' | 'name'
   handleMouseDown?: () => void
@@ -32,7 +33,7 @@ export const GhostPreview: FC<GhostPreviewProps> = ({
       if (!handRef.current) return
       // const { top } = getCoords(e.target)
       const { top } = getCoords(handRef.current)
-      console.log(e.pageY, window.scrollY, top)
+      // console.log(e.pageY, window.scrollY, top)
       // console.log(handRef.current.getBoundingClientRect().top)
       const x = e.pageX
       // console.log(e.offsetX)

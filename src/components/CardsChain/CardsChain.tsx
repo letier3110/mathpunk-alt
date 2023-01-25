@@ -1,12 +1,13 @@
 import { FC, ReactNode } from 'react'
 import { CardType } from '../../math/CardType'
+import { VectorCard } from '../../math/VectorCard'
 
 interface CardsChainProps {
-  chain: CardType[]
+  chain: Array<CardType | VectorCard>
   children: ReactNode[]
   keys?: string[]
   className?: string
-  equalizerResult: string
+  equalizerResult: string | ReactNode
   handleEqual: () => void
 }
 
@@ -25,7 +26,7 @@ export const CardsChain: FC<CardsChainProps> = ({ chain, children, keys, equaliz
             <div className='additionText'>=</div>
           </div>
           <div onClick={handleEqual} className='card'>
-            <div className='mainText'>{equalizerResult}</div>
+            {typeof equalizerResult === 'string' ? <div className='mainText'>{equalizerResult}</div> : equalizerResult}
           </div>
         </div>
       )}
