@@ -14,12 +14,12 @@ function App() {
   return (
     <>
       <div className='boardGhost'></div>
-      <IntroContainer />
-      <TutorialContainer />
-      <MainMenuContainer />
-      <DuelContainer />
-      <ArithmeticContainer />
-      <PlottingContainer />
+      {/* <IntroContainer /> */}
+      {/* <TutorialContainer /> */}
+      {/* <MainMenuContainer /> */}
+      {/* <DuelContainer /> */}
+      {/* <ArithmeticContainer /> */}
+      {/* <PlottingContainer /> */}
       <DrinksContainer />
       <GhostPreviewProvider>
         <RerollsProvider>

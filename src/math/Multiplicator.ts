@@ -1,9 +1,12 @@
 import { IComputable } from './arithmetic'
 import { CardType } from './CardType'
+import { FormulaeCardType } from './formulae'
+import { OperatorCard, OperatorCardProps } from './OperatorCard'
+import { VectorCard } from './VectorCard'
 
-export class Multiplicator extends CardType implements IComputable {
-  constructor() {
-    super({ name: 'Multiplicator' })
+export class Multiplicator extends OperatorCard implements IComputable {
+  constructor({ name, card }: OperatorCardProps) {
+    super({ name: 'Multiplicator', card })
   }
 
   getName() {

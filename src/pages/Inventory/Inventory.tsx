@@ -16,13 +16,16 @@ import { useInventoryContext } from './Inventory.constate'
 import s from './Inventory.module.css'
 import { Reroll } from '../../components/Reroll/Reroll'
 import { useRerolls } from '../../hooks/Rerolls.constate'
+import { OperatorCard } from '../../math/OperatorCard'
 
 interface InventoryProps {
   //
 }
 
 const arithmeticOperators = Object.values(ArithmeticCardTypes)
-const ALL_OPERATORS = arithmeticOperators.map((x) => new ArithmeticCardTypeEnumToClass[x]({ name: '' }))
+const ALL_OPERATORS = arithmeticOperators.map(
+  (x) => new ArithmeticCardTypeEnumToClass[x]({ name: '', card: new CardType({ name: '' }) })
+)
 
 const MAX_POWER_COUNT = 10
 
@@ -32,7 +35,7 @@ export const Inventory: FC<InventoryProps> = () => {
   const { selectedCard, setSelectedCard } = useGhostPreviewContext()
   const { reroll, restoreLeft, left } = useRerolls()
 
-  const handleCardClick = (card: CardType) => {
+  const handleCardClick = (card: OperatorCard) => {
     if (card.getName() === NAVIGATION_POWER_NAME) {
       restoreLeft()
       setGameMode(GAME_MODES.MAIN_MENU)
@@ -50,7 +53,7 @@ export const Inventory: FC<InventoryProps> = () => {
       : powers.concat(
           Array(MAX_POWER_COUNT - powers.length)
             .fill(0)
-            .map(() => new NavigatorCard())
+            .map(() => new NavigatorCard({ name: '', card: new CardType({ name: '' }) }))
         )
   }, [powers])
 
@@ -94,14 +97,14 @@ export const Inventory: FC<InventoryProps> = () => {
               }}
             >
               {powersWithBlocked.map((x) => {
-                const isSelected = x.getId() === selectedCard?.getId()
+                const isSelected = x.getCard().getId() === selectedCard?.getCard().getId()
                 const style: CSSProperties = {
                   zIndex: isSelected ? 200 : '',
                   backgroundColor: selectedCard ? 'rgba(0, 255, 0,.3)' : ''
                 }
                 if (x.getName() === 'Navigator')
                   return (
-                    <div key={x.getId()} className='cardPlace'>
+                    <div key={x.getCard().getId()} className='cardPlace'>
                       ?
                     </div>
                   )
@@ -109,29 +112,31 @@ export const Inventory: FC<InventoryProps> = () => {
                 if (x.getName() === REROLL_POWER_NAME) {
                   return (
                     <Reroll
-                      key={x.getId()}
+                      key={x.getCard().getId()}
                       left={left}
                       style={style}
                       className={[isSelected ? 'border' : '', 'card'].join(' ')}
                       handleReroll={() => {
                         handleCardClick(x)
                       }}
-                      handleMouseDown={() => setSelectedCard((prev) => (prev?.getId() === x.getId() ? null : x))}
+                      handleMouseDown={() =>
+                        setSelectedCard((prev) => (prev?.getCard().getId() === x.getCard().getId() ? null : x))
+                      }
                     />
                   )
                 }
                 return (
                   <NavigatorTypeView
-                    key={x.getId()}
-                    card={x}
+                    key={x.getCard().getId()}
+                    card={x.getCard() as CardType}
                     style={style}
                     isReward
                     className={[isSelected ? 'border' : '', 'card'].join(' ')}
                     handleCardClick={() => {
                       handleCardClick(x)
                     }}
-                    handleMouseDown={(card: CardType) =>
-                      setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                    handleMouseDown={() =>
+                      setSelectedCard((prev) => (prev?.getCard().getId() === x.getCard().getId() ? null : x))
                     }
                   >
                     <div className='mainText'>{x.getName()}</div>
@@ -145,9 +150,10 @@ export const Inventory: FC<InventoryProps> = () => {
             <div className={[s.operatorsGrid].join(' ')}>
               {ALL_OPERATORS.map((x, i) => {
                 const isInList = mathOperators.indexOf(arithmeticOperators[i])
-                return (
-                  <AdditionView key={x.getId()} className={s.addition} card={isInList >= 0 ? x : new Numberator()} />
-                )
+                const cardInlist = x
+                const cardNumberator = new Numberator({ name: '', card: new CardType({ name: '' }) })
+                const card = isInList >= 0 ? cardInlist : cardNumberator
+                return <AdditionView key={x.getCard().getId()} className={s.addition} card={card} />
               })}
             </div>
           </div>

@@ -1,11 +1,14 @@
 import { IChangable, IComputable, SwitcherValue } from './arithmetic'
 import { CardType } from './CardType'
+import { FormulaeCardType } from './formulae'
+import { OperatorCard, OperatorCardProps } from './OperatorCard'
+import { VectorCard } from './VectorCard'
 
-export class Switcher extends CardType implements IComputable, IChangable<SwitcherValue> {
+export class Switcher extends OperatorCard implements IComputable, IChangable<SwitcherValue> {
   private switcherValue: SwitcherValue = SwitcherValue.DIFFERENCATOR
 
-  constructor() {
-    super({ name: 'Switcher' })
+  constructor({ name, card }: OperatorCardProps) {
+    super({ name: 'Switcher', card })
   }
   getChangableState(): SwitcherValue {
     return this.switcherValue
@@ -14,11 +17,11 @@ export class Switcher extends CardType implements IComputable, IChangable<Switch
   getNextPossibleValue(): SwitcherValue {
     switch (this.getChangableState()) {
       case SwitcherValue.DENOMINATOR:
-        return SwitcherValue.MULTIPLICATOR;
+        return SwitcherValue.MULTIPLICATOR
       case SwitcherValue.MULTIPLICATOR:
-        return SwitcherValue.SUMMATOR;
+        return SwitcherValue.SUMMATOR
       case SwitcherValue.SUMMATOR:
-        return SwitcherValue.DIFFERENCATOR;
+        return SwitcherValue.DIFFERENCATOR
       case SwitcherValue.DIFFERENCATOR:
       default:
         return SwitcherValue.DENOMINATOR
@@ -58,7 +61,7 @@ export class Switcher extends CardType implements IComputable, IChangable<Switch
   }
 
   getIsInteractive() {
-    return true;
+    return true
   }
 
   calculate(x: number, y: number): number {

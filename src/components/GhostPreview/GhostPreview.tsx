@@ -1,14 +1,15 @@
 import { CSSProperties, FC, useEffect, useRef } from 'react'
 import { CardType } from '../../math/CardType'
+import { OperatorCard } from '../../math/OperatorCard'
 import { VectorCard } from '../../math/VectorCard'
 import { getCoords } from '../../util'
 import { CardsHand } from '../CardsHand/CardsHand'
 import { RewardEffect } from '../RewardEffect/RewardEffect'
 
 interface GhostPreviewProps {
-  card: CardType | VectorCard
+  card: OperatorCard
   className?: string
-  deck: Array<CardType | VectorCard>
+  deck: Array<OperatorCard>
   isReward?: boolean
   showField?: 'description' | 'count' | 'name'
   handleMouseDown?: () => void
@@ -65,9 +66,9 @@ export const GhostPreview: FC<GhostPreviewProps> = ({
     <CardsHand
       className={['ghostHand']}
       ref={handRef}
-      keys={deck.map((x) => x.getId().toString())}
+      keys={deck.map((x) => x.getCard().getId().toString())}
       styles={deck.map((x) => {
-        const isSelected = x.getId().toString() === card?.getId().toString()
+        const isSelected = x.getCard().getId().toString() === card?.getCard().getId().toString()
         return isSelected ? { position: 'fixed', top: '0px', left: '0px', rotate: '0deg', zIndex: 200 } : {}
       })}
       handleMouseDown={handleMouseDown}
@@ -76,7 +77,7 @@ export const GhostPreview: FC<GhostPreviewProps> = ({
       {deck
         // .filter((x) => x.getDescription() !== selectedCard?.getDescription())
         .map((x) => {
-          const isSelected = x.getId().toString() === card?.getId().toString()
+          const isSelected = x.getCard().getId().toString() === card?.getCard().getId().toString()
           const style: CSSProperties = {
             // scale: isSelected ? '1.2' : '1',
             zIndex: isSelected ? 200 : '',
@@ -86,17 +87,17 @@ export const GhostPreview: FC<GhostPreviewProps> = ({
           }
           return (
             <div
-              key={x.getId().toString()}
+              key={x.getCard().getId().toString()}
               className='card hideCard ghostCard'
               style={style}
               ref={isSelected ? cardRef : null}
             >
               {isReward && <RewardEffect />}
               {showField === 'description'
-                ? card.getDescription()
+                ? card.getCard().getDescription()
                 : showField === 'name'
-                ? card.getName()
-                : card.getCount()}
+                ? card.getCard().getName()
+                : card.getCard().getCount()}
             </div>
           )
         })}

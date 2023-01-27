@@ -16,9 +16,10 @@ import { NavigatorTypeView } from '../../components/NavigatorTypeView/NavigatorT
 import { useDeck } from '../../hooks/DeckState.constate'
 import { arithmeticWinDeck, REROLL_POWER_NAME } from '../../shared/decks.data'
 import { useInventoryContext } from '../Inventory/Inventory.constate'
+import { OperatorCard } from '../../math/OperatorCard'
 
 interface AddCardProps {
-  card: CardType
+  card: OperatorCard
   index?: number
 }
 
@@ -38,14 +39,14 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
   // const [left, setLeft] = useState(3)
   const [enemyHp, setEnemyHp] = useState(10)
   const [round, setRound] = useState<number>(1)
-  const [chain, setChain] = useState<CardType[]>([])
+  const [chain, setChain] = useState<OperatorCard[]>([])
   const [prediction, setPrediction] = useState(0)
 
   const equalizerResult: number = useMemo(() => {
     if (chain.length === 0) return 0
-    if (chain.length === 1) return Number(chain[0].getCount())
+    if (chain.length === 1) return Number(chain[0].getCard().getCount())
     const strResult = chain.reduce(
-      (a, p, i) => a.concat(p.getCount().toString(), i === chain.length - 1 ? '' : p.getName()),
+      (a, p, i) => a.concat(p.getCard().getCount().toString(), i === chain.length - 1 ? '' : p.getName()),
       ''
     )
     const result: number = eval(strResult)
@@ -58,7 +59,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
 
   const lessonEndDeck = useMemo(() => {
     const newArrs = arithmeticWinDeck.filter((x) => !powers.find((y) => y.getName() === x.getName()))
-    return [new NavigatorCard(START_NEW_NAME)].concat(newArrs)
+    return [new NavigatorCard({ name: START_NEW_NAME, card: new CardType({ name: '' }) })].concat(newArrs)
   }, [powers])
 
   useEffect(() => {
@@ -80,14 +81,14 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
       setChain(newArr)
       updateDeck(
         GAME_MODES.ARITHMETICS,
-        deck.filter((x) => x.getId() !== card.getId())
+        deck.filter((x) => !OperatorCard.isCardsEqual(x, card))
       )
     } else {
       const newArr = chain.slice(0, index).concat(card).concat(chain.slice(index))
       setChain(newArr)
       updateDeck(
         GAME_MODES.ARITHMETICS,
-        deck.filter((x) => x.getId() !== card.getId())
+        deck.filter((x) => !OperatorCard.isCardsEqual(x, card))
       )
     }
   }
@@ -96,11 +97,11 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
     if (!index) {
       const newArr = deck.concat(card)
       updateDeck(GAME_MODES.ARITHMETICS, newArr)
-      setChain(chain.filter((x) => x.getId() !== card.getId()))
+      setChain(chain.filter((x) => !OperatorCard.isCardsEqual(x, card)))
     } else {
       const newArr = [...deck.slice(0, index), card, ...deck.slice(index)]
       updateDeck(GAME_MODES.ARITHMETICS, newArr)
-      setChain(chain.filter((x) => x.getId() !== card.getId()))
+      setChain(chain.filter((x) => !OperatorCard.isCardsEqual(x, card)))
     }
   }
 
@@ -129,7 +130,7 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
     handleStartNewRound()
   }
 
-  const handleEndGameClick = (card: CardType) => {
+  const handleEndGameClick = (card: OperatorCard) => {
     if (card.getName() === START_NEW_NAME) {
       handleStartNewGame()
       return
@@ -173,35 +174,37 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
             <div className='flex1 count'>{count}</div>
             <CardsChain
               chain={chain}
-              keys={chain.map((x) => x.getId().toString())}
+              keys={chain.map((x) => x.getCard().getId().toString())}
               equalizerResult={formatNumber(equalizerResult)}
               handleEqual={handleEqual}
             >
-              {chain.map((x, i) => (
-                <CardTypeView
-                  key={x.getId()}
-                  card={x}
-                  showPreview
-                  className='card noAddition'
-                  isHoverable={selectedCard !== null}
-                  handleMouseUpBefore={() => {
-                    if (selectedCard) {
-                      handleAddCard({ card: selectedCard, index: i })
-                      setSelectedCard(null)
-                    }
-                  }}
-                  handleMouseUpAfter={() => {
-                    if (selectedCard) {
-                      handleAddCard({ card: selectedCard, index: i + 1 })
-                      setSelectedCard(null)
-                    }
-                  }}
-                  handleMouseDown={(card: CardType) => {
-                    handleRemoveCard({ card })
-                    setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
-                  }}
-                />
-              ))}
+              {chain
+                .filter((x) => x.getCard() instanceof CardType)
+                .map((x, i) => (
+                  <CardTypeView
+                    key={x.getCard().getId()}
+                    card={x.getCard() as CardType}
+                    showPreview
+                    className='card noAddition'
+                    isHoverable={selectedCard !== null}
+                    handleMouseUpBefore={() => {
+                      if (selectedCard) {
+                        handleAddCard({ card: selectedCard, index: i })
+                        setSelectedCard(null)
+                      }
+                    }}
+                    handleMouseUpAfter={() => {
+                      if (selectedCard) {
+                        handleAddCard({ card: selectedCard, index: i + 1 })
+                        setSelectedCard(null)
+                      }
+                    }}
+                    handleMouseDown={() => {
+                      handleRemoveCard({ card: x })
+                      setSelectedCard((prev) => (prev?.getCard().getId() === x.getCard().getId() ? null : x))
+                    }}
+                  />
+                ))}
             </CardsChain>
           </div>
           {selectedCard && (
@@ -227,26 +230,28 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
               }
             }}
           >
-            <CardsHand keys={deck.map((x) => x.getId().toString())}>
-              {deck.map((x) => {
-                const isSelected = x.getId() === selectedCard?.getId()
-                const style: CSSProperties = {
-                  scale: isSelected ? '1.2' : '1',
-                  zIndex: isSelected ? 200 : '',
-                  visibility: !isSelected ? 'visible' : 'hidden'
-                }
-                return (
-                  <CardTypeView
-                    key={x.getId()}
-                    card={x}
-                    style={style}
-                    handleCardClick={() => handleAddCard({ card: x })}
-                    handleMouseDown={(card: CardType) =>
-                      setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
-                    }
-                  />
-                )
-              })}
+            <CardsHand keys={deck.map((x) => x.getCard().getId().toString())}>
+              {deck
+                .filter((x) => x.getCard() instanceof CardType)
+                .map((x) => {
+                  const isSelected = x.getCard().getId() === selectedCard?.getCard().getId()
+                  const style: CSSProperties = {
+                    scale: isSelected ? '1.2' : '1',
+                    zIndex: isSelected ? 200 : '',
+                    visibility: !isSelected ? 'visible' : 'hidden'
+                  }
+                  return (
+                    <CardTypeView
+                      key={x.getCard().getId()}
+                      card={x.getCard() as CardType}
+                      style={style}
+                      handleCardClick={() => handleAddCard({ card: x })}
+                      handleMouseDown={() =>
+                        setSelectedCard((prev) => (prev?.getCard().getId() === x.getCard().getId() ? null : x))
+                      }
+                    />
+                  )
+                })}
             </CardsHand>
           </div>
         </>
@@ -290,9 +295,9 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
               }
             }}
           >
-            <CardsHand keys={lessonEndDeck.map((x) => x.getId().toString())}>
+            <CardsHand keys={lessonEndDeck.map((x) => x.getCard().getId().toString())}>
               {lessonEndDeck.map((x) => {
-                const isSelected = x.getId() === selectedCard?.getId()
+                const isSelected = x.getCard().getId() === selectedCard?.getCard().getId()
                 const style: CSSProperties = {
                   scale: isSelected ? '1.2' : '1',
                   zIndex: isSelected ? 200 : '',
@@ -300,15 +305,15 @@ export const Arithmetic: FC<ArithmeticProps> = () => {
                 }
                 return (
                   <NavigatorTypeView
-                    key={x.getId()}
-                    card={x}
+                    key={x.getCard().getId()}
+                    card={x.getCard() as CardType}
                     handleCardClick={() => {
                       handleEndGameClick(x)
                     }}
                     isReward={x.getName() === REROLL_POWER_NAME}
                     style={style}
-                    handleMouseDown={(card: CardType) =>
-                      setSelectedCard((prev) => (prev?.getId() === card.getId() ? null : card))
+                    handleMouseDown={() =>
+                      setSelectedCard((prev) => (prev?.getCard().getId() === x.getCard().getId() ? null : x))
                     }
                   >
                     <div className='mainText'>{x.getName()}</div>

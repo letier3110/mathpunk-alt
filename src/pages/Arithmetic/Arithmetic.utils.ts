@@ -1,6 +1,7 @@
 import { ArithmeticCardTypeEnum, ArithmeticCardTypes } from '../../math/arithmetic'
 import { CardType } from '../../math/CardType'
 import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, DifficultySettings } from '../../math/math'
+import { OperatorCard } from '../../math/OperatorCard'
 import { weightedRand } from '../../math/utils'
 
 const getStartCardPool = (operators: Array<ArithmeticCardTypeEnum>): Record<ArithmeticCardTypeEnum, number> => {
@@ -54,16 +55,18 @@ export const generateNumenator = (hardMode = false): number => {
   return res
 }
 
-export const getDeckPoolArithmetic = (operators: Array<ArithmeticCardTypeEnum>, hardMode = false): CardType[] => {
+export const getDeckPoolArithmetic = (operators: Array<ArithmeticCardTypeEnum>, hardMode = false): OperatorCard[] => {
   if (operators.length === 0) return []
   const array = Array(5).fill((x: number) => x)
-  const res = array.map((): CardType => {
+  const res = array.map<OperatorCard>(() => {
+    const card = new CardType({ name: '' })
+    card.setCount(generateNumenator(hardMode))
     const result = new ArithmeticCardTypeEnumToClass[
       weightedRand<ArithmeticCardTypeEnum>(getStartCardPool(operators))()
     ]({
-      name: ''
+      name: '',
+      card
     })
-    result.setCount(generateNumenator(hardMode))
     return result
   })
   return res

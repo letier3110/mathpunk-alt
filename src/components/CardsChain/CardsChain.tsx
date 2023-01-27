@@ -1,9 +1,10 @@
 import { FC, ReactNode } from 'react'
 import { CardType } from '../../math/CardType'
+import { OperatorCard } from '../../math/OperatorCard'
 import { VectorCard } from '../../math/VectorCard'
 
 interface CardsChainProps {
-  chain: Array<CardType | VectorCard>
+  chain: Array<OperatorCard>
   children: ReactNode[]
   keys?: string[]
   className?: string

@@ -1,7 +1,8 @@
 import { CardType } from './CardType'
+import { FormulaeCardType } from './formulae'
 import { VectorCard } from './VectorCard'
 
-interface OperatorCardProps {
+export interface OperatorCardProps {
   name: string
   card: CardType | VectorCard
 }
@@ -13,14 +14,14 @@ interface IOperatorCard {
 export class OperatorCard implements IOperatorCard {
   private id: number
   private name: string
-  private card: CardType | VectorCard
+  private card: CardType | VectorCard | FormulaeCardType
   constructor({ name, card }: OperatorCardProps) {
     this.name = name
     this.card = card
     this.id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
   }
 
-  setCard(card: CardType | VectorCard) {
+  setCard(card: CardType | VectorCard | FormulaeCardType) {
     this.card = card
   }
 
@@ -51,5 +52,9 @@ export class OperatorCard implements IOperatorCard {
 
   getIsInteractive() {
     return false
+  }
+
+  static isCardsEqual(a: OperatorCard, b: OperatorCard): boolean {
+    return a.getCard().getId() === b.getCard().getId()
   }
 }

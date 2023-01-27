@@ -31,3 +31,11 @@ export const compareColors = (a: IColor, b: IColor, _likelihoodRatio?: number): 
 export const findMax = (a: IColor): number => {
   return a.red > a.blue && a.red > a.green ? a.red : a.blue > a.red && a.blue > a.green ? a.blue : a.green
 }
+
+export const summColors = (a: IColor, b:IColor): IColor => {
+  return {
+    red: a.red + b.red,
+    green: a.green + b.green,
+    blue: a.blue + b.blue
+  }
+}

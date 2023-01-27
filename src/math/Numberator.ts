@@ -1,20 +1,20 @@
 import { IComputable } from './arithmetic'
 import { CardType } from './CardType'
+import { FormulaeCardType } from './formulae'
+import { OperatorCard, OperatorCardProps } from './OperatorCard'
+import { VectorCard } from './VectorCard'
 
-export class Numberator extends CardType implements IComputable {
-  constructor(count?: number) {
-    super({ name: 'Numberator' })
-    if(count) {
-      this.setCount(count)
-    }
+export class Numberator extends OperatorCard implements IComputable {
+  constructor({ name, card }: OperatorCardProps) {
+    super({ name: 'Numberator', card })
   }
 
   getName() {
-    return this.getCount();
+    return this.getCard().getCount().toString()
   }
 
   getDescription() {
-    return this.getCount();
+    return this.getCard().getCount().toString()
   }
 
   calculate(x: number, y: number): number {

@@ -2,6 +2,7 @@ import { CSSProperties, FC, useMemo } from 'react'
 import { useChainContext } from '../../hooks/Chain.constate'
 import { instanceOfChangable, SwitcherValue } from '../../math/arithmetic'
 import { CardType } from '../../math/CardType'
+import { OperatorCard } from '../../math/OperatorCard'
 import { formatNumber } from '../../math/utils'
 import { VectorCard } from '../../math/VectorCard'
 import { AdditionView } from '../AdditionView/AdditionView'
@@ -10,7 +11,7 @@ import { ColorSquare, vectorCardToColor } from '../ColorSquare/ColorSquare'
 
 interface ColorCardTypeViewProps {
   className?: string
-  card: VectorCard
+  operator: OperatorCard
   showPreview?: boolean
   noAddition?: boolean
   style?: CSSProperties
@@ -24,7 +25,7 @@ interface ColorCardTypeViewProps {
 }
 
 export const ColorCardTypeView: FC<ColorCardTypeViewProps> = ({
-  card,
+  operator,
   showPreview = false,
   noAddition = false,
   className = 'card',
@@ -37,6 +38,7 @@ export const ColorCardTypeView: FC<ColorCardTypeViewProps> = ({
   handleMouseUp = () => {},
   handleHover
 }) => {
+  const card = operator.getCard() as VectorCard
   // const count = card.getCount()
   // const size = card.getSize()
   // const description = card.getDescription()
@@ -105,10 +107,14 @@ export const ColorCardTypeView: FC<ColorCardTypeViewProps> = ({
         {/* <div className='mainText'>{formatNumber(Number(count))}</div> */}
         {card.getSize() === 3 ? <ColorSquare color={vectorCardToColor(card)} /> : <ArrayNumber item={card} />}
         {noAddition === false && (
-          <AdditionView interactive={isInteractiveAddition} handleAdditionClick={handleAdditionClick} card={card} />
+          <AdditionView
+            interactive={isInteractiveAddition}
+            handleAdditionClick={handleAdditionClick}
+            card={operator}
+          />
         )}
       </div>
-      {noAddition === false && showPreview && <AdditionView card={card} showPreview />}
+      {noAddition === false && showPreview && <AdditionView card={operator} showPreview />}
       {isHoverable && <div className='hoverZone' onMouseDown={handleUpAfter} onMouseEnter={handleHoverAfter}></div>}
     </>
   )

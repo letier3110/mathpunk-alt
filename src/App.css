@@ -657,13 +657,6 @@ body {
   bottom: 20px;
 }
 
-.addition {
-  position: relative;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-}
-
 .sidebar {
   position: absolute;
   right: 0px;

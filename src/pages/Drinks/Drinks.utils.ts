@@ -3,7 +3,7 @@ import { CardType } from '../../math/CardType'
 import { IColor } from '../../math/ColorType'
 import { ArithmeticCardTypeEnumToClass, DIFFICULTIES, DifficultySettings } from '../../math/math'
 import { OperatorCard } from '../../math/OperatorCard'
-import { SummatorNew } from '../../math/Summator_New'
+import { Summator } from '../../math/Summator'
 // import { Summator } from '../../math/Summator'
 import { weightedRand } from '../../math/utils'
 import { VectorCard } from '../../math/VectorCard'
@@ -90,7 +90,7 @@ export const getDeckPoolDrinks = (
     const card = new VectorCard({ name: '', size: 3 })
     const color = generateColor(hardMode)
     card.setCount([color.red, color.green, color.blue])
-    const result = new SummatorNew(card)
+    const result = new Summator({ name: '', card})
     return result
   })
   return res

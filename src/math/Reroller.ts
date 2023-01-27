@@ -1,15 +1,16 @@
 import { CardType } from './CardType'
+import { OperatorCard, OperatorCardProps } from './OperatorCard'
 
-export class Reroller extends CardType {
-  constructor(name = 'Reroller') {
-    super({ name })
+export class Reroller extends OperatorCard {
+  constructor({ name = 'Reroller', card }: OperatorCardProps) {
+    super({ name, card: new CardType({ name }) })
   }
 
   getName() {
-    return this.getCount();
+    return this.getCard().getCount().toString()
   }
 
   getDescription() {
-    return `reroll?\n${this.getCount()}`;
+    return `reroll?\n${this.getCard().getCount().toString()}`
   }
 }
