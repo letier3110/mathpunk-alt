@@ -24,8 +24,10 @@ export const Cube: FC<CubeProps> = ({ children, state = 'hidden' }) => {
     <>
       {/* <div className="leftSide"></div> */}
       {/* <div className='rightSide'></div> */}
-      <div className={['bottomSide', bottomClassnames].join(' ')}></div>
-      <div className={['root', rootClassnames].join(' ')}>{children}</div>
+      {/* <div className={['bottomSide', bottomClassnames].join(' ')}></div> */}
+      {/* <div className={['root', rootClassnames].join(' ')}>{children}</div> */}
+      <div className={['root'].join(' ')}>{children}</div>
+      {/* {children} */}
     </>
   )
 }
